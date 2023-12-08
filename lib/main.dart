@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'view/home_page.dart';
 
-void main() {
+void main(){
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const TheCube());
 }
 
@@ -10,7 +11,7 @@ class TheCube extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       home: HomePage(),
     );
   }

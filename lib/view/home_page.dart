@@ -5,6 +5,21 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Center(
+            child: OutlinedButton(
+              onPressed: () {},
+              child: const Text(
+                'open camera',
+                style: TextStyle(fontSize: 30.0),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
