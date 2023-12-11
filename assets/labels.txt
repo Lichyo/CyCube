@@ -1,0 +1,2 @@
+0 cube
+1 nothing

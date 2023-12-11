@@ -5,7 +5,7 @@ import 'dart:math';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(RubiksCube());
+  runApp(const RubiksCube());
 }
 
 class RubiksCube extends StatefulWidget {
@@ -23,6 +23,8 @@ class _RubiksCubeState extends State<RubiksCube> {
     return MaterialApp(
       home: GestureDetector(
         onPanUpdate: (detail) {
+          print('x: ${_offset.dx}');
+          print('y: ${_offset.dy}');
           setState(() => _offset += detail.delta);
         },
         child: Scaffold(
@@ -31,9 +33,7 @@ class _RubiksCubeState extends State<RubiksCube> {
             title: Text(
               'The Cube',
               style: GoogleFonts.aboreto(
-                fontSize: 27.0,
-                fontWeight: FontWeight.w400
-              ),
+                  fontSize: 27.0, fontWeight: FontWeight.w400),
             ),
           ),
           body: Column(
@@ -49,54 +49,6 @@ class _RubiksCubeState extends State<RubiksCube> {
                 child: Center(
                   child: Stack(
                     children: [
-                      Transform(
-                        transform: Matrix4.identity()
-                          ..translate(0.0, 0.0, -100.0),
-                        child: Container(
-                          color: Colors.green,
-                          width: 200,
-                          height: 200,
-                        ),
-                      ),
-                      Transform(
-                        transform: Matrix4.identity()
-                          ..translate(0.0, 0.0, 100.0),
-                        child: Container(
-                          color: Colors.blue,
-                          width: 200,
-                          height: 200,
-                        ),
-                      ),
-                      Transform(
-                        transform: Matrix4.identity()
-                          ..translate(0.0, 0.0, -100.0)
-                          ..rotateY(-pi / 2),
-                        child: Container(
-                          color: Colors.red,
-                          width: 200,
-                          height: 200,
-                        ),
-                      ),
-                      Transform(
-                        transform: Matrix4.identity()
-                          ..translate(200.0, 0.0, -100.0)
-                          ..rotateY(-pi / 2),
-                        child: Container(
-                          color: Colors.orange,
-                          width: 200,
-                          height: 200,
-                        ),
-                      ),
-                      Transform(
-                        transform: Matrix4.identity()
-                          ..translate(0.0, 0.0, -100.0)
-                          ..rotateX(pi / 2),
-                        child: Container(
-                          color: Colors.black,
-                          width: 200,
-                          height: 200,
-                        ),
-                      ),
                       Transform(
                         origin: const Offset(0, 0),
                         transform: Matrix4.identity()
