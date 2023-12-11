@@ -45,7 +45,14 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+<<<<<<< HEAD
 	<key>FLTEnableImpeller</key>
     <false />
+=======
+	<key>NSCameraUsageDescription</key>
+    <string>Using your camera to capture the cube</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>your usage description here</string>
+>>>>>>> tf_model
 </dict>
 </plist>
