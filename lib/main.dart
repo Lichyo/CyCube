@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:cube/components/cube_face.dart';
 import 'dart:math';
 
 void main() {
@@ -24,10 +26,21 @@ class _RubiksCubeState extends State<RubiksCube> {
           setState(() => _offset += detail.delta);
         },
         child: Scaffold(
+          appBar: AppBar(
+            elevation: 5,
+            title: Text(
+              'The Cube',
+              style: GoogleFonts.aboreto(
+                fontSize: 27.0,
+                fontWeight: FontWeight.w400
+              ),
+            ),
+          ),
           body: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Transform(
+                origin: const Offset(0, 0),
                 alignment: Alignment.center,
                 transform: Matrix4.identity()
                   ..rotateX(_offset.dy * pi / 180)
@@ -85,13 +98,56 @@ class _RubiksCubeState extends State<RubiksCube> {
                         ),
                       ),
                       Transform(
+                        origin: const Offset(0, 0),
                         transform: Matrix4.identity()
-                          ..translate(0.0, 200.0, -100.0)
+                          ..translate(0.0, 0.0, -150.0)
                           ..rotateX(pi / 2),
-                        child: Container(
+                        child: const CubeFace(
+                          color: Colors.white,
+                        ),
+                      ),
+                      Transform(
+                        origin: const Offset(0, 0),
+                        transform: Matrix4.identity()
+                          ..translate(0.0, 0.0, 150.0),
+                        child: const CubeFace(
                           color: Colors.yellow,
-                          width: 200,
-                          height: 200,
+                        ),
+                      ),
+                      Transform(
+                        origin: const Offset(0, 0),
+                        transform: Matrix4.identity()
+                          ..translate(0.0, 0.0, -150.0)
+                          ..rotateY(-pi / 2),
+                        child: const CubeFace(
+                          color: Colors.green,
+                        ),
+                      ),
+                      Transform(
+                        origin: const Offset(0, 0),
+                        transform: Matrix4.identity()
+                          ..translate(300.0, 0.0, -150.0)
+                          ..rotateY(-pi / 2),
+                        child: const CubeFace(
+                          color: Colors.blue,
+                        ),
+                      ),
+                      Transform(
+                        origin: const Offset(0, 0),
+                        transform: Matrix4.identity()
+                          ..translate(0.0, 0.0, -150.0)
+                          ..rotateX(pi / 2),
+                        child: const CubeFace(
+                          color: Colors.red,
+                        ),
+                      ),
+                      Transform(
+                        origin: const Offset(0, 0),
+                        transform: Matrix4.identity()
+                          ..translate(0.0, 300.0, -150.0)
+                          ..rotateX(pi / 2),
+                        child: const CubeFace(
+                          color: Colors.orange,
                         ),
                       ),
                     ],
