@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'dart:math';
 import 'package:image_picker/image_picker.dart';
 import 'service/cube/cube_rotation.dart';
-import 'dart:typed_data';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
 
 void main() {
@@ -66,12 +66,14 @@ class _RubiksCubeState extends State<RubiksCube> {
                 onPressed: () async {
                   ImagePicker imagePicker = ImagePicker();
                   XFile? image =
-                      await imagePicker.pickImage(source: ImageSource.camera);
+                      await imagePicker.pickImage(source: ImageSource.gallery);
                   Uint8List byte = await image!.readAsBytes();
-                  File file = File(
-                      '/Users/lichyo/StudioProjects/cube/assets/samples/sample.png')
-                    ..writeAsBytes(byte)
-                    ..openWrite();
+                  // File('/Users/lichyo/StudioProjects/cube/assets/samples/sample.png')
+                  //     .writeAsBytes(byte);
+                  FirebaseFirestore fireStore = FirebaseFirestore.instance;
+                  fireStore.collection('image').add({
+                    'byte': byte,
+                  });
                 },
                 child: const Text('Open Camera'),
               ),
@@ -82,19 +84,3 @@ class _RubiksCubeState extends State<RubiksCube> {
     );
   }
 }
-//
-// class TempView extends StatelessWidget {
-//   const TempView({
-//     super.key,
-//     required this.image,
-//   });
-//
-//   final XFile image;
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Center(
-//       child: Image(image: ),
-//     );
-//   }
-// }
