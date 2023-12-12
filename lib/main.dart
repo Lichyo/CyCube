@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:math';
-import 'constants.dart';
+import 'package:image_picker/image_picker.dart';
+import 'service/cube/cube_rotation.dart';
+import 'dart:typed_data';
+import 'dart:io';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,16 +21,19 @@ class RubiksCube extends StatefulWidget {
 
 class _RubiksCubeState extends State<RubiksCube> {
   Offset _offset = Offset.zero;
+  String? name;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: GestureDetector(
         onPanUpdate: (detail) {
-          setState(() => _offset += detail.delta);
+          setState(() => _offset += detail.delta * 0.4);
         },
         child: Scaffold(
           appBar: AppBar(
+            centerTitle: true,
             elevation: 5,
             title: Text(
               'The Cube',
@@ -43,14 +50,30 @@ class _RubiksCubeState extends State<RubiksCube> {
                 origin: const Offset(0, 0),
                 alignment: Alignment.center,
                 transform: Matrix4.identity()
-                  ..rotateX(_offset.dy * pi / 180)
+                  ..rotateX(-_offset.dy * pi / 180)
                   ..rotateY(_offset.dx * pi / 180)
                   ..setEntry(2, 2, 0.001),
                 child: Center(
                   child: Stack(
-                    children: permutateCube(offset: _offset),
+                    children: CubeRotation().permutateCube(offset: _offset),
                   ),
                 ),
+              ),
+              const SizedBox(
+                height: 100,
+              ),
+              OutlinedButton(
+                onPressed: () async {
+                  ImagePicker imagePicker = ImagePicker();
+                  XFile? image =
+                      await imagePicker.pickImage(source: ImageSource.camera);
+                  Uint8List byte = await image!.readAsBytes();
+                  File file = File(
+                      '/Users/lichyo/StudioProjects/cube/assets/samples/sample.png')
+                    ..writeAsBytes(byte)
+                    ..openWrite();
+                },
+                child: const Text('Open Camera'),
               ),
             ],
           ),
@@ -59,3 +82,19 @@ class _RubiksCubeState extends State<RubiksCube> {
     );
   }
 }
+//
+// class TempView extends StatelessWidget {
+//   const TempView({
+//     super.key,
+//     required this.image,
+//   });
+//
+//   final XFile image;
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Center(
+//       child: Image(image: ),
+//     );
+//   }
+// }
