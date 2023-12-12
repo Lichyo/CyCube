@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:math';
-import 'components/cube.dart';
+import 'constants.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,8 +23,7 @@ class _RubiksCubeState extends State<RubiksCube> {
     return MaterialApp(
       home: GestureDetector(
         onPanUpdate: (detail) {
-          print('x: ${_offset.dx}');
-          print('y: ${_offset.dy}');
+          permutateCube(offset: _offset);
           setState(() => _offset += detail.delta);
         },
         child: Scaffold(
@@ -48,7 +47,11 @@ class _RubiksCubeState extends State<RubiksCube> {
                   ..rotateX(_offset.dy * pi / 180)
                   ..rotateY(_offset.dx * pi / 180)
                   ..setEntry(2, 2, 0.001),
-                child: Cube(offset: _offset,),
+                child: Center(
+                  child: Stack(
+                    children: permutateCube(offset: _offset),
+                  ),
+                ),
               ),
             ],
           ),
