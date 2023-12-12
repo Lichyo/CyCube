@@ -1,16 +1,31 @@
 # cube
 
-A new Flutter project.
+3D Rubik's Cube Tutorial App
+This Flutter application is designed to create a 3D cube tutorial using AR.
+The app captures user movements through the device's camera and projects them onto the screen,
+creating an interactive and immersive learning experience for solving the cube.
+
+## Features
+
+- Augmented Reality Cube Projection: Utilize the device's camera to capture user movements and
+  project a 3D magic cube onto the screen in augmented reality.
+
+- Interactive Cube Rotation: Allow users to interact with the magic cube by rotating it through
+  gestures captured by the camera.
+
+- Step-by-Step Tutorial: Provide a step-by-step tutorial on solving the magic cube. Each step should
+  be visually represented on the AR cube, guiding users through the solving process.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+### Step 1.
 
-A few resources to get you started if this is your first Flutter project:
+  git clone https://github.com/Lichyo/TheCube.git
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+### Step 2.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+  flutter pub get
+
+### Step 3.
+
+  flutter run 
