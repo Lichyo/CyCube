@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:math';
-import 'components/cube_face.dart';
+import 'constants.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,7 +32,7 @@ class _RubiksCubeState extends State<RubiksCube> {
               'The Cube',
               style: GoogleFonts.aboreto(
                 fontSize: 27.0,
-                fontWeight: FontWeight.w400
+                fontWeight: FontWeight.w400,
               ),
             ),
           ),
@@ -48,60 +48,7 @@ class _RubiksCubeState extends State<RubiksCube> {
                   ..setEntry(2, 2, 0.001),
                 child: Center(
                   child: Stack(
-                    children: [
-                      Transform(
-                        origin: const Offset(0, 0),
-                        transform: Matrix4.identity()
-                          ..translate(0.0, 0.0, -150.0),
-                        child: const CubeFace(
-                          color: Colors.white,
-                        ),
-                      ),
-                      Transform(
-                        origin: const Offset(0, 0),
-                        transform: Matrix4.identity()
-                          ..translate(0.0, 0.0, 150.0),
-                        child: const CubeFace(
-                          color: Colors.yellow,
-                        ),
-                      ),
-                      Transform(
-                        origin: const Offset(0, 0),
-                        transform: Matrix4.identity()
-                          ..translate(0.0, 0.0, -150.0)
-                          ..rotateY(-pi / 2),
-                        child: const CubeFace(
-                          color: Colors.green,
-                        ),
-                      ),
-                      Transform(
-                        origin: const Offset(0, 0),
-                        transform: Matrix4.identity()
-                          ..translate(300.0, 0.0, -150.0)
-                          ..rotateY(-pi / 2),
-                        child: const CubeFace(
-                          color: Colors.blue,
-                        ),
-                      ),
-                      Transform(
-                        origin: const Offset(0, 0),
-                        transform: Matrix4.identity()
-                          ..translate(0.0, 0.0, -150.0)
-                          ..rotateX(pi / 2),
-                        child: const CubeFace(
-                          color: Colors.red,
-                        ),
-                      ),
-                      Transform(
-                        origin: const Offset(0, 0),
-                        transform: Matrix4.identity()
-                          ..translate(0.0, 300.0, -150.0)
-                          ..rotateX(pi / 2),
-                        child: const CubeFace(
-                          color: Colors.orange,
-                        ),
-                      ),
-                    ],
+                    children: permutateCube(offset: _offset),
                   ),
                 ),
               ),
