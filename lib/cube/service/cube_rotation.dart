@@ -6,11 +6,10 @@ import '../model/cube_rotate.dart';
 enum Facing { top, bottom, left, right, front, back }
 
 class CubeRotation {
-  late Rotate currentRotation;
+  Rotate currentRotation = Rotate();
   List<Widget> cubes = [];
 
   CubeRotation() {
-    currentRotation = Rotate();
     updateCube();
   }
 
@@ -68,67 +67,57 @@ class CubeRotation {
   };
 
   List<Widget> updateCube() {
-    cubes.clear();
-    // cubes.add(cube[Facing.bottom]!);
+    cubes = [];
+    cubes.add(cube[Facing.bottom]!);
     cubes.add(cube[Facing.back]!);
-    // cubes.add(cube[Facing.left]!);
-    // cubes.add(cube[Facing.right]!);
-    // cubes.add(cube[Facing.top]!);
+    cubes.add(cube[Facing.left]!);
+    cubes.add(cube[Facing.right]!);
+    cubes.add(cube[Facing.top]!);
     cubes.add(cube[Facing.front]!);
     return cubes;
   }
 
   List<Widget> permutateCube({required Offset offset}) {
     Rotate rotate = _calculateRotation(offset: offset);
-    if (rotate.U % 4 == 0) {
-    } else if (rotate.U % 4 == 1) {
-      _rotateU(rotate);
-    } else if (rotate.U % 4 == 2) {
-      _rotateU(rotate);
-      _rotateU(rotate);
-    } else if (rotate.U % 4 == 3) {
-      _rotateU(rotate);
-      _rotateU(rotate);
-      _rotateU(rotate);
+    if (currentRotation.U < rotate.U) {
+      _rotateU();
+    } else if (currentRotation.U > rotate.U) {
+      _rotateU();
+      _rotateU();
+      _rotateU();
     }
-    // if (rotate.R % 4 == 0) {
-    // } else if (rotate.R % 4 == 1) {
-    //   _rotateR();
-    // } else if (rotate.R % 4 == 2) {
-    //   _rotateR();
-    //   _rotateR();
-    // } else if (rotate.R % 4 == 3) {
-    //   _rotateR();
-    //   _rotateR();
-    //   _rotateR();
-    // }
-    return cubes;
+    if (currentRotation.R > rotate.R) {
+      _rotateR();
+    } else if (currentRotation.R < rotate.R) {
+      _rotateR();
+      _rotateR();
+      _rotateR();
+    }
+    currentRotation = rotate;
+    return updateCube();
   }
 
-  // void _rotateR() {
-  //   Widget temp = _cube[Facing.front]!;
-  //   _cube[Facing.front] = _cube[Facing.bottom]!;
-  //   _cube[Facing.bottom] = _cube[Facing.back]!;
-  //   _cube[Facing.back] = _cube[Facing.top]!;
-  //   _cube[Facing.top] = temp;
-  //
-  // }
+  void _rotateR() {
+    Widget temp = cube[Facing.front]!;
+    cube[Facing.front] = cube[Facing.bottom]!;
+    cube[Facing.bottom] = cube[Facing.back]!;
+    cube[Facing.back] = cube[Facing.top]!;
+    cube[Facing.top] = temp;
+  }
 
-  void _rotateU(Rotate rotate) {
-    if (currentRotation.U < rotate.U) {
-      currentRotation.U = rotate.U;
-      Widget temp = cube[Facing.left]!;
-      cube[Facing.left] = cube[Facing.front]!;
-      cube[Facing.front] = cube[Facing.right]!;
-      cube[Facing.right] = cube[Facing.back]!;
-      cube[Facing.right] = temp;
-      print(cubes);
-    }
+  void _rotateU() {
+    Widget temp = cube[Facing.left]!;
+    cube[Facing.left] = cube[Facing.front]!;
+    cube[Facing.front] = cube[Facing.right]!;
+    cube[Facing.right] = cube[Facing.back]!;
+    cube[Facing.back] = temp;
   }
 
   Rotate _calculateRotation({required Offset offset}) {
     Rotate rotate = Rotate();
     double dx = offset.dx;
+    double dy = offset.dy;
+
     rotate.U = 0;
     while (dx < -90) {
       dx += 90;
@@ -139,18 +128,15 @@ class CubeRotation {
       rotate.U--;
     }
 
-    print('rotate.U: ${rotate.U}');
-    // double dy = offset.dy;
-    // rotate.R = 0;
-    // while (dy < -90) {
-    //   dy += 90;
-    //   rotate.R++;
-    // }
-    // while (dy > 90) {
-    //   dy -= 90;
-    //   rotate.R--;
-    // }
-    // print('rotate.R: ${rotate.R}');
+    rotate.R = 0;
+    while (dy < -90) {
+      dy += 90;
+      rotate.R++;
+    }
+    while (dy > 90) {
+      dy -= 90;
+      rotate.R--;
+    }
     return rotate;
   }
 }

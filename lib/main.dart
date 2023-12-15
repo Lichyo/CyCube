@@ -66,6 +66,10 @@ class _RubiksCubeState extends State<RubiksCube> {
                   ),
                 ),
               ),
+              OutlinedButton(
+                onPressed: () {},
+                child: Text('test'),
+              ),
             ],
           ),
         ),
