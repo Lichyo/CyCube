@@ -36,7 +36,6 @@ target 'Runner' do
     inherit! :search_paths
   end
 end
-
 post_install do |installer|
   # add these lines:
   installer.pods_project.build_configurations.each do |config|

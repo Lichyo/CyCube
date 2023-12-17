@@ -19,6 +19,11 @@ dependencies:
   firebase_core: ^2.24.2
   google_ml_kit: ^0.16.3
   google_mlkit_object_detection: ^0.11.0
+  image_picker: ^1.0.5
+  cloud_firestore: ^4.13.6
+  firebase_storage: ^11.5.6
+  font_awesome_flutter: ^10.6.0
+  firebase_auth: ^4.15.3
 
 
 dev_dependencies:
@@ -34,6 +39,7 @@ flutter:
   assets:
     - assets/
     - assets/samples/
+    - assets/images/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
