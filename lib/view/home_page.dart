@@ -23,7 +23,6 @@ class _RubiksCubeState extends State<RubiksCube> {
   void initState() {
     super.initState();
     cubes = cubeRotation.cubes;
-    auth.signInAnonymously();
   }
 
   @override
@@ -48,7 +47,6 @@ class _RubiksCubeState extends State<RubiksCube> {
                   color: Colors.teal,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    // crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       const Center(
                         child: CircleAvatar(
@@ -60,14 +58,28 @@ class _RubiksCubeState extends State<RubiksCube> {
                       Padding(
                         padding: const EdgeInsets.only(top: 10.0, left: 20.0),
                         child: Text(
-                          'L i c h y o',
+                          'lichyo',
                           style: GoogleFonts.getFont(
                             'Ubuntu',
+                            color: Colors.white,
                             fontSize: 30.0,
                           ),
                         ),
                       ),
                     ],
+                  ),
+                ),
+                const Expanded(child: SizedBox()),
+                GestureDetector(
+                  onTap: () async {
+                    await _auth.logout();
+                  },
+                  child: Container(
+                    alignment: Alignment.centerLeft,
+                    height: 50,
+                    width: double.infinity,
+                    color: Colors.grey.shade500.withOpacity(0.1),
+                    child: const Text('    Logout'),
                   ),
                 ),
               ],
