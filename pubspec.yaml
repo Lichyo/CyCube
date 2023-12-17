@@ -12,27 +12,47 @@ dependencies:
   flutter:
     sdk: flutter
 
+
   cupertino_icons: ^1.0.2
   vector_math: ^2.1.4
   google_fonts: ^6.1.0
-  image_picker: ^1.0.4
-  cloud_firestore: ^4.13.6
   firebase_core: ^2.24.2
+  google_ml_kit: ^0.16.3
+  google_mlkit_object_detection: ^0.11.0
+  image_picker: ^1.0.5
+  cloud_firestore: ^4.13.6
+  firebase_storage: ^11.5.6
+  font_awesome_flutter: ^10.6.0
+  firebase_auth: ^4.15.3
+
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+
   flutter_lints: ^2.0.0
 
 flutter:
 
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
   assets:
     - assets/
     - assets/samples/
+    - assets/images/
+  #   - images/a_dot_ham.jpeg
 
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.dev/assets-and-images/#resolution-aware
+
+  # For details regarding adding assets from package dependencies, see
+  # https://flutter.dev/assets-and-images/#from-packages
+
+  # To add custom fonts to your application, add a fonts section here,
+  # in this "flutter" section. Each entry in this list should have a
+  # "family" key with the font family name, and a "fonts" key with a
+  # list giving the asset and other descriptors for the font. For
+  # example:
   # fonts:
   #   - family: Schyler
   #     fonts:
@@ -44,3 +64,6 @@ flutter:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
+  #
+  # For details regarding fonts from package dependencies,
+  # see https://flutter.dev/custom-fonts/#from-packages
