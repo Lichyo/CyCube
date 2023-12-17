@@ -24,4 +24,8 @@ class AuthService {
   Future<void> logout() async{
     await _auth.signOut();
   }
+
+  Future<User?> get currentUser async{
+    return _auth.currentUser;
+  }
 }

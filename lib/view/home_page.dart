@@ -69,18 +69,54 @@ class _RubiksCubeState extends State<RubiksCube> {
                     ],
                   ),
                 ),
+                const SizedBox(
+                  height: 10,
+                ),
+                ListTile(
+                  leading: Image.asset(
+                    'assets/images/cube.png',
+                  ),
+                  title: const Text(
+                    'WCA ID : 2019LICH01',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.email,
+                    size: 55.0,
+                    color: Colors.teal.shade600,
+                  ),
+                  title: const Text(
+                    'lichyo003@gmail.com',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
                 const Expanded(child: SizedBox()),
                 GestureDetector(
                   onTap: () async {
                     await _auth.logout();
                   },
-                  child: Container(
-                    alignment: Alignment.centerLeft,
-                    height: 50,
-                    width: double.infinity,
-                    color: Colors.grey.shade500.withOpacity(0.1),
-                    child: const Text('    Logout'),
+                  child: ListTile(
+                    leading: Icon(
+                      Icons.logout,
+                      size: 55.0,
+                      color: Colors.blue.shade500,
+                    ),
+                    title: const Text(
+                      'Logout',
+                      style: TextStyle(
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ),
+                ),
+                const SizedBox(
+                  height: 50.0,
                 ),
               ],
             ),

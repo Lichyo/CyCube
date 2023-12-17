@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'package:cube/cube/components/cube_face.dart';
-import '../model/cube_rotattion.dart';
+import '../model/cube_rotation.dart';
 
 enum Facing { top, bottom, left, right, front, back }
 
@@ -79,13 +79,13 @@ class CubeRotation {
 
   List<Widget> permutateCube({required Offset offset}) {
     Rotate rotate = _calculateRotation(offset: offset);
-    // if (currentRotation.U < rotate.U) {
-    //   _rotateU();
-    // } else if (currentRotation.U > rotate.U) {
-    //   _rotateU();
-    //   _rotateU();
-    //   _rotateU();
-    // }
+    if (currentRotation.U < rotate.U) {
+      _rotateU();
+    } else if (currentRotation.U > rotate.U) {
+      _rotateU();
+      _rotateU();
+      _rotateU();
+    }
     if (currentRotation.R > rotate.R) {
       _rotateR();
     } else if (currentRotation.R < rotate.R) {
