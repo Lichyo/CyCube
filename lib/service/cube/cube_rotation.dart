@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:math';
-import 'package:cube/components/cube_face.dart';
+import 'package:cube/cube/components/cube_face.dart';
 
 enum Facing { green, blue, red, orange, white, yellow }
 
