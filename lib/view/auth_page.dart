@@ -87,22 +87,24 @@ class _AuthPageState extends State<AuthPage> {
                 onPressed: () async {
                   showDialog(
                     context: context,
-                    builder: (context) => Center(
-                      child: CircularProgressIndicator(
-                        color: Colors.teal,
-                        backgroundColor: Colors.grey.shade500,
-                      ),
-                    ),
+                    builder: (context) =>
+                        Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.teal,
+                            backgroundColor: Colors.grey.shade500,
+                          ),
+                        ),
                   );
                   try {
                     await _auth.login(email: _email, password: _password);
                   } catch (e) {
                     showDialog(
                       context: context,
-                      builder: (context) => AlertDialog(
-                        title: const Text('Login Fail'),
-                        content: Text(e.toString()),
-                      ),
+                      builder: (context) =>
+                          AlertDialog(
+                            title: const Text('Login Fail'),
+                            content: Text(e.toString()),
+                          ),
                     );
                   }
                   Navigator.of(context).push(
@@ -110,6 +112,9 @@ class _AuthPageState extends State<AuthPage> {
                       builder: (context) => const RubiksCube(),
                     ),
                   );
+                  await _auth.login(email: _email, password: _password);
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => const RubiksCube()));
                 },
                 child: Text(
                   'Login',
