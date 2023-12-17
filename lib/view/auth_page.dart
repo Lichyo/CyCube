@@ -1,3 +1,4 @@
+import 'package:cube/view/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cube/service/auth_service.dart';
@@ -84,7 +85,31 @@ class _AuthPageState extends State<AuthPage> {
               height: 50,
               child: OutlinedButton(
                 onPressed: () async {
-                  _auth.login(email: _email, password: _password);
+                  showDialog(
+                    context: context,
+                    builder: (context) => Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.teal,
+                        backgroundColor: Colors.grey.shade500,
+                      ),
+                    ),
+                  );
+                  try {
+                    await _auth.login(email: _email, password: _password);
+                  } catch (e) {
+                    showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                        title: const Text('Login Fail'),
+                        content: Text(e.toString()),
+                      ),
+                    );
+                  }
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => const RubiksCube(),
+                    ),
+                  );
                 },
                 child: Text(
                   'Login',
