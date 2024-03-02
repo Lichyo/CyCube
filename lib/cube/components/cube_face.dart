@@ -8,15 +8,15 @@ class CubeFace extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 300,
-      width: 300,
+      height: 90,
+      width: 90,
       child: Column(
         children: [
           Row(
             children: [
               Container(
-                width: 100,
-                height: 100,
+                width: 30,
+                height: 30,
                 decoration: BoxDecoration(
                   color: color,
                   border: Border.all(color: Colors.black),
@@ -26,8 +26,8 @@ class CubeFace extends StatelessWidget {
                 ),
               ),
               Container(
-                width: 100,
-                height: 100,
+                width: 30,
+                height: 30,
                 decoration: BoxDecoration(
                   color: color,
                   border: Border.all(color: Colors.black),
@@ -37,45 +37,8 @@ class CubeFace extends StatelessWidget {
                 ),
               ),
               Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  color: color,
-                  border: Border.all(color: Colors.black),
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(3),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          Row(
-            children: [
-              Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  color: color,
-                  border: Border.all(color: Colors.black),
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(3),
-                  ),
-                ),
-              ),
-              Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  color: color,
-                  border: Border.all(color: Colors.black),
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(3),
-                  ),
-                ),
-              ),
-              Container(
-                width: 100,
-                height: 100,
+                width: 30,
+                height: 30,
                 decoration: BoxDecoration(
                   color: color,
                   border: Border.all(color: Colors.black),
@@ -89,8 +52,8 @@ class CubeFace extends StatelessWidget {
           Row(
             children: [
               Container(
-                width: 100,
-                height: 100,
+                width: 30,
+                height: 30,
                 decoration: BoxDecoration(
                   color: color,
                   border: Border.all(color: Colors.black),
@@ -100,8 +63,8 @@ class CubeFace extends StatelessWidget {
                 ),
               ),
               Container(
-                width: 100,
-                height: 100,
+                width: 30,
+                height: 30,
                 decoration: BoxDecoration(
                   color: color,
                   border: Border.all(color: Colors.black),
@@ -111,8 +74,45 @@ class CubeFace extends StatelessWidget {
                 ),
               ),
               Container(
-                width: 100,
-                height: 100,
+                width: 30,
+                height: 30,
+                decoration: BoxDecoration(
+                  color: color,
+                  border: Border.all(color: Colors.black),
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(3),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              Container(
+                width: 30,
+                height: 30,
+                decoration: BoxDecoration(
+                  color: color,
+                  border: Border.all(color: Colors.black),
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(3),
+                  ),
+                ),
+              ),
+              Container(
+                width: 30,
+                height: 30,
+                decoration: BoxDecoration(
+                  color: color,
+                  border: Border.all(color: Colors.black),
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(3),
+                  ),
+                ),
+              ),
+              Container(
+                width: 30,
+                height: 30,
                 decoration: BoxDecoration(
                   color: color,
                   border: Border.all(color: Colors.black),

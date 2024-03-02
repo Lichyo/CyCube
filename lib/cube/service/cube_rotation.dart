@@ -17,7 +17,7 @@ class CubeRotation {
     Facing.top: Transform(
       origin: const Offset(0, 0),
       transform: Matrix4.identity()
-        ..translate(0.0, 0.0, -150.0)
+        ..translate(0.0, 0.0, -30.0)
         ..rotateX(pi / 2),
       child: const CubeFace(
         color: Colors.white,
@@ -26,7 +26,7 @@ class CubeRotation {
     Facing.bottom: Transform(
       origin: const Offset(0, 0),
       transform: Matrix4.identity()
-        ..translate(0.0, 300.0, -150.0)
+        ..translate(0.0, 90.0, -30.0)
         ..rotateX(pi / 2),
       child: const CubeFace(
         color: Colors.yellow,
@@ -35,7 +35,7 @@ class CubeRotation {
     Facing.left: Transform(
       origin: const Offset(0, 0),
       transform: Matrix4.identity()
-        ..translate(0.0, 0.0, -150.0)
+        ..translate(0.0, 0.0, -30.0)
         ..rotateY(-pi / 2),
       child: const CubeFace(
         color: Colors.orange,
@@ -44,7 +44,7 @@ class CubeRotation {
     Facing.right: Transform(
       origin: const Offset(0, 0),
       transform: Matrix4.identity()
-        ..translate(300.0, 0.0, -150.0)
+        ..translate(90.0, 0.0, -30.0)
         ..rotateY(-pi / 2),
       child: const CubeFace(
         color: Colors.red,
@@ -52,14 +52,14 @@ class CubeRotation {
     ),
     Facing.front: Transform(
       origin: const Offset(0, 0),
-      transform: Matrix4.identity()..translate(0.0, 0.0, 150.0),
+      transform: Matrix4.identity()..translate(0.0, 0.0, 60.0),
       child: const CubeFace(
         color: Colors.green,
       ),
     ),
     Facing.back: Transform(
       origin: const Offset(0, 0),
-      transform: Matrix4.identity()..translate(0.0, 0.0, -150.0),
+      transform: Matrix4.identity()..translate(0.0, 0.0, -30.0),
       child: const CubeFace(
         color: Colors.blue,
       ),
