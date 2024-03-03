@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cube/cube.dart';
+import 'package:cube/cube/cube.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
