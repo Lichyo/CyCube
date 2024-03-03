@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cube/cube/service/cube_rotation.dart';
+import 'package:cube/cube.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,14 +16,11 @@ class RubiksCube extends StatefulWidget {
 class _RubiksCubeState extends State<RubiksCube> {
   Offset _offset = Offset.zero;
   final AuthService _auth = AuthService();
-  CubeRotation cubeRotation = CubeRotation();
-  List<Widget> cubes = [];
   FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
   void initState() {
     super.initState();
-    cubes = cubeRotation.cubes;
   }
 
   @override
@@ -33,7 +30,6 @@ class _RubiksCubeState extends State<RubiksCube> {
         onPanUpdate: (detail) {
           setState(() {
             _offset += detail.delta;
-            cubes = cubeRotation.permutateCube(offset: _offset);
           });
         },
         child: Scaffold(
@@ -59,9 +55,7 @@ class _RubiksCubeState extends State<RubiksCube> {
                   ..rotateY(_offset.dx * pi / 180)
                   ..setEntry(2, 2, 0.001),
                 child: Center(
-                  child: Stack(
-                    children: cubes,
-                  ),
+                  child: Cube(),
                 ),
               ),
             ],
@@ -71,4 +65,3 @@ class _RubiksCubeState extends State<RubiksCube> {
     );
   }
 }
-
