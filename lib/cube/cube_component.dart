@@ -4,10 +4,10 @@ import 'dart:math';
 enum Facing { top, bottom, left, right, front, back }
 
 class CubeComponent extends StatelessWidget {
-  final double cubeWidth = 40;
+  final double cubeWidth;
   Map<Facing, Widget> _cube = {};
 
-  CubeComponent({super.key, isBlack = false}) {
+  CubeComponent({super.key, isBlack = false, required this.cubeWidth}) {
     if (isBlack) {
       _cube = {
         Facing.top: Transform(

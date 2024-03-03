@@ -1,10 +1,10 @@
+import 'package:cube/cube/cube_component.dart';
+import 'package:cube/cube/cube_state.dart';
 import 'package:flutter/material.dart';
 import 'package:cube/cube/cube.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:math';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cube/service/auth_service.dart';
-import 'package:cube/components/drawer.dart';
+import 'package:gap/gap.dart';
 
 class RubiksCube extends StatefulWidget {
   const RubiksCube({super.key});
@@ -15,8 +15,7 @@ class RubiksCube extends StatefulWidget {
 
 class _RubiksCubeState extends State<RubiksCube> {
   Offset _offset = Offset.zero;
-  final AuthService _auth = AuthService();
-  FirebaseAuth auth = FirebaseAuth.instance;
+  CubeState cubeState = CubeState(width: 40);
 
   @override
   void initState() {
@@ -33,7 +32,6 @@ class _RubiksCubeState extends State<RubiksCube> {
           });
         },
         child: Scaffold(
-          drawer: CustomDrawer(auth: _auth),
           appBar: AppBar(
             elevation: 5,
             title: Text(
@@ -55,8 +53,20 @@ class _RubiksCubeState extends State<RubiksCube> {
                   ..rotateY(_offset.dx * pi / 180)
                   ..setEntry(2, 2, 0.001),
                 child: Center(
-                  child: Cube(),
+                  child: Cube(cubeState: cubeState),
                 ),
+              ),
+              const Gap(200),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    cubeState.cubeModels[25].component = CubeComponent(
+                      cubeWidth: 40,
+                      isBlack: true,
+                    );
+                  });
+                },
+                child: const Text('Add Black Cube'),
               ),
             ],
           ),

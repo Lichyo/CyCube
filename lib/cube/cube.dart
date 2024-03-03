@@ -1,46 +1,31 @@
-import 'dart:math';
-
-import 'cube_component.dart';
+import 'package:cube/cube/single_cube_model.dart';
 import 'package:flutter/material.dart';
+import 'cube_state.dart';
 
 class Cube extends StatelessWidget {
-  List<Widget> cube = [];
+  final List<Widget> _cube = [];
+  final CubeState cubeState;
 
-  Cube({super.key}) {
-    final CubeComponent pieceCube = CubeComponent();
-    final pieceCubeWidth = pieceCube.cubeWidth;
-
-    cube.add(
-      Transform(
-        transform: Matrix4.identity(),
-        child: CubeComponent(
-          isBlack: true,
-        ),
-      ),
-    );
-    for (int z = -1; z < 2; z++) {
-      for (int y = -1; y < 2; y++) {
-        for (int x = -1; x < 2; x++) {
-          cube.add(
-            Transform(
-              transform: Matrix4.identity()
-                ..translate(
-                  x * pieceCubeWidth, // 向右遞增
-                  -y * pieceCubeWidth, // 向下遞增
-                  z * pieceCubeWidth, // 向前遞增
-                ),
-              child: pieceCube,
+  Cube({super.key, required this.cubeState}) {
+    for (SingleCubeModel cube in cubeState.cubeModels) {
+      _cube.add(
+        Transform(
+          transform: Matrix4.identity()
+            ..translate(
+              cube.x, // 向右遞增
+              cube.y, // 向下遞增
+              cube.z, // 向前遞增
             ),
-          );
-        }
-      }
+          child: cube.component,
+        ),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Stack(
-      children: cube,
+      children: _cube,
     );
   }
 }
