@@ -1,4 +1,5 @@
 import 'package:cube/view/home_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cube/service/auth_service.dart';
@@ -96,7 +97,7 @@ class _AuthPageState extends State<AuthPage> {
                         ),
                   );
                   try {
-                    await _auth.login(email: _email, password: _password);
+                        await _auth.login(email: _email, password: _password);
                   } catch (e) {
                     showDialog(
                       context: context,
@@ -107,15 +108,13 @@ class _AuthPageState extends State<AuthPage> {
                           ),
                     );
                   }
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => const RubiksCube(),
-                    ),
-                  );
-                  await _auth.login(email: _email, password: _password);
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const RubiksCube()));
-                },
+                  if (_auth.currentUser != null) {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const RubiksCube(),
+                      ),
+                    );
+                  },
                 child: Text(
                   'Login',
                   style: GoogleFonts.getFont(
