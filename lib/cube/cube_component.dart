@@ -6,8 +6,14 @@ enum Facing { top, bottom, left, right, front, back }
 class CubeComponent extends StatelessWidget {
   final double cubeWidth;
   Map<Facing, Widget> _cube = {};
+  final Map<Facing, Color> cubeColor;
 
-  CubeComponent({super.key, isBlack = false, required this.cubeWidth}) {
+  CubeComponent({
+    super.key,
+    isBlack = false,
+    required this.cubeWidth,
+    required this.cubeColor,
+  }) {
     if (isBlack) {
       _cube = {
         Facing.top: Transform(
@@ -120,7 +126,7 @@ class CubeComponent extends StatelessWidget {
             width: cubeWidth,
             height: cubeWidth,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: cubeColor[Facing.top],
               border: Border.all(color: Colors.black),
               borderRadius: const BorderRadius.all(
                 Radius.circular(3),
@@ -137,7 +143,7 @@ class CubeComponent extends StatelessWidget {
             width: cubeWidth,
             height: cubeWidth,
             decoration: BoxDecoration(
-              color: Colors.yellow,
+              color: cubeColor[Facing.bottom],
               border: Border.all(color: Colors.black),
               borderRadius: const BorderRadius.all(
                 Radius.circular(3),
@@ -154,7 +160,7 @@ class CubeComponent extends StatelessWidget {
             width: cubeWidth,
             height: cubeWidth,
             decoration: BoxDecoration(
-              color: Colors.orange,
+              color: cubeColor[Facing.left],
               border: Border.all(color: Colors.black),
               borderRadius: const BorderRadius.all(
                 Radius.circular(3),
@@ -171,7 +177,7 @@ class CubeComponent extends StatelessWidget {
             width: cubeWidth,
             height: cubeWidth,
             decoration: BoxDecoration(
-              color: Colors.red,
+              color: cubeColor[Facing.right],
               border: Border.all(color: Colors.black),
               borderRadius: const BorderRadius.all(
                 Radius.circular(3),
@@ -186,7 +192,7 @@ class CubeComponent extends StatelessWidget {
             width: cubeWidth,
             height: cubeWidth,
             decoration: BoxDecoration(
-              color: Colors.green,
+              color: cubeColor[Facing.front],
               border: Border.all(color: Colors.black),
               borderRadius: const BorderRadius.all(
                 Radius.circular(3),
@@ -201,7 +207,7 @@ class CubeComponent extends StatelessWidget {
             width: cubeWidth,
             height: cubeWidth,
             decoration: BoxDecoration(
-              color: Colors.blue,
+              color: cubeColor[Facing.back],
               border: Border.all(color: Colors.black),
               borderRadius: const BorderRadius.all(
                 Radius.circular(3),

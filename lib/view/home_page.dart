@@ -1,5 +1,6 @@
 import 'package:cube/cube/cube_component.dart';
 import 'package:cube/cube/cube_state.dart';
+import 'package:cube/cube/single_cube_model.dart';
 import 'package:flutter/material.dart';
 import 'package:cube/cube/cube.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -57,16 +58,60 @@ class _RubiksCubeState extends State<RubiksCube> {
                 ),
               ),
               const Gap(200),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          setState(() {
+                            cubeState.rMove();
+                          });
+                        },
+                        child: const Text('R'),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          setState(() {
+                            cubeState.uMove();
+                          });
+                        },
+                        child: const Text('U'),
+                      )
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TextButton(
+                        onPressed: () {
+                          setState(() {
+                            cubeState.bMoveReverse();
+                          });
+                        },
+                        child: const Text('B'),
+                      ),
+                      TextButton(
+                        onPressed: () {},
+                        child: const Text('B'),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
               TextButton(
                 onPressed: () {
                   setState(() {
-                    cubeState.cubeModels[25].component = CubeComponent(
+                    cubeState.cubeModels[26].component = CubeComponent(
                       cubeWidth: 40,
+                      cubeColor: cubeState.cubeColor,
                       isBlack: true,
                     );
                   });
                 },
-                child: const Text('Add Black Cube'),
+                child: const Text('Add Default Component'),
               ),
             ],
           ),
