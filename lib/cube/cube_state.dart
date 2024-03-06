@@ -56,65 +56,66 @@ class CubeState {
     }
   }
 
-  // 2, 5, 8
-  // 11, 14, 17
-  // 20, 23, 26
+  void _shift(List<int> cornerIds, List<int> edgeIds) {
+    final CubeComponent cornerComponent = cubeModels[cornerIds[0]].component;
+    cubeModels[cornerIds[0]].component = cubeModels[cornerIds[1]].component;
+    cubeModels[cornerIds[1]].component = cubeModels[cornerIds[2]].component;
+    cubeModels[cornerIds[2]].component = cubeModels[cornerIds[3]].component;
+    cubeModels[cornerIds[3]].component = cornerComponent;
 
-  // 26 -> 8
-  // 8 -> 2
-  // 2 -> 20
-  // 20 -> 26
-  // void rMove() {
-  //   updateCubeComponent(id: 2);
-  //   // updateCubeComponent(id: 5);
-  //   updateCubeComponent(id: 8);
-  //   // updateCubeComponent(id: 11);
-  //   // updateCubeComponent(id: 17);
-  //   updateCubeComponent(id: 20);
-  //   updateCubeComponent(id: 26);
-  //   // updateCubeComponent(id: 23);
-  // }
+    final CubeComponent edgeComponent = cubeModels[edgeIds[0]].component;
+    cubeModels[edgeIds[0]].component = cubeModels[edgeIds[1]].component;
+    cubeModels[edgeIds[1]].component = cubeModels[edgeIds[2]].component;
+    cubeModels[edgeIds[2]].component = cubeModels[edgeIds[3]].component;
+    cubeModels[edgeIds[3]].component = edgeComponent;
+  }
 
   void rMove() {
-    final CubeComponent cornerComponent = cubeModels[26].component;
-    cubeModels[26].component = cubeModels[20].component;
-    cubeModels[20].component = cubeModels[2].component;
-    cubeModels[2].component = cubeModels[8].component;
-    cubeModels[8].component = cornerComponent;
+    _shift([26, 20, 2, 8], [5, 17, 23, 11]);
+  }
 
-    final CubeComponent edgeComponent = cubeModels[5].component;
-    cubeModels[5].component = cubeModels[17].component;
-    cubeModels[17].component = cubeModels[23].component;
-    cubeModels[23].component = cubeModels[11].component;
-    cubeModels[11].component = edgeComponent;
+  void rMoveReverse() {
+    _shift([8, 2, 20, 26], [11, 23, 17, 5]);
+  }
+
+  void lMove() {
+    _shift([6, 0, 18, 24], [9, 3, 15, 21]);
+  }
+
+  void lMoveReverse() {
+    _shift([24, 18, 0, 6], [21, 15, 3, 9]);
+  }
+
+  void fMove() {
+    _shift([20, 26, 24, 18], [19, 23, 25, 21]);
+  }
+
+  void fMoveReverse() {
+    _shift([18, 24, 26, 20], [21, 25, 23, 19]);
+  }
+
+  void bMove() {
+    _shift([6, 8, 2, 0], [5, 7, 3, 1]);
   }
 
   void bMoveReverse() {
-    final CubeComponent cornerComponent = cubeModels[0].component;
-    cubeModels[0].component = cubeModels[2].component;
-    cubeModels[2].component = cubeModels[8].component;
-    cubeModels[8].component = cubeModels[6].component;
-    cubeModels[6].component = cornerComponent;
-
-    final CubeComponent edgeComponent = cubeModels[1].component;
-    cubeModels[1].component = cubeModels[3].component;
-    cubeModels[3].component = cubeModels[7].component;
-    cubeModels[7].component = cubeModels[5].component;
-    cubeModels[5].component = edgeComponent;
+    _shift([0, 2, 8, 6], [1, 3, 7, 5]);
   }
 
   void uMove() {
-    final CubeComponent cornerComponent = cubeModels[8].component;
-    cubeModels[8].component = cubeModels[6].component;
-    cubeModels[6].component = cubeModels[24].component;
-    cubeModels[24].component = cubeModels[26].component;
-    cubeModels[26].component = cornerComponent;
+    _shift([8, 6, 24, 26], [17, 7, 15, 25]);
+  }
 
-    final CubeComponent edgeComponent = cubeModels[17].component;
-    cubeModels[17].component = cubeModels[7].component;
-    cubeModels[7].component = cubeModels[15].component;
-    cubeModels[15].component = cubeModels[25].component;
-    cubeModels[25].component = edgeComponent;
+  void uMoveReverse() {
+    _shift([26, 24, 6, 8], [25, 15, 7, 17]);
+  }
+
+  void dMove() {
+    _shift([2, 20, 18, 0], [11, 1, 9, 19]);
+  }
+
+  void dMoveReverse() {
+    _shift([0, 18, 20, 2], [19, 9, 1, 11]);
   }
 
   Map<Facing, Color> _updateXColor({required SingleCubeModel cube}) {
