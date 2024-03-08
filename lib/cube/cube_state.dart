@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class CubeState {
   List<SingleCubeModel> cubeModels = [];
   final double width;
-  final Map<Facing, Color> _defaultCubeColor = {
+  final Map<Facing, Color> defaultCubeColor = {
     Facing.top: Colors.white,
     Facing.bottom: Colors.yellow,
     Facing.right: Colors.red,
@@ -92,7 +92,7 @@ class CubeState {
             SingleCubeModel(
               id: id,
               component: CubeComponent(
-                cubeColor: Map.from(_defaultCubeColor),
+                cubeColor: Map.from(defaultCubeColor),
                 cubeWidth: width,
               ),
               x: x * width,
@@ -131,13 +131,13 @@ class CubeState {
   }
 
   void lMove() {
-    _updateCubeComponent(ids: [6, 0, 18, 24, 9, 3, 15, 21], axis: 'xx');
-    _shift([6, 0, 18, 24], [9, 3, 15, 21]);
+    _updateCubeComponent(ids: [6, 0, 18, 24, 15, 3, 9, 21], axis: 'xx');
+    _shift([6, 0, 18, 24], [15, 3, 9, 21]);
   }
 
   void lMoveReverse() {
     _updateCubeComponent(ids: [24, 18, 0, 6, 21, 15, 3, 9], axis: 'x');
-    _shift([24, 18, 0, 6], [21, 15, 3, 9]);
+    _shift([24, 18, 0, 6], [21, 9, 3, 15]);
   }
 
   void fMove() {
@@ -152,12 +152,12 @@ class CubeState {
 
   void bMove() {
     _updateCubeComponent(ids: [6, 8, 2, 0, 5, 7, 3, 1], axis: 'yy');
-    _shift([6, 8, 2, 0], [5, 7, 3, 1]);
+    _shift([6, 8, 2, 0], [7, 5, 1, 3]);
   }
 
   void bMoveReverse() {
     _updateCubeComponent(ids: [0, 2, 8, 6, 1, 3, 7, 5], axis: 'y');
-    _shift([0, 2, 8, 6], [1, 3, 7, 5]);
+    _shift([0, 2, 8, 6], [3, 1, 5, 7]);
   }
 
   void uMove() {
@@ -172,12 +172,12 @@ class CubeState {
 
   void dMove() {
     _updateCubeComponent(ids: [2, 20, 18, 0, 11, 1, 9, 19], axis: 'zz');
-    _shift([2, 20, 18, 0], [11, 1, 9, 19]);
+    _shift([2, 20, 18, 0], [1, 11, 19, 9]);
   }
 
   void dMoveReverse() {
     _updateCubeComponent(ids: [0, 18, 20, 2, 19, 9, 1, 11], axis: 'z');
-    _shift([0, 18, 20, 2], [19, 9, 1, 11]);
+    _shift([0, 18, 20, 2], [9, 19, 11, 1]);
   }
 
   Map<Facing, Color> _updateXColor({required SingleCubeModel cube}) {
