@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class CubeState {
   List<SingleCubeModel> cubeModels = [];
   final double width;
-  Map<Facing, Color> cubeColor = {
+  final Map<Facing, Color> _defaultCubeColor = {
     Facing.top: Colors.white,
     Facing.bottom: Colors.yellow,
     Facing.right: Colors.red,
@@ -15,21 +15,59 @@ class CubeState {
     Facing.back: Colors.blue,
   };
 
-  void updateCubeComponent({
-    required int id,
+  String printColor(Color color) {
+    if (color == Colors.red) {
+      return 'Red';
+    } else if (color == Colors.orange) {
+      return 'orange';
+    } else if (color == Colors.white) {
+      return 'white';
+    } else if (color == Colors.yellow) {
+      return 'yellow';
+    } else if (color == Colors.blue) {
+      return 'blue';
+    } else if (color == Colors.black) {
+      return 'black';
+    } else {
+      return 'green';
+    }
+  }
+
+  void searchUpdate(List<int> ids) {
+    for (int id in ids) {
+      print(
+          '$id : top : ${printColor(cubeModels[id].component.cubeColor[Facing.top]!)}');
+      print(
+          '$id : bottom : ${printColor(cubeModels[id].component.cubeColor[Facing.bottom]!)}');
+      print(
+          '$id : right : ${printColor(cubeModels[id].component.cubeColor[Facing.right]!)}');
+      print(
+          '$id : left : ${printColor(cubeModels[id].component.cubeColor[Facing.left]!)}');
+      print(
+          '$id : front : ${printColor(cubeModels[id].component.cubeColor[Facing.front]!)}');
+      print(
+          '$id : back : ${printColor(cubeModels[id].component.cubeColor[Facing.back]!)}');
+      print('\n');
+    }
+  }
+
+  void _updateCubeComponent({
+    required List<int> ids,
   }) {
-    final updatedCubeColor = _updateXColor(cube: cubeModels[id]);
-    cubeModels[id] = SingleCubeModel(
-      cubeColor: updatedCubeColor,
-      id: id,
-      component: CubeComponent(
-        cubeWidth: width,
-        cubeColor: updatedCubeColor,
-      ),
-      x: cubeModels[id].x,
-      y: cubeModels[id].y,
-      z: cubeModels[id].z,
-    );
+    for (int id in ids) {
+      final Map<Facing, Color> updatedCubeColor =
+          _updateXColor(cube: cubeModels[id]);
+      cubeModels[id] = SingleCubeModel(
+        id: id,
+        component: CubeComponent(
+          cubeWidth: width,
+          cubeColor: updatedCubeColor,
+        ),
+        x: cubeModels[id].x,
+        y: cubeModels[id].y,
+        z: cubeModels[id].z,
+      );
+    }
   }
 
   CubeState({required this.width}) {
@@ -40,9 +78,8 @@ class CubeState {
           cubeModels.add(
             SingleCubeModel(
               id: id,
-              cubeColor: cubeColor,
               component: CubeComponent(
-                cubeColor: cubeColor,
+                cubeColor: Map.from(_defaultCubeColor),
                 cubeWidth: width,
               ),
               x: x * width,
@@ -71,6 +108,7 @@ class CubeState {
   }
 
   void rMove() {
+    _updateCubeComponent(ids: [26, 20, 2, 8, 5, 17, 23, 11]);
     _shift([26, 20, 2, 8], [5, 17, 23, 11]);
   }
 
@@ -119,14 +157,42 @@ class CubeState {
   }
 
   Map<Facing, Color> _updateXColor({required SingleCubeModel cube}) {
-    Color topColor = cube.component.cubeColor[Facing.top]!;
-    cube.component.cubeColor[Facing.top] =
-        cube.component.cubeColor[Facing.front]!;
-    cube.component.cubeColor[Facing.front] =
-        cube.component.cubeColor[Facing.bottom]!;
-    cube.component.cubeColor[Facing.bottom] =
-        cube.component.cubeColor[Facing.back]!;
-    cube.component.cubeColor[Facing.back] = topColor;
-    return cube.cubeColor;
+    Map<Facing, Color> cubeColor = Map.from(cube.component.cubeColor);
+    final Color topColor = cubeColor[Facing.top]!;
+    cubeColor[Facing.top] = cubeColor[Facing.front]!;
+    cubeColor[Facing.front] = cubeColor[Facing.bottom]!;
+    cubeColor[Facing.bottom] = cubeColor[Facing.back]!;
+    cubeColor[Facing.back] = topColor;
+    return cubeColor;
+  }
+
+  Map<Facing, Color> _updateXColorReverse({required SingleCubeModel cube}) {
+    Map<Facing, Color> cubeColor = Map.from(cube.component.cubeColor);
+    final Color color = cubeColor[Facing.back]!;
+    cubeColor[Facing.back] = cubeColor[Facing.bottom]!;
+    cubeColor[Facing.bottom] = cubeColor[Facing.front]!;
+    cubeColor[Facing.front] = cubeColor[Facing.top]!;
+    cubeColor[Facing.top] = color;
+    return cubeColor;
+  }
+
+  Map<Facing, Color> _updateYColor({required SingleCubeModel cube}) {
+    Map<Facing, Color> cubeColor = Map.from(cube.component.cubeColor);
+    final Color color = cubeColor[Facing.back]!;
+    cubeColor[Facing.back] = cubeColor[Facing.bottom]!;
+    cubeColor[Facing.bottom] = cubeColor[Facing.front]!;
+    cubeColor[Facing.front] = cubeColor[Facing.top]!;
+    cubeColor[Facing.top] = color;
+    return cubeColor;
+  }
+
+  Map<Facing, Color> _updateYColorReverse({required SingleCubeModel cube}) {
+    Map<Facing, Color> cubeColor = Map.from(cube.component.cubeColor);
+    final Color color = cubeColor[Facing.back]!;
+    cubeColor[Facing.back] = cubeColor[Facing.bottom]!;
+    cubeColor[Facing.bottom] = cubeColor[Facing.front]!;
+    cubeColor[Facing.front] = cubeColor[Facing.top]!;
+    cubeColor[Facing.top] = color;
+    return cubeColor;
   }
 }

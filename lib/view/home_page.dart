@@ -159,14 +159,34 @@ class _RubiksCubeState extends State<RubiksCube> {
               TextButton(
                 onPressed: () {
                   setState(() {
-                    cubeState.cubeModels[26].component = CubeComponent(
-                      cubeWidth: 40,
-                      cubeColor: cubeState.cubeColor,
-                      isBlack: true,
-                    );
+                    // cubeState.cubeModels[26].component = CubeComponent(
+                    //   cubeWidth: 40,
+                    //   cubeColor: cubeState.cubeColor,
+                    //   isBlack: true,
+                    // );
                   });
                 },
                 child: const Text('Add Default Component'),
+              ),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    // _shift([26, 20, 2, 8], [5, 17, 23, 11]);
+                    // cubeState.updateCubeComponent(
+                    //     ids: [2, 5, 8, 11, 17, 20, 23, 26]);
+                    // cubeState.rMove();
+                  });
+                },
+                child: const Text('rotate 26'),
+              ),
+              TextButton(
+                onPressed: () {
+                  setState(() {
+                    // cubeState.cubeModels[26].component.cubeColor[Facing.top] = Colors.black;
+                    // cubeState.searchUpdate([25, 26]);
+                  });
+                },
+                child: const Text('search cubes'),
               ),
             ],
           ),
