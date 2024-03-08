@@ -146,27 +146,24 @@ class _RubiksCubeState extends State<RubiksCube> {
                           },
                           child: const Text('F\'')),
                       TextButton(
-                          onPressed: () {
-                            setState(() {
-                              cubeState.rMoveReverse();
-                            });
-                          },
-                          child: const Text('R\'')),
+                        onPressed: () {
+                          setState(() {
+                            cubeState.rMoveReverse();
+                          });
+                        },
+                        child: const Text('R\''),
+                      ),
                     ],
                   ),
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        cubeState = CubeState(width: 40);
+                      });
+                    },
+                    child: const Text('Reset'),
+                  ),
                 ],
-              ),
-              TextButton(
-                onPressed: () {
-                  setState(() {
-                    cubeState.cubeModels[26].component = CubeComponent(
-                      cubeWidth: 40,
-                      cubeColor: cubeState.cubeColor,
-                      isBlack: true,
-                    );
-                  });
-                },
-                child: const Text('Add Default Component'),
               ),
             ],
           ),
