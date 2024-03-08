@@ -155,6 +155,14 @@ class _RubiksCubeState extends State<RubiksCube> {
                       ),
                     ],
                   ),
+                  TextButton(
+                    onPressed: () {
+                      setState(() {
+                        cubeState = CubeState(width: 40);
+                      });
+                    },
+                    child: const Text('Reset'),
+                  ),
                 ],
               ),
             ],
