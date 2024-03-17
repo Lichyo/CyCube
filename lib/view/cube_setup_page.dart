@@ -48,7 +48,7 @@ class _CubeSetupPageState extends State<CubeSetupPage> {
       } else {
         _currentID = 0;
         allCubeFaces.add(cubeFaces);
-        if (allCubeFaces.length == 1) {
+        if (allCubeFaces.length == 6) {
           Navigator.pop(context, [allCubeFaces]);
         } else {
           initCubeFaces();

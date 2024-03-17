@@ -205,6 +205,24 @@ class CubeState {
     return cubeColor;
   }
 
+  String _printColor(Color color) {
+    if (color == Colors.red) {
+      return 'Red';
+    } else if (color == Colors.orange) {
+      return 'orange';
+    } else if (color == Colors.white) {
+      return 'white';
+    } else if (color == Colors.yellow) {
+      return 'yellow';
+    } else if (color == Colors.blue) {
+      return 'blue';
+    } else if (color == Colors.black) {
+      return 'black';
+    } else {
+      return 'green';
+    }
+  }
+
   void _setupSingleFace({
     required List<int> cubeIDs,
     required List<CubeFaceModel> cubeFaces,
@@ -241,14 +259,14 @@ class CubeState {
       } else if (cubeFaces[i][4].color == Colors.yellow) {
         print('setup yellow face');
         _setupSingleFace(
-          cubeIDs: [2, 1, 0, 5, 4, 3, 8, 7, 6],
+          cubeIDs: [0, 1, 2, 9, 10, 11, 18, 19, 20],
           cubeFaces: cubeFaces[i],
           facing: Facing.bottom,
         );
       } else if (cubeFaces[i][4].color == Colors.red) {
         print('setup red face');
         _setupSingleFace(
-          cubeIDs: [20, 11, 2, 13, 14, 5, 26, 17, 8],
+          cubeIDs: [20, 11, 2, 23, 14, 5, 26, 17, 8],
           cubeFaces: cubeFaces[i],
           facing: Facing.right,
         );
@@ -262,16 +280,16 @@ class CubeState {
       } else if (cubeFaces[i][4].color == Colors.blue) {
         print('setup blue face');
         _setupSingleFace(
-          cubeIDs: [24, 25, 26, 15, 16, 17, 6, 7, 8],
+          cubeIDs: [2, 1, 0, 5, 4, 3, 8, 7, 6],
           cubeFaces: cubeFaces[i],
           facing: Facing.back,
         );
       } else {
         print('setup green face');
         _setupSingleFace(
-          cubeIDs: [0, 1, 2, 9, 10, 11, 18, 9, 20],
+          cubeIDs: [18, 19, 20, 21, 22, 23, 24, 25, 26],
           cubeFaces: cubeFaces[i],
-          facing: Facing.bottom,
+          facing: Facing.front,
         );
       }
     }
