@@ -2,18 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'view/home_page.dart';
-import 'package:cube/view/auth_page.dart';
-import 'view/home_page.dart';
+import 'package:camera/camera.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  final List<CameraDescription> cameras = await availableCameras();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(
-    const MaterialApp(
+    MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: RubiksCube(),
+      home: RubiksCube(
+        camera: cameras,
+      ),
     ),
   );
 }

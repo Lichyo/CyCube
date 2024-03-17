@@ -2,6 +2,7 @@ import 'package:cube/cube/cube.dart';
 import 'package:cube/cube/cube_component.dart';
 import 'single_cube_model.dart';
 import 'package:flutter/material.dart';
+import 'package:cube/model/cube_face.dart';
 
 class CubeState {
   List<SingleCubeModel> cubeModels = [];
@@ -14,42 +15,6 @@ class CubeState {
     Facing.front: Colors.green,
     Facing.back: Colors.blue,
   };
-
-  String printColor(Color color) {
-    if (color == Colors.red) {
-      return 'Red';
-    } else if (color == Colors.orange) {
-      return 'orange';
-    } else if (color == Colors.white) {
-      return 'white';
-    } else if (color == Colors.yellow) {
-      return 'yellow';
-    } else if (color == Colors.blue) {
-      return 'blue';
-    } else if (color == Colors.black) {
-      return 'black';
-    } else {
-      return 'green';
-    }
-  }
-
-  void searchUpdate(List<int> ids) {
-    for (int id in ids) {
-      print(
-          '$id : top : ${printColor(cubeModels[id].component.cubeColor[Facing.top]!)}');
-      print(
-          '$id : bottom : ${printColor(cubeModels[id].component.cubeColor[Facing.bottom]!)}');
-      print(
-          '$id : right : ${printColor(cubeModels[id].component.cubeColor[Facing.right]!)}');
-      print(
-          '$id : left : ${printColor(cubeModels[id].component.cubeColor[Facing.left]!)}');
-      print(
-          '$id : front : ${printColor(cubeModels[id].component.cubeColor[Facing.front]!)}');
-      print(
-          '$id : back : ${printColor(cubeModels[id].component.cubeColor[Facing.back]!)}');
-      print('\n');
-    }
-  }
 
   void _updateCubeComponent({
     required List<int> ids,
@@ -238,5 +203,95 @@ class CubeState {
     cubeColor[Facing.front] = cubeColor[Facing.left]!;
     cubeColor[Facing.left] = color;
     return cubeColor;
+  }
+
+  String _printColor(Color color) {
+    if (color == Colors.red) {
+      return 'Red';
+    } else if (color == Colors.orange) {
+      return 'orange';
+    } else if (color == Colors.white) {
+      return 'white';
+    } else if (color == Colors.yellow) {
+      return 'yellow';
+    } else if (color == Colors.blue) {
+      return 'blue';
+    } else if (color == Colors.black) {
+      return 'black';
+    } else {
+      return 'green';
+    }
+  }
+
+  void _setupSingleFace({
+    required List<int> cubeIDs,
+    required List<CubeFaceModel> cubeFaces,
+    required Facing facing,
+  }) {
+    int i = 0;
+    for (int id in cubeIDs) {
+      Map<Facing, Color> updatedCubeColor =
+          Map.from(cubeModels[id].component.cubeColor);
+      updatedCubeColor[facing] = cubeFaces[i].color!;
+      cubeModels[id] = SingleCubeModel(
+        id: id,
+        component: CubeComponent(
+          cubeWidth: width,
+          cubeColor: updatedCubeColor,
+        ),
+        x: cubeModels[id].x,
+        y: cubeModels[id].y,
+        z: cubeModels[id].z,
+      );
+      i++;
+    }
+  }
+
+  void setupCubeWithScanningColor(List<List<CubeFaceModel>> cubeFaces) {
+    for (int i = 0; i < cubeFaces.length; i++) {
+      if (cubeFaces[i][4].color == Colors.white) {
+        print('setup white face');
+        _setupSingleFace(
+          cubeIDs: [24, 25, 26, 15, 16, 17, 6, 7, 8],
+          cubeFaces: cubeFaces[i],
+          facing: Facing.top,
+        );
+      } else if (cubeFaces[i][4].color == Colors.yellow) {
+        print('setup yellow face');
+        _setupSingleFace(
+          cubeIDs: [0, 1, 2, 9, 10, 11, 18, 19, 20],
+          cubeFaces: cubeFaces[i],
+          facing: Facing.bottom,
+        );
+      } else if (cubeFaces[i][4].color == Colors.red) {
+        print('setup red face');
+        _setupSingleFace(
+          cubeIDs: [20, 11, 2, 23, 14, 5, 26, 17, 8],
+          cubeFaces: cubeFaces[i],
+          facing: Facing.right,
+        );
+      } else if (cubeFaces[i][4].color == Colors.orange) {
+        print('setup orange face');
+        _setupSingleFace(
+          cubeIDs: [0, 9, 18, 3, 12, 21, 6, 15, 24],
+          cubeFaces: cubeFaces[i],
+          facing: Facing.left,
+        );
+      } else if (cubeFaces[i][4].color == Colors.blue) {
+        print('setup blue face');
+        _setupSingleFace(
+          cubeIDs: [2, 1, 0, 5, 4, 3, 8, 7, 6],
+          cubeFaces: cubeFaces[i],
+          facing: Facing.back,
+        );
+      } else {
+        print('setup green face');
+        _setupSingleFace(
+          cubeIDs: [18, 19, 20, 21, 22, 23, 24, 25, 26],
+          cubeFaces: cubeFaces[i],
+          facing: Facing.front,
+        );
+      }
+    }
   }
 }

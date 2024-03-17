@@ -1,14 +1,17 @@
-import 'package:cube/cube/cube_component.dart';
 import 'package:cube/cube/cube_state.dart';
-import 'package:cube/cube/single_cube_model.dart';
 import 'package:flutter/material.dart';
 import 'package:cube/cube/cube.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:math';
 import 'package:gap/gap.dart';
+import 'package:camera/camera.dart';
+import 'package:cube/view/cube_setup_page.dart';
+import 'package:cube/model/cube_face.dart';
 
 class RubiksCube extends StatefulWidget {
-  const RubiksCube({super.key});
+  const RubiksCube({super.key, required this.camera});
+
+  final List<CameraDescription> camera;
 
   @override
   State<RubiksCube> createState() => _RubiksCubeState();
@@ -18,10 +21,7 @@ class _RubiksCubeState extends State<RubiksCube> {
   Offset _offset = Offset.zero;
   CubeState cubeState = CubeState(width: 40);
 
-  @override
-  void initState() {
-    super.initState();
-  }
+  bool isRecording = false;
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +34,27 @@ class _RubiksCubeState extends State<RubiksCube> {
         },
         child: Scaffold(
           appBar: AppBar(
+            actions: [
+              IconButton(
+                onPressed: () async {
+                  final results = await Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => const CubeSetupPage()));
+                  final List<List<CubeFaceModel>> allCubeFaces = results[0];
+                  setState(() {
+                    cubeState.setupCubeWithScanningColor(allCubeFaces);
+                  });
+                },
+                icon: const Icon(
+                  Icons.camera,
+                  size: 27.0,
+                ),
+              ),
+              IconButton(
+                onPressed: () {},
+                icon: const Icon(Icons.update),
+              ),
+            ],
             elevation: 5,
             title: Text(
               'The Cube',
@@ -162,6 +183,10 @@ class _RubiksCubeState extends State<RubiksCube> {
                       });
                     },
                     child: const Text('Reset'),
+                  ),
+                  TextButton(
+                    onPressed: () async {},
+                    child: const Text('open camera'),
                   ),
                 ],
               ),

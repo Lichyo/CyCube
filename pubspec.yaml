@@ -25,6 +25,8 @@ dependencies:
   font_awesome_flutter: ^10.6.0
   firebase_auth: ^4.15.3
   gap: ^3.0.1
+  camera: ^0.10.5+9
+  path_provider: ^2.1.2
 
 
 dev_dependencies:
