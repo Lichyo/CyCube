@@ -7,7 +7,6 @@ import 'package:gap/gap.dart';
 import 'package:camera/camera.dart';
 import 'package:cube/view/cube_setup_page.dart';
 import 'package:cube/model/cube_face.dart';
-import 'package:cube/cube/cube_component.dart';
 
 class RubiksCube extends StatefulWidget {
   const RubiksCube({super.key, required this.camera});
