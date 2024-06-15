@@ -19,7 +19,7 @@ class RubiksCube extends StatefulWidget {
 
 class _RubiksCubeState extends State<RubiksCube> {
   Offset _offset = Offset.zero;
-  CubeState cubeState = CubeState(width: 40);
+  CubeState cubeState = CubeState();
 
   bool isRecording = false;
 
@@ -49,10 +49,6 @@ class _RubiksCubeState extends State<RubiksCube> {
                   Icons.camera,
                   size: 27.0,
                 ),
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.update),
               ),
             ],
             elevation: 5,
@@ -179,14 +175,16 @@ class _RubiksCubeState extends State<RubiksCube> {
                   TextButton(
                     onPressed: () {
                       setState(() {
-                        cubeState = CubeState(width: 40);
+                        cubeState = CubeState();
                       });
                     },
                     child: const Text('Reset'),
                   ),
                   TextButton(
-                    onPressed: () async {},
-                    child: const Text('open camera'),
+                    onPressed: () {
+                      cubeState.outputCubeState();
+                    },
+                    child: const Text('Output Cube State'),
                   ),
                 ],
               ),

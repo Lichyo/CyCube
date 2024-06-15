@@ -12,7 +12,6 @@ class CubeSetupPage extends StatefulWidget {
 }
 
 class _CubeSetupPageState extends State<CubeSetupPage> {
-  final int _width = 40;
   int _currentID = 0;
   Color pickColor = Colors.white;
   List<CubeFaceModel> cubeFaces = [];

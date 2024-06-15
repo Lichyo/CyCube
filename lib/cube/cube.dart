@@ -7,7 +7,7 @@ class Cube extends StatelessWidget {
   final CubeState cubeState;
 
   Cube({super.key, required this.cubeState}) {
-    for (SingleCubeModel cube in cubeState.cubeModels) {
+    for (SingleCubeModel cube in CubeState.cubeModels) {
       _cube.add(
         Transform(
           transform: Matrix4.identity()

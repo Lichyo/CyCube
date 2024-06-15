@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import 'cube_constants.dart';
 
-enum Facing { top, bottom, left, right, front, back }
-
 class CubeComponent extends StatelessWidget {
   Map<Facing, Widget> _cube = {};
   final Map<Facing, Color> cubeColor;
@@ -32,7 +30,7 @@ class CubeComponent extends StatelessWidget {
           ),
         ),
       ),
-      Facing.bottom: Transform(
+      Facing.down: Transform(
         origin: const Offset(0, 0),
         transform: Matrix4.identity()
           ..translate(0.0, cubeWidth, -cubeWidth)
@@ -41,7 +39,7 @@ class CubeComponent extends StatelessWidget {
           width: cubeWidth,
           height: cubeWidth,
           decoration: BoxDecoration(
-            color: isBlack ? Colors.black : cubeColor[Facing.bottom],
+            color: isBlack ? Colors.black : cubeColor[Facing.down],
             border: Border.all(color: Colors.black),
             borderRadius: const BorderRadius.all(
               Radius.circular(3),
@@ -115,7 +113,7 @@ class CubeComponent extends StatelessWidget {
       ),
     };
     _cubeFaces.add(_cube[Facing.back]!);
-    _cubeFaces.add(_cube[Facing.bottom]!);
+    _cubeFaces.add(_cube[Facing.down]!);
     _cubeFaces.add(_cube[Facing.left]!);
     _cubeFaces.add(_cube[Facing.right]!);
     _cubeFaces.add(_cube[Facing.top]!);
