@@ -7,9 +7,6 @@ import 'package:camera/camera.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final List<CameraDescription> cameras = await availableCameras();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
   runApp(
     MaterialApp(
       debugShowCheckedModeBanner: false,

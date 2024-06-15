@@ -3,18 +3,11 @@ import 'package:cube/cube/cube_component.dart';
 import 'single_cube_model.dart';
 import 'package:flutter/material.dart';
 import 'package:cube/model/cube_face.dart';
+import 'cube_constants.dart';
 
 class CubeState {
   List<SingleCubeModel> cubeModels = [];
   final double width;
-  final Map<Facing, Color> defaultCubeColor = {
-    Facing.top: Colors.white,
-    Facing.bottom: Colors.yellow,
-    Facing.right: Colors.red,
-    Facing.left: Colors.orange,
-    Facing.front: Colors.green,
-    Facing.back: Colors.blue,
-  };
 
   void _updateCubeComponent({
     required List<int> ids,

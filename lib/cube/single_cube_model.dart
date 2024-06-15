@@ -1,5 +1,4 @@
 import 'cube_component.dart';
-import 'package:flutter/material.dart';
 
 class SingleCubeModel {
   final double x;
