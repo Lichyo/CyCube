@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cube/cube/cube_face_model.dart';
+import 'package:cy_cube/cube/cube_face_model.dart';
 
 class SingleCubeFace extends StatelessWidget {
   const SingleCubeFace({

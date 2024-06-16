@@ -1,7 +1,7 @@
-import 'package:cube/cube/cube_component.dart';
+import 'package:cy_cube/cube/cube_component.dart';
 import 'single_cube_model.dart';
 import 'package:flutter/material.dart';
-import 'package:cube/cube/cube_face_model.dart';
+import 'package:cy_cube/cube/cube_face_model.dart';
 import 'cube_constants.dart';
 
 class CubeState {

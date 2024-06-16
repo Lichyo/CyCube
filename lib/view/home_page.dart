@@ -1,12 +1,12 @@
-import 'package:cube/cube/cube_state.dart';
-import 'package:cube/service/database_service.dart';
+import 'package:cy_cube/cube/cube_state.dart';
+import 'package:cy_cube/service/database_service.dart';
 import 'package:flutter/material.dart';
-import 'package:cube/cube/cube.dart';
+import 'package:cy_cube/cube/cube.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:math';
 import 'package:gap/gap.dart';
-import 'package:cube/view/cube_setup_page.dart';
-import 'package:cube/cube/cube_face_model.dart';
+import 'package:cy_cube/view/cube_setup_page.dart';
+import 'package:cy_cube/cube/cube_face_model.dart';
 
 class RubiksCube extends StatefulWidget {
   const RubiksCube({super.key});

@@ -1,4 +1,4 @@
-import 'package:cube/cube/single_cube_model.dart';
+import 'package:cy_cube/cube/single_cube_model.dart';
 import 'package:flutter/material.dart';
 import 'cube_state.dart';
 
