@@ -1,7 +1,7 @@
 import 'package:cube/cube/cube_component.dart';
 import 'single_cube_model.dart';
 import 'package:flutter/material.dart';
-import 'package:cube/model/cube_face.dart';
+import 'package:cube/cube/cube_face_model.dart';
 import 'cube_constants.dart';
 
 class CubeState {
@@ -278,17 +278,53 @@ class CubeState {
     }
   }
 
+  static Color transformStringToColor(String color) {
+    if (color == 'red') {
+      return Colors.red;
+    } else if (color == 'orange') {
+      return Colors.orange;
+    } else if (color == 'white') {
+      return Colors.white;
+    } else if (color == 'yellow') {
+      return Colors.yellow;
+    } else if (color == 'blue') {
+      return Colors.blue;
+    } else if (color == 'black') {
+      return Colors.black;
+    } else {
+      return Colors.green;
+    }
+  }
+
   List<String> outputCubeState() {
     List<String> cubeColors = [];
     for (Facing cubeFace in cubeFaces) {
-      print('---------------------------');
       for (int cubeFaceID in cubeFaceIDs[cubeFace]!) {
         String cubeColor = CubeState.transformColorToString(
             CubeState.cubeModels[cubeFaceID].component.cubeColor[cubeFace]!);
         cubeColors.add(cubeColor);
-        print(cubeColor);
       }
     }
     return cubeColors;
+  }
+
+  void setCubeState({required List<String> cubeColors}) {
+    int index = 0;
+    for (Facing cubeFace in cubeFaces) {
+      List<CubeFaceModel> cubeFaceModes = [];
+      for (int cubeFaceID in cubeFaceIDs[cubeFace]!) {
+        CubeFaceModel cubeFaceModel = CubeFaceModel(
+          id: cubeFaceID,
+          color: transformStringToColor(cubeColors[index++]),
+          isSelected: false,
+        );
+        cubeFaceModes.add(cubeFaceModel);
+      }
+      _setupSingleFace(
+        cubeIDs: cubeFaceIDs[cubeFace]!,
+        cubeFaces: cubeFaceModes,
+        facing: cubeFace,
+      );
+    }
   }
 }

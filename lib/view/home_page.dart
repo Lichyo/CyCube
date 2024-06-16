@@ -1,17 +1,15 @@
 import 'package:cube/cube/cube_state.dart';
+import 'package:cube/service/database_service.dart';
 import 'package:flutter/material.dart';
 import 'package:cube/cube/cube.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:math';
 import 'package:gap/gap.dart';
-import 'package:camera/camera.dart';
 import 'package:cube/view/cube_setup_page.dart';
-import 'package:cube/model/cube_face.dart';
+import 'package:cube/cube/cube_face_model.dart';
 
 class RubiksCube extends StatefulWidget {
-  const RubiksCube({super.key, required this.camera});
-
-  final List<CameraDescription> camera;
+  const RubiksCube({super.key});
 
   @override
   State<RubiksCube> createState() => _RubiksCubeState();
@@ -21,7 +19,6 @@ class _RubiksCubeState extends State<RubiksCube> {
   Offset _offset = Offset.zero;
   CubeState cubeState = CubeState();
 
-  bool isRecording = false;
 
   @override
   Widget build(BuildContext context) {
@@ -181,10 +178,11 @@ class _RubiksCubeState extends State<RubiksCube> {
                     child: const Text('Reset'),
                   ),
                   TextButton(
-                    onPressed: () {
-                      cubeState.outputCubeState();
+                    onPressed: () async{
+                        // print(await DatabaseService().createRoom(cubeState: cubeState));
+                        // await DatabaseService().joinRoom(roomID: '123');
                     },
-                    child: const Text('Output Cube State'),
+                    child: const Text('set cube color in 3D view'),
                   ),
                 ],
               ),

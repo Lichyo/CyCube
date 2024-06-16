@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:cube/components/pick_color_container.dart';
-import 'package:cube/model/cube_face.dart';
+import 'package:cube/cube/cube_face_model.dart';
 import 'package:cube/components/single_cube_face.dart';
 
 class CubeSetupPage extends StatefulWidget {

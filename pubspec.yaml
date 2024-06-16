@@ -16,14 +16,8 @@ dependencies:
   cupertino_icons: ^1.0.2
   vector_math: ^2.1.4
   google_fonts: ^6.1.0
-  firebase_core: ^2.24.2
-  google_ml_kit: ^0.16.3
-  google_mlkit_object_detection: ^0.11.0
   image_picker: ^1.0.5
-  cloud_firestore: ^4.13.6
-  firebase_storage: ^11.5.6
   font_awesome_flutter: ^10.6.0
-  firebase_auth: ^4.15.3
   gap: ^3.0.1
   camera: ^0.10.5+9
   path_provider: ^2.1.2
