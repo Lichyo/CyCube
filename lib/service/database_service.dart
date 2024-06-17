@@ -1,55 +1,27 @@
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:cube/cube/cube_state.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart';
-//
-// class DatabaseService {
-//   final FirebaseAuth _auth = FirebaseAuth.instance;
-//   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-//
-//   Future<void> signInWithEmailAndPassword(String email, String password) async {
-//     try {
-//       await _auth.signInWithEmailAndPassword(email: email, password: password);
-//     } catch (e) {
-//       print(e);
-//     }
-//   }
-//
-//   Future<void> signOut() async {
-//     try {
-//       await _auth.signOut();
-//     } catch (e) {
-//       print(e);
-//     }
-//   }
-//
-//   Future<void> registerWithEmailAndPassword(
-//       String email, String password) async {
-//     try {
-//       await _auth.createUserWithEmailAndPassword(
-//           email: email, password: password);
-//     } catch (e) {
-//       print(e);
-//     }
-//   }
-//
-//   Future<String> createRoom({required CubeState cubeState}) async {
-//     await _firestore.doc('rooms/${_auth.currentUser!.uid}').set({
-//       'userName': _auth.currentUser!.email,
-//       'cubeStates': cubeState.outputCubeState(),
-//     });
-//     return _auth.currentUser!.uid;
-//   }
-//
-//   Future<String> updateRoom({required CubeState cubeState}) async {
-//     await _firestore.doc('rooms/${_auth.currentUser!.uid}').update({
-//       'cubeStates': cubeState.outputCubeState(),
-//     });
-//     return _auth.currentUser!.uid;
-//   }
-//
-//   Future<void> joinRoom({required String roomID}) async {
-//     await _firestore.doc('rooms/$roomID').update({
-//       'teacher': _auth.currentUser!.email,
-//     });
-//   }
-// }
+import 'dart:convert';
+import 'package:cy_cube/cube/cube_state.dart';
+import 'package:http/http.dart' as http;
+
+class DatabaseService {
+  Future<int> createRoom(
+      {required CubeState cubeState, required String email}) async {
+    final List<String> cubeStatus = cubeState.outputCubeState();
+    var response = await http.get(Uri.parse(
+        'http://127.0.0.1:5000/room/create?cube_state=$cubeStatus&email=$email'));
+    final int roomID = jsonDecode(response.body);
+    return roomID;
+  }
+
+  Future<List<String>> joinRoom(
+      {required String email, required int roomID}) async {
+    var response = await http.get(Uri.parse(
+        'http://127.0.0.1:5000/room/join?email=$email&roomID=$roomID'));
+    final List<dynamic> temp = jsonDecode(response.body);
+    final List<String> cubeStatus = temp.map((item) => item.toString()).toList();
+    return cubeStatus;
+  }
+
+  Future<void> quitRoom({required int roomID}) async {
+    await http.get(Uri.parse('http://127.0.0.1:5000/room/quit?roomID=$roomID'));
+  }
+}

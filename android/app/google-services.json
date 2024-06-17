@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "332722357217",
+    "project_id": "cy-cube",
+    "storage_bucket": "cy-cube.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:332722357217:android:334cc4dd7ff21ffcd248a0",
+        "android_client_info": {
+          "package_name": "com.lcy.cy_c"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDt5rnEawnVkKAFIgXdgGNuJkzL7RjnhM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:332722357217:android:1b18d33f081b7654d248a0",
+        "android_client_info": {
+          "package_name": "com.lcy.cy_cube"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDt5rnEawnVkKAFIgXdgGNuJkzL7RjnhM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

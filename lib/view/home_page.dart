@@ -19,7 +19,6 @@ class _RubiksCubeState extends State<RubiksCube> {
   Offset _offset = Offset.zero;
   CubeState cubeState = CubeState();
 
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -170,19 +169,25 @@ class _RubiksCubeState extends State<RubiksCube> {
                     ],
                   ),
                   TextButton(
-                    onPressed: () {
-                      setState(() {
-                        cubeState = CubeState();
-                      });
+                    onPressed: () async {
+                      int roomID = await DatabaseService().createRoom(
+                          cubeState: cubeState, email: 'lichyo003@gmail.com');
+                      print(roomID);
                     },
-                    child: const Text('Reset'),
+                    child: const Text('create room'),
                   ),
                   TextButton(
-                    onPressed: () async{
-                        // print(await DatabaseService().createRoom(cubeState: cubeState));
-                        // await DatabaseService().joinRoom(roomID: '123');
+                    onPressed: () async {
+                      List<String> output = await DatabaseService().joinRoom(
+                          email: 'ttcyt1029@gmail.com', roomID: 705532);
+                      cubeState.setCubeState(cubeStatus: output);
+                      setState(() {});
                     },
-                    child: const Text('set cube color in 3D view'),
+                    child: const Text('join the room'),
+                  ),
+                  TextButton(
+                    onPressed: () async {},
+                    child: const Text('quit the room'),
                   ),
                 ],
               ),

@@ -297,25 +297,25 @@ class CubeState {
   }
 
   List<String> outputCubeState() {
-    List<String> cubeColors = [];
+    List<String> cubeStatus = [];
     for (Facing cubeFace in cubeFaces) {
       for (int cubeFaceID in cubeFaceIDs[cubeFace]!) {
-        String cubeColor = CubeState.transformColorToString(
-            CubeState.cubeModels[cubeFaceID].component.cubeColor[cubeFace]!);
-        cubeColors.add(cubeColor);
+        String cubeColor = '"${CubeState.transformColorToString(
+            CubeState.cubeModels[cubeFaceID].component.cubeColor[cubeFace]!)}"';
+        cubeStatus.add(cubeColor);
       }
     }
-    return cubeColors;
+    return cubeStatus;
   }
 
-  void setCubeState({required List<String> cubeColors}) {
+  void setCubeState({required List<String> cubeStatus}) {
     int index = 0;
     for (Facing cubeFace in cubeFaces) {
       List<CubeFaceModel> cubeFaceModes = [];
       for (int cubeFaceID in cubeFaceIDs[cubeFace]!) {
         CubeFaceModel cubeFaceModel = CubeFaceModel(
           id: cubeFaceID,
-          color: transformStringToColor(cubeColors[index++]),
+          color: transformStringToColor(cubeStatus[index++]),
           isSelected: false,
         );
         cubeFaceModes.add(cubeFaceModel);
