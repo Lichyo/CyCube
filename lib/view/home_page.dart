@@ -179,7 +179,7 @@ class _RubiksCubeState extends State<RubiksCube> {
                   TextButton(
                     onPressed: () async {
                       List<String> output = await DatabaseService().joinRoom(
-                          email: 'ttcyt1029@gmail.com', roomID: 453253);
+                          email: 'lichyo003@gmail.com', roomID: 948318);
                       cubeState.setCubeState(cubeStatus: output);
                       setState(() {});
                     },

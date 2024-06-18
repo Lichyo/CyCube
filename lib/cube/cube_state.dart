@@ -3,7 +3,6 @@ import 'single_cube_model.dart';
 import 'package:flutter/material.dart';
 import 'package:cy_cube/cube/cube_face_model.dart';
 import 'cube_constants.dart';
-import 'cube_constants.dart';
 
 class CubeState {
   static List<SingleCubeModel> cubeModels = [];
@@ -294,7 +293,7 @@ class CubeState {
 
   static String transformColorToString(Color color) {
     if (color == Colors.red) {
-      return 'Red';
+      return 'red';
     } else if (color == Colors.orange) {
       return 'orange';
     } else if (color == Colors.white) {

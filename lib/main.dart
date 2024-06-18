@@ -6,6 +6,7 @@ void main() async {
     const MaterialApp(
       debugShowCheckedModeBanner: false,
       home: RubiksCube(),
+      // home: Lab(),
     ),
   );
 }
