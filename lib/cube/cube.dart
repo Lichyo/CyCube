@@ -4,9 +4,8 @@ import 'cube_state.dart';
 
 class Cube extends StatelessWidget {
   final List<Widget> _cube = [];
-  final CubeState cubeState;
 
-  Cube({super.key, required this.cubeState}) {
+  Cube({super.key}) {
     for (SingleCubeModel cube in CubeState.cubeModels) {
       _cube.add(
         Transform(

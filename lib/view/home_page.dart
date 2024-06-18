@@ -67,7 +67,7 @@ class _RubiksCubeState extends State<RubiksCube> {
                   ..rotateY(_offset.dx * pi / 180)
                   ..setEntry(2, 2, 0.001),
                 child: Center(
-                  child: Cube(cubeState: cubeState),
+                  child: Cube(),
                 ),
               ),
               const Gap(200),
@@ -179,7 +179,7 @@ class _RubiksCubeState extends State<RubiksCube> {
                   TextButton(
                     onPressed: () async {
                       List<String> output = await DatabaseService().joinRoom(
-                          email: 'ttcyt1029@gmail.com', roomID: 705532);
+                          email: 'ttcyt1029@gmail.com', roomID: 453253);
                       cubeState.setCubeState(cubeStatus: output);
                       setState(() {});
                     },
