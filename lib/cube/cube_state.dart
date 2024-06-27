@@ -14,6 +14,11 @@ class CubeState {
     Facing.front: Colors.green,
     Facing.back: Colors.blue,
   };
+  Function()? onStateChange;
+
+  void setOnStateChange(Function()? callback) {
+    onStateChange = callback;
+  }
 
   void _updateCubeComponent({
     required List<int> ids,
@@ -94,7 +99,9 @@ class CubeState {
     } else if (rotation == 'B\'') {
       bMoveReverse();
     }
-    print('Rotation: $rotation');
+    if (onStateChange != null) {
+      onStateChange!();
+    }
   }
 
   void _shift(List<int> cornerIds, List<int> edgeIds) {
@@ -320,7 +327,7 @@ class CubeState {
     }
   }
 
-  static String transformColorToString(Color color) {
+  static String _transformColorToString(Color color) {
     if (color == Colors.red) {
       return 'red';
     } else if (color == Colors.orange) {
@@ -338,7 +345,7 @@ class CubeState {
     }
   }
 
-  static Color transformStringToColor(String color) {
+  static Color _transformStringToColor(String color) {
     if (color == 'red') {
       return Colors.red;
     } else if (color == 'orange') {
@@ -361,7 +368,7 @@ class CubeState {
     for (Facing cubeFace in cubeFaces) {
       for (int cubeFaceID in cubeFaceIDs[cubeFace]!) {
         String cubeColor =
-            '"${CubeState.transformColorToString(CubeState.cubeModels[cubeFaceID].component.cubeColor[cubeFace]!)}"';
+            '"${CubeState._transformColorToString(CubeState.cubeModels[cubeFaceID].component.cubeColor[cubeFace]!)}"';
         cubeStatus.add(cubeColor);
       }
     }
@@ -375,7 +382,7 @@ class CubeState {
       for (int cubeFaceID in cubeFaceIDs[cubeFace]!) {
         CubeFaceModel cubeFaceModel = CubeFaceModel(
           id: cubeFaceID,
-          color: transformStringToColor(cubeStatus[index++]),
+          color: _transformStringToColor(cubeStatus[index++]),
           isSelected: false,
         );
         cubeFaceModes.add(cubeFaceModel);
