@@ -52,7 +52,17 @@ class DatabaseService {
     });
   }
 
-  static Future<void> courseWithStudentPOV({required String rotation, required String roomID}) async {
+  static Future<void> courseWithStudentPOV({
+    required String rotation,
+    required String roomID,
+  }) async {
+    var data = await _firestore.collection('rooms').doc(roomID).get();
+    String previousRotation = data['next_move'];
+    if (previousRotation == rotation) {
+      await _firestore.collection('rooms').doc(roomID).update({
+        'next_move': '',
+      });
+    }
     await _firestore.collection('rooms').doc(roomID).update({
       'next_move': rotation,
     });

@@ -19,6 +19,8 @@ class _RubiksCubeState extends State<RubiksCube> {
   Offset _offset = Offset.zero;
   CubeState cubeState = CubeState();
   String? roomID;
+  bool isJoinCourseRoom = false;
+  bool isCreateRoom = false;
 
   @override
   void initState() {
@@ -34,7 +36,6 @@ class _RubiksCubeState extends State<RubiksCube> {
     // TODO: implement dispose
     cubeState.setOnStateChange(null);
     super.dispose();
-
   }
 
   @override
@@ -85,6 +86,8 @@ class _RubiksCubeState extends State<RubiksCube> {
                                     roomID: roomID,
                                     cubeState: cubeState,
                                   );
+                                  isJoinCourseRoom = true;
+                                  setState(() {});
                                   Navigator.pop(context);
                                 },
                               ),
@@ -123,22 +126,31 @@ class _RubiksCubeState extends State<RubiksCube> {
                 ),
               ),
               const Gap(100),
-              CubeRotationTable(
-                onPressed: (rotation) {
-                  cubeState.rotate(rotation);
-                  if (roomID != null) {
-                    DatabaseService.courseWithStudentPOV(rotation: rotation, roomID: roomID!);
-                  }
-                },
+              Visibility(
+                visible: !isJoinCourseRoom,
+                child: CubeRotationTable(
+                  onPressed: (rotation) {
+                    cubeState.rotate(rotation);
+                    if (roomID != null) {
+                      DatabaseService.courseWithStudentPOV(
+                          rotation: rotation, roomID: roomID!);
+                    }
+                  },
+                ),
               ),
-              TextButton(
-                onPressed: () async {
-                  roomID = await DatabaseService.createRoom(
-                    email: 'lichyo003@gmail.com',
-                    cubeState: cubeState,
-                  );
-                },
-                child: const Text('create room'),
+              Visibility(
+                visible: !isJoinCourseRoom && !isCreateRoom,
+                child: TextButton(
+                  onPressed: () async {
+                    roomID = await DatabaseService.createRoom(
+                      email: 'lichyo003@gmail.com',
+                      cubeState: cubeState,
+                    );
+                    isCreateRoom = true;
+                    setState(() {});
+                  },
+                  child: const Text('create room'),
+                ),
               ),
             ],
           ),

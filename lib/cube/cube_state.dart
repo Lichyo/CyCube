@@ -98,7 +98,7 @@ class CubeState {
       bMove();
     } else if (rotation == 'B\'') {
       bMoveReverse();
-    }
+    } else if (rotation == '') {}
     if (onStateChange != null) {
       onStateChange!();
     }
@@ -238,7 +238,6 @@ class CubeState {
     return cubeColor;
   }
 
-
   void _setupSingleFace({
     required List<int> cubeIDs,
     required List<CubeFaceModel> cubeFaces,
@@ -350,8 +349,8 @@ class CubeState {
     List<String> cubeStatus = [];
     for (Facing cubeFace in cubeFaces) {
       for (int cubeFaceID in cubeFaceIDs[cubeFace]!) {
-        String cubeColor =
-            CubeState._transformColorToString(CubeState.cubeModels[cubeFaceID].component.cubeColor[cubeFace]!);
+        String cubeColor = CubeState._transformColorToString(
+            CubeState.cubeModels[cubeFaceID].component.cubeColor[cubeFace]!);
         cubeStatus.add(cubeColor);
       }
     }
