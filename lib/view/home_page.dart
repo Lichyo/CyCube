@@ -1,5 +1,6 @@
+import 'package:cy_cube/cube/cube_rotation_table.dart';
 import 'package:cy_cube/cube/cube_state.dart';
-import 'package:cy_cube/service/database_service.dart';
+import 'package:cy_cube/service/database_service_with_socket.dart';
 import 'package:flutter/material.dart';
 import 'package:cy_cube/cube/cube.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -59,6 +60,7 @@ class _RubiksCubeState extends State<RubiksCube> {
           body: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const Gap(200),
               Transform(
                 origin: const Offset(0, 0),
                 alignment: Alignment.center,
@@ -71,125 +73,13 @@ class _RubiksCubeState extends State<RubiksCube> {
                 ),
               ),
               const Gap(200),
-              Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      TextButton(
-                          onPressed: () {
-                            setState(() {
-                              cubeState.dMove();
-                            });
-                          },
-                          child: const Text('D')),
-                      TextButton(
-                          onPressed: () {
-                            setState(() {
-                              cubeState.bMove();
-                            });
-                          },
-                          child: const Text('B')),
-                      TextButton(
-                          onPressed: () {
-                            setState(() {
-                              cubeState.lMove();
-                            });
-                          },
-                          child: const Text('L')),
-                      TextButton(
-                          onPressed: () {
-                            setState(() {
-                              cubeState.uMove();
-                            });
-                          },
-                          child: const Text('U')),
-                      TextButton(
-                          onPressed: () {
-                            setState(() {
-                              cubeState.fMove();
-                            });
-                          },
-                          child: const Text('F')),
-                      TextButton(
-                          onPressed: () {
-                            setState(() {
-                              cubeState.rMove();
-                            });
-                          },
-                          child: const Text('R')),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      TextButton(
-                          onPressed: () {
-                            setState(() {
-                              cubeState.dMoveReverse();
-                            });
-                          },
-                          child: const Text('D\'')),
-                      TextButton(
-                          onPressed: () {
-                            setState(() {
-                              cubeState.bMoveReverse();
-                            });
-                          },
-                          child: const Text('B\'')),
-                      TextButton(
-                          onPressed: () {
-                            setState(() {
-                              cubeState.lMoveReverse();
-                            });
-                          },
-                          child: const Text('L\'')),
-                      TextButton(
-                          onPressed: () {
-                            setState(() {
-                              cubeState.uMoveReverse();
-                            });
-                          },
-                          child: const Text('U\'')),
-                      TextButton(
-                          onPressed: () {
-                            setState(() {
-                              cubeState.fMoveReverse();
-                            });
-                          },
-                          child: const Text('F\'')),
-                      TextButton(
-                        onPressed: () {
-                          setState(() {
-                            cubeState.rMoveReverse();
-                          });
-                        },
-                        child: const Text('R\''),
-                      ),
-                    ],
-                  ),
-                  TextButton(
-                    onPressed: () async {
-                      int roomID = await DatabaseService().createRoom(
-                          cubeState: cubeState, email: 'lichyo003@gmail.com');
-                      print(roomID);
-                    },
-                    child: const Text('create room'),
-                  ),
-                  TextButton(
-                    onPressed: () async {
-                      List<String> output = await DatabaseService().joinRoom(
-                          email: 'lichyo003@gmail.com', roomID: 948318);
-                      cubeState.setCubeState(cubeStatus: output);
-                      setState(() {});
-                    },
-                    child: const Text('join the room'),
-                  ),
-                  TextButton(
-                    onPressed: () async {},
-                    child: const Text('quit the room'),
-                  ),
-                ],
+              Expanded(
+                child: CubeRotationTable(
+                  onPressed: (rotation) {
+                    cubeState.rotate(rotation);
+                    setState(() {});
+                  },
+                ),
               ),
             ],
           ),

@@ -68,6 +68,35 @@ class CubeState {
     }
   }
 
+  void rotate(String rotation) {
+    if (rotation == 'U') {
+      uMove();
+    } else if (rotation == 'U\'') {
+      uMoveReverse();
+    } else if (rotation == 'D') {
+      dMove();
+    } else if (rotation == 'D\'') {
+      dMoveReverse();
+    } else if (rotation == 'R') {
+      rMove();
+    } else if (rotation == 'R\'') {
+      rMoveReverse();
+    } else if (rotation == 'L') {
+      lMove();
+    } else if (rotation == 'L\'') {
+      lMoveReverse();
+    } else if (rotation == 'F') {
+      fMove();
+    } else if (rotation == 'F\'') {
+      fMoveReverse();
+    } else if (rotation == 'B') {
+      bMove();
+    } else if (rotation == 'B\'') {
+      bMoveReverse();
+    }
+    print('Rotation: $rotation');
+  }
+
   void _shift(List<int> cornerIds, List<int> edgeIds) {
     final CubeComponent cornerComponent = cubeModels[cornerIds[0]].component;
     cubeModels[cornerIds[0]].component = cubeModels[cornerIds[1]].component;

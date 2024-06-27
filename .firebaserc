@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "cy-cube": "cy-cube",
+    "default": "cy-cube"
+  },
+  "targets": {},
+  "etags": {}
+}
