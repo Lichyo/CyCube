@@ -18,6 +18,7 @@ class RubiksCube extends StatefulWidget {
 class _RubiksCubeState extends State<RubiksCube> {
   Offset _offset = Offset.zero;
   CubeState cubeState = CubeState();
+  String? roomID;
 
   @override
   void initState() {
@@ -125,12 +126,14 @@ class _RubiksCubeState extends State<RubiksCube> {
               CubeRotationTable(
                 onPressed: (rotation) {
                   cubeState.rotate(rotation);
-                  setState(() {});
+                  if (roomID != null) {
+                    DatabaseService.courseWithStudentPOV(rotation: rotation, roomID: roomID!);
+                  }
                 },
               ),
               TextButton(
                 onPressed: () async {
-                  int roomID = await DatabaseService.createRoom(
+                  roomID = await DatabaseService.createRoom(
                     email: 'lichyo003@gmail.com',
                     cubeState: cubeState,
                   );

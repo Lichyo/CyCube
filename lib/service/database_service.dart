@@ -5,19 +5,20 @@ import 'dart:math';
 class DatabaseService {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  static Future<int> createRoom({
+  static Future<String> createRoom({
     required CubeState cubeState,
     required String email,
   }) async {
     final List<String> cubeStatus = cubeState.outputCubeState();
     int randomRoomID = Random().nextInt(900000) + 100000;
-    await _firestore.collection('rooms').doc(randomRoomID.toString()).set({
+    String roomID = randomRoomID.toString();
+    await _firestore.collection('rooms').doc(roomID).set({
       'cube_status': cubeStatus,
       'student': email,
       'teacher': '',
       'next_move': '',
     });
-    return randomRoomID;
+    return roomID;
   }
 
   static Future<List<String>> joinRoom({
@@ -35,11 +36,11 @@ class DatabaseService {
       cubeStatus.add(cubeState.toString());
     }
     cubeState.setCubeState(cubeStatus: cubeStatus);
-    _startCourse(roomID: roomID, cubeState: cubeState);
+    _startCourseWithTeacherPOV(roomID: roomID, cubeState: cubeState);
     return cubeStatus;
   }
 
-  static Future<void> _startCourse({
+  static Future<void> _startCourseWithTeacherPOV({
     required String roomID,
     required CubeState cubeState,
   }) async {
@@ -48,6 +49,12 @@ class DatabaseService {
       var data = snapshot.data();
       nextMove = data!['next_move'];
       cubeState.rotate(nextMove);
+    });
+  }
+
+  static Future<void> courseWithStudentPOV({required String rotation, required String roomID}) async {
+    await _firestore.collection('rooms').doc(roomID).update({
+      'next_move': rotation,
     });
   }
 }
