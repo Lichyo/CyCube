@@ -1,13 +1,12 @@
-import 'package:cube/cube/single_cube_model.dart';
+import 'package:cy_cube/cube/single_cube_model.dart';
 import 'package:flutter/material.dart';
 import 'cube_state.dart';
 
 class Cube extends StatelessWidget {
   final List<Widget> _cube = [];
-  final CubeState cubeState;
 
-  Cube({super.key, required this.cubeState}) {
-    for (SingleCubeModel cube in cubeState.cubeModels) {
+  Cube({super.key}) {
+    for (SingleCubeModel cube in CubeState.cubeModels) {
       _cube.add(
         Transform(
           transform: Matrix4.identity()

@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "cube-bddd3"
-  }
+    "cy-cube": "cy-cube",
+    "default": "cy-cube"
+  },
+  "targets": {},
+  "etags": {}
 }

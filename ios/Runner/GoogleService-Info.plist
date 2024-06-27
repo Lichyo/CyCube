@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyCGsgtLMW1qnO4vIJS6GKkU96yBUfWny_M</string>
+	<string>AIzaSyBc-dAEe6wV5g8EIdhPVrrC3DhK2LoM4t4</string>
 	<key>GCM_SENDER_ID</key>
-	<string>1017295288458</string>
+	<string>332722357217</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.lichyo.cube</string>
+	<string>com.lcy.cyCube</string>
 	<key>PROJECT_ID</key>
-	<string>cube-bddd3</string>
+	<string>cy-cube</string>
 	<key>STORAGE_BUCKET</key>
-	<string>cube-bddd3.appspot.com</string>
+	<string>cy-cube.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,8 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:1017295288458:ios:0eebdd1644e2944ac55573</string>
-	<key>DATABASE_URL</key>
-	<string>https://cube-bddd3-default-rtdb.asia-southeast1.firebasedatabase.app</string>
+	<string>1:332722357217:ios:c7df0d569ba9bd69d248a0</string>
 </dict>
 </plist>

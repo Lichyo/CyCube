@@ -1,22 +1,40 @@
 {
   "project_info": {
-    "project_number": "1017295288458",
-    "firebase_url": "https://cube-bddd3-default-rtdb.asia-southeast1.firebasedatabase.app",
-    "project_id": "cube-bddd3",
-    "storage_bucket": "cube-bddd3.appspot.com"
+    "project_number": "332722357217",
+    "project_id": "cy-cube",
+    "storage_bucket": "cy-cube.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1017295288458:android:fd583b281cbb42c1c55573",
+        "mobilesdk_app_id": "1:332722357217:android:334cc4dd7ff21ffcd248a0",
         "android_client_info": {
-          "package_name": "com.lichyo.cube"
+          "package_name": "com.lcy.cy_c"
         }
       },
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyD3cfx1ByoShphV-AHYUgA9RzOr70Pl5g0"
+          "current_key": "AIzaSyCDt5rnEawnVkKAFIgXdgGNuJkzL7RjnhM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:332722357217:android:1b18d33f081b7654d248a0",
+        "android_client_info": {
+          "package_name": "com.lcy.cy_cube"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDt5rnEawnVkKAFIgXdgGNuJkzL7RjnhM"
         }
       ],
       "services": {

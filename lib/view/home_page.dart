@@ -1,17 +1,15 @@
-import 'package:cube/cube/cube_state.dart';
+import 'package:cy_cube/cube/cube_rotation_table.dart';
+import 'package:cy_cube/cube/cube_state.dart';
 import 'package:flutter/material.dart';
-import 'package:cube/cube/cube.dart';
+import 'package:cy_cube/cube/cube.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:math';
 import 'package:gap/gap.dart';
-import 'package:camera/camera.dart';
-import 'package:cube/view/cube_setup_page.dart';
-import 'package:cube/model/cube_face.dart';
+import 'package:cy_cube/service/database_service.dart';
 
 class RubiksCube extends StatefulWidget {
-  const RubiksCube({super.key, required this.camera});
-
-  final List<CameraDescription> camera;
+  const RubiksCube({super.key});
 
   @override
   State<RubiksCube> createState() => _RubiksCubeState();
@@ -19,9 +17,26 @@ class RubiksCube extends StatefulWidget {
 
 class _RubiksCubeState extends State<RubiksCube> {
   Offset _offset = Offset.zero;
-  CubeState cubeState = CubeState(width: 40);
+  CubeState cubeState = CubeState();
+  String? roomID;
+  bool isJoinCourseRoom = false;
+  bool isCreateRoom = false;
 
-  bool isRecording = false;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    cubeState.setOnStateChange(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    cubeState.setOnStateChange(null);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,23 +51,54 @@ class _RubiksCubeState extends State<RubiksCube> {
           appBar: AppBar(
             actions: [
               IconButton(
-                onPressed: () async {
-                  final results = await Navigator.of(context).push(
-                      MaterialPageRoute(
-                          builder: (context) => const CubeSetupPage()));
-                  final List<List<CubeFaceModel>> allCubeFaces = results[0];
-                  setState(() {
-                    cubeState.setupCubeWithScanningColor(allCubeFaces);
-                  });
+                onPressed: () {
+                  String roomID = '';
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('Join Room'),
+                        content: const Text('Enter room ID to join a room'),
+                        actions: [
+                          TextField(
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                            ],
+                            onChanged: (value) {
+                              roomID = value;
+                            },
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('cancel'),
+                              ),
+                              TextButton(
+                                child: const Text('Join'),
+                                onPressed: () async {
+                                  await DatabaseService.joinRoom(
+                                    email: 'lichyo003@gmail.com',
+                                    roomID: roomID,
+                                    cubeState: cubeState,
+                                  );
+                                  isJoinCourseRoom = true;
+                                  setState(() {});
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          ),
+                        ],
+                      );
+                    },
+                  );
                 },
-                icon: const Icon(
-                  Icons.camera,
-                  size: 27.0,
-                ),
-              ),
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(Icons.update),
+                icon: const Icon(Icons.door_back_door_outlined),
               ),
             ],
             elevation: 5,
@@ -67,6 +113,7 @@ class _RubiksCubeState extends State<RubiksCube> {
           body: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              const Gap(50),
               Transform(
                 origin: const Offset(0, 0),
                 alignment: Alignment.center,
@@ -75,120 +122,35 @@ class _RubiksCubeState extends State<RubiksCube> {
                   ..rotateY(_offset.dx * pi / 180)
                   ..setEntry(2, 2, 0.001),
                 child: Center(
-                  child: Cube(cubeState: cubeState),
+                  child: Cube(),
                 ),
               ),
-              const Gap(200),
-              Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      TextButton(
-                          onPressed: () {
-                            setState(() {
-                              cubeState.dMove();
-                            });
-                          },
-                          child: const Text('D')),
-                      TextButton(
-                          onPressed: () {
-                            setState(() {
-                              cubeState.bMove();
-                            });
-                          },
-                          child: const Text('B')),
-                      TextButton(
-                          onPressed: () {
-                            setState(() {
-                              cubeState.lMove();
-                            });
-                          },
-                          child: const Text('L')),
-                      TextButton(
-                          onPressed: () {
-                            setState(() {
-                              cubeState.uMove();
-                            });
-                          },
-                          child: const Text('U')),
-                      TextButton(
-                          onPressed: () {
-                            setState(() {
-                              cubeState.fMove();
-                            });
-                          },
-                          child: const Text('F')),
-                      TextButton(
-                          onPressed: () {
-                            setState(() {
-                              cubeState.rMove();
-                            });
-                          },
-                          child: const Text('R')),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      TextButton(
-                          onPressed: () {
-                            setState(() {
-                              cubeState.dMoveReverse();
-                            });
-                          },
-                          child: const Text('D\'')),
-                      TextButton(
-                          onPressed: () {
-                            setState(() {
-                              cubeState.bMoveReverse();
-                            });
-                          },
-                          child: const Text('B\'')),
-                      TextButton(
-                          onPressed: () {
-                            setState(() {
-                              cubeState.lMoveReverse();
-                            });
-                          },
-                          child: const Text('L\'')),
-                      TextButton(
-                          onPressed: () {
-                            setState(() {
-                              cubeState.uMoveReverse();
-                            });
-                          },
-                          child: const Text('U\'')),
-                      TextButton(
-                          onPressed: () {
-                            setState(() {
-                              cubeState.fMoveReverse();
-                            });
-                          },
-                          child: const Text('F\'')),
-                      TextButton(
-                        onPressed: () {
-                          setState(() {
-                            cubeState.rMoveReverse();
-                          });
-                        },
-                        child: const Text('R\''),
-                      ),
-                    ],
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      setState(() {
-                        cubeState = CubeState(width: 40);
-                      });
-                    },
-                    child: const Text('Reset'),
-                  ),
-                  TextButton(
-                    onPressed: () async {},
-                    child: const Text('open camera'),
-                  ),
-                ],
+              const Gap(100),
+              Visibility(
+                visible: !isJoinCourseRoom,
+                child: CubeRotationTable(
+                  onPressed: (rotation) {
+                    cubeState.rotate(rotation);
+                    if (roomID != null) {
+                      DatabaseService.courseWithStudentPOV(
+                          rotation: rotation, roomID: roomID!);
+                    }
+                  },
+                ),
+              ),
+              Visibility(
+                visible: !isJoinCourseRoom && !isCreateRoom,
+                child: TextButton(
+                  onPressed: () async {
+                    roomID = await DatabaseService.createRoom(
+                      email: 'lichyo003@gmail.com',
+                      cubeState: cubeState,
+                    );
+                    isCreateRoom = true;
+                    setState(() {});
+                  },
+                  child: const Text('create room'),
+                ),
               ),
             ],
           ),

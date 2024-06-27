@@ -1,20 +1,24 @@
-import 'package:cube/cube/cube.dart';
-import 'package:cube/cube/cube_component.dart';
+import 'package:cy_cube/cube/cube_component.dart';
 import 'single_cube_model.dart';
 import 'package:flutter/material.dart';
-import 'package:cube/model/cube_face.dart';
+import 'package:cy_cube/cube/cube_face_model.dart';
+import 'cube_constants.dart';
 
 class CubeState {
-  List<SingleCubeModel> cubeModels = [];
-  final double width;
+  static List<SingleCubeModel> cubeModels = [];
   final Map<Facing, Color> defaultCubeColor = {
     Facing.top: Colors.white,
-    Facing.bottom: Colors.yellow,
+    Facing.down: Colors.yellow,
     Facing.right: Colors.red,
     Facing.left: Colors.orange,
     Facing.front: Colors.green,
     Facing.back: Colors.blue,
   };
+  Function()? onStateChange;
+
+  void setOnStateChange(Function()? callback) {
+    onStateChange = callback;
+  }
 
   void _updateCubeComponent({
     required List<int> ids,
@@ -38,7 +42,6 @@ class CubeState {
       cubeModels[id] = SingleCubeModel(
         id: id,
         component: CubeComponent(
-          cubeWidth: width,
           cubeColor: updatedCubeColor,
         ),
         x: cubeModels[id].x,
@@ -48,7 +51,7 @@ class CubeState {
     }
   }
 
-  CubeState({required this.width}) {
+  CubeState() {
     int id = 0;
     for (int z = -1; z < 2; z++) {
       for (int y = -1; y < 2; y++) {
@@ -58,16 +61,46 @@ class CubeState {
               id: id,
               component: CubeComponent(
                 cubeColor: Map.from(defaultCubeColor),
-                cubeWidth: width,
               ),
-              x: x * width,
-              y: -y * width,
-              z: z * width,
+              x: x * cubeWidth,
+              y: -y * cubeWidth,
+              z: z * cubeWidth,
             ),
           );
           id++;
         }
       }
+    }
+  }
+
+  void rotate(String rotation) {
+    if (rotation == 'U') {
+      uMove();
+    } else if (rotation == 'U\'') {
+      uMoveReverse();
+    } else if (rotation == 'D') {
+      dMove();
+    } else if (rotation == 'D\'') {
+      dMoveReverse();
+    } else if (rotation == 'R') {
+      rMove();
+    } else if (rotation == 'R\'') {
+      rMoveReverse();
+    } else if (rotation == 'L') {
+      lMove();
+    } else if (rotation == 'L\'') {
+      lMoveReverse();
+    } else if (rotation == 'F') {
+      fMove();
+    } else if (rotation == 'F\'') {
+      fMoveReverse();
+    } else if (rotation == 'B') {
+      bMove();
+    } else if (rotation == 'B\'') {
+      bMoveReverse();
+    } else if (rotation == '') {}
+    if (onStateChange != null) {
+      onStateChange!();
     }
   }
 
@@ -149,8 +182,8 @@ class CubeState {
     Map<Facing, Color> cubeColor = Map.from(cube.component.cubeColor);
     final Color topColor = cubeColor[Facing.top]!;
     cubeColor[Facing.top] = cubeColor[Facing.front]!;
-    cubeColor[Facing.front] = cubeColor[Facing.bottom]!;
-    cubeColor[Facing.bottom] = cubeColor[Facing.back]!;
+    cubeColor[Facing.front] = cubeColor[Facing.down]!;
+    cubeColor[Facing.down] = cubeColor[Facing.back]!;
     cubeColor[Facing.back] = topColor;
     return cubeColor;
   }
@@ -158,8 +191,8 @@ class CubeState {
   Map<Facing, Color> _updateXColorReverse({required SingleCubeModel cube}) {
     Map<Facing, Color> cubeColor = Map.from(cube.component.cubeColor);
     final Color color = cubeColor[Facing.back]!;
-    cubeColor[Facing.back] = cubeColor[Facing.bottom]!;
-    cubeColor[Facing.bottom] = cubeColor[Facing.front]!;
+    cubeColor[Facing.back] = cubeColor[Facing.down]!;
+    cubeColor[Facing.down] = cubeColor[Facing.front]!;
     cubeColor[Facing.front] = cubeColor[Facing.top]!;
     cubeColor[Facing.top] = color;
     return cubeColor;
@@ -169,8 +202,8 @@ class CubeState {
     Map<Facing, Color> cubeColor = Map.from(cube.component.cubeColor);
     final Color color = cubeColor[Facing.top]!;
     cubeColor[Facing.top] = cubeColor[Facing.right]!;
-    cubeColor[Facing.right] = cubeColor[Facing.bottom]!;
-    cubeColor[Facing.bottom] = cubeColor[Facing.left]!;
+    cubeColor[Facing.right] = cubeColor[Facing.down]!;
+    cubeColor[Facing.down] = cubeColor[Facing.left]!;
     cubeColor[Facing.left] = color;
     return cubeColor;
   }
@@ -178,8 +211,8 @@ class CubeState {
   Map<Facing, Color> _updateYColor({required SingleCubeModel cube}) {
     Map<Facing, Color> cubeColor = Map.from(cube.component.cubeColor);
     final Color color = cubeColor[Facing.left]!;
-    cubeColor[Facing.left] = cubeColor[Facing.bottom]!;
-    cubeColor[Facing.bottom] = cubeColor[Facing.right]!;
+    cubeColor[Facing.left] = cubeColor[Facing.down]!;
+    cubeColor[Facing.down] = cubeColor[Facing.right]!;
     cubeColor[Facing.right] = cubeColor[Facing.top]!;
     cubeColor[Facing.top] = color;
     return cubeColor;
@@ -205,24 +238,6 @@ class CubeState {
     return cubeColor;
   }
 
-  String _printColor(Color color) {
-    if (color == Colors.red) {
-      return 'Red';
-    } else if (color == Colors.orange) {
-      return 'orange';
-    } else if (color == Colors.white) {
-      return 'white';
-    } else if (color == Colors.yellow) {
-      return 'yellow';
-    } else if (color == Colors.blue) {
-      return 'blue';
-    } else if (color == Colors.black) {
-      return 'black';
-    } else {
-      return 'green';
-    }
-  }
-
   void _setupSingleFace({
     required List<int> cubeIDs,
     required List<CubeFaceModel> cubeFaces,
@@ -236,7 +251,6 @@ class CubeState {
       cubeModels[id] = SingleCubeModel(
         id: id,
         component: CubeComponent(
-          cubeWidth: width,
           cubeColor: updatedCubeColor,
         ),
         x: cubeModels[id].x,
@@ -261,7 +275,7 @@ class CubeState {
         _setupSingleFace(
           cubeIDs: [0, 1, 2, 9, 10, 11, 18, 19, 20],
           cubeFaces: cubeFaces[i],
-          facing: Facing.bottom,
+          facing: Facing.down,
         );
       } else if (cubeFaces[i][4].color == Colors.red) {
         print('setup red face');
@@ -292,6 +306,74 @@ class CubeState {
           facing: Facing.front,
         );
       }
+    }
+  }
+
+  static String _transformColorToString(Color color) {
+    if (color == Colors.red) {
+      return 'red';
+    } else if (color == Colors.orange) {
+      return 'orange';
+    } else if (color == Colors.white) {
+      return 'white';
+    } else if (color == Colors.yellow) {
+      return 'yellow';
+    } else if (color == Colors.blue) {
+      return 'blue';
+    } else if (color == Colors.black) {
+      return 'black';
+    } else {
+      return 'green';
+    }
+  }
+
+  static Color _transformStringToColor(String color) {
+    if (color == 'red') {
+      return Colors.red;
+    } else if (color == 'orange') {
+      return Colors.orange;
+    } else if (color == 'white') {
+      return Colors.white;
+    } else if (color == 'yellow') {
+      return Colors.yellow;
+    } else if (color == 'blue') {
+      return Colors.blue;
+    } else if (color == 'black') {
+      return Colors.black;
+    } else {
+      return Colors.green;
+    }
+  }
+
+  List<String> outputCubeState() {
+    List<String> cubeStatus = [];
+    for (Facing cubeFace in cubeFaces) {
+      for (int cubeFaceID in cubeFaceIDs[cubeFace]!) {
+        String cubeColor = CubeState._transformColorToString(
+            CubeState.cubeModels[cubeFaceID].component.cubeColor[cubeFace]!);
+        cubeStatus.add(cubeColor);
+      }
+    }
+    return cubeStatus;
+  }
+
+  void setCubeState({required List<String> cubeStatus}) {
+    int index = 0;
+    for (Facing cubeFace in cubeFaces) {
+      List<CubeFaceModel> cubeFaceModes = [];
+      for (int cubeFaceID in cubeFaceIDs[cubeFace]!) {
+        CubeFaceModel cubeFaceModel = CubeFaceModel(
+          id: cubeFaceID,
+          color: _transformStringToColor(cubeStatus[index++]),
+          isSelected: false,
+        );
+        cubeFaceModes.add(cubeFaceModel);
+      }
+      _setupSingleFace(
+        cubeIDs: cubeFaceIDs[cubeFace]!,
+        cubeFaces: cubeFaceModes,
+        facing: cubeFace,
+      );
     }
   }
 }
