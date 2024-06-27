@@ -33,7 +33,6 @@ class DatabaseService {
     List<String> cubeStatus = [];
     for (String cubeState in data) {
       cubeStatus.add(cubeState.toString());
-      print(cubeState.toString());
     }
     cubeState.setCubeState(cubeStatus: cubeStatus);
     _startCourse(roomID: roomID, cubeState: cubeState);

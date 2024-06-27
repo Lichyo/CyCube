@@ -238,23 +238,6 @@ class CubeState {
     return cubeColor;
   }
 
-  String _printColor(Color color) {
-    if (color == Colors.red) {
-      return 'Red';
-    } else if (color == Colors.orange) {
-      return 'orange';
-    } else if (color == Colors.white) {
-      return 'white';
-    } else if (color == Colors.yellow) {
-      return 'yellow';
-    } else if (color == Colors.blue) {
-      return 'blue';
-    } else if (color == Colors.black) {
-      return 'black';
-    } else {
-      return 'green';
-    }
-  }
 
   void _setupSingleFace({
     required List<int> cubeIDs,
@@ -368,7 +351,7 @@ class CubeState {
     for (Facing cubeFace in cubeFaces) {
       for (int cubeFaceID in cubeFaceIDs[cubeFace]!) {
         String cubeColor =
-            '"${CubeState._transformColorToString(CubeState.cubeModels[cubeFaceID].component.cubeColor[cubeFace]!)}"';
+            CubeState._transformColorToString(CubeState.cubeModels[cubeFaceID].component.cubeColor[cubeFace]!);
         cubeStatus.add(cubeColor);
       }
     }
