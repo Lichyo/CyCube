@@ -1,7 +1,8 @@
-import 'package:cy_cube/components/single_cube_face.dart';
 import 'package:flutter/material.dart';
 import 'package:cy_cube/cube/cube_constants.dart';
 import 'package:cy_cube/cube/cube_state.dart';
+
+const double size = 65;
 
 class CubeStateIn2D extends StatelessWidget {
   const CubeStateIn2D({
@@ -15,25 +16,28 @@ class CubeStateIn2D extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog(
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
               const SizedBox(
-                width: 60,
-                height: 60,
+                width: size,
+                height: size,
               ),
               cubeState.show2DFace(facing: Facing.top),
               const SizedBox(
-                width: 60,
-                height: 60,
+                width: size,
+                height: size,
               ),
               const SizedBox(
-                width: 60,
-                height: 60,
+                width: size,
+                height: size,
               ),
             ],
           ),
           Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
               cubeState.show2DFace(facing: Facing.left),
               cubeState.show2DFace(facing: Facing.front),
@@ -42,19 +46,20 @@ class CubeStateIn2D extends StatelessWidget {
             ],
           ),
           Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
               const SizedBox(
-                width: 60,
-                height: 60,
+                width: size,
+                height: size,
               ),
               cubeState.show2DFace(facing: Facing.down),
               const SizedBox(
-                width: 60,
-                height: 60,
+                width: size,
+                height: size,
               ),
               const SizedBox(
-                width: 60,
-                height: 60,
+                width: size,
+                height: size,
               ),
             ],
           ),
