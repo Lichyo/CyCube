@@ -52,7 +52,6 @@ class _RubiksCubeState extends State<RubiksCube> {
             actions: [
               IconButton(
                 onPressed: () {
-                  String roomID = '';
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
@@ -83,7 +82,7 @@ class _RubiksCubeState extends State<RubiksCube> {
                                 onPressed: () async {
                                   await DatabaseService.joinRoom(
                                     email: 'lichyo003@gmail.com',
-                                    roomID: roomID,
+                                    roomID: roomID!,
                                     cubeState: cubeState,
                                   );
                                   isJoinCourseRoom = true;
@@ -103,12 +102,13 @@ class _RubiksCubeState extends State<RubiksCube> {
             ],
             elevation: 5,
             title: Text(
-              'The Cube',
+                roomID ?? 'The Cube',
               style: GoogleFonts.aboreto(
                 fontSize: 27.0,
                 fontWeight: FontWeight.w400,
               ),
             ),
+            centerTitle: true,
           ),
           body: Column(
             mainAxisAlignment: MainAxisAlignment.center,
