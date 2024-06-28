@@ -160,9 +160,7 @@ class _RubiksCubeState extends State<RubiksCube> {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return Expanded(
-                        child: CubeStateIn2D(cubeState: cubeState),
-                      );
+                      return CubeStateIn2D(cubeState: cubeState);
                     },
                   );
                   cubeState.show2DFace(facing: Facing.top);
