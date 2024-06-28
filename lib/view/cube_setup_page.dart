@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:cy_cube/components/pick_color_container.dart';
-import 'package:cy_cube/cube/cube_face_model.dart';
+import 'package:cy_cube/cube/single_cube_component_face_model.dart';
 import 'package:cy_cube/components/single_cube_face.dart';
 
 class CubeSetupPage extends StatefulWidget {
@@ -14,8 +14,8 @@ class CubeSetupPage extends StatefulWidget {
 class _CubeSetupPageState extends State<CubeSetupPage> {
   int _currentID = 0;
   Color pickColor = Colors.white;
-  List<CubeFaceModel> cubeFaces = [];
-  List<List<CubeFaceModel>> allCubeFaces = [];
+  List<SingleCubeComponentFaceModel> cubeFaces = [];
+  List<List<SingleCubeComponentFaceModel>> allCubeFaces = [];
 
   @override
   void initState() {
@@ -26,15 +26,15 @@ class _CubeSetupPageState extends State<CubeSetupPage> {
 
   void initCubeFaces() {
     cubeFaces = [];
-    cubeFaces.add(CubeFaceModel(id: 0, isSelected: true));
-    cubeFaces.add(CubeFaceModel(id: 1, isSelected: false));
-    cubeFaces.add(CubeFaceModel(id: 2, isSelected: false));
-    cubeFaces.add(CubeFaceModel(id: 3, isSelected: false));
-    cubeFaces.add(CubeFaceModel(id: 4, isSelected: false));
-    cubeFaces.add(CubeFaceModel(id: 5, isSelected: false));
-    cubeFaces.add(CubeFaceModel(id: 6, isSelected: false));
-    cubeFaces.add(CubeFaceModel(id: 7, isSelected: false));
-    cubeFaces.add(CubeFaceModel(id: 8, isSelected: false));
+    cubeFaces.add(SingleCubeComponentFaceModel(id: 0, isSelected: true));
+    cubeFaces.add(SingleCubeComponentFaceModel(id: 1, isSelected: false));
+    cubeFaces.add(SingleCubeComponentFaceModel(id: 2, isSelected: false));
+    cubeFaces.add(SingleCubeComponentFaceModel(id: 3, isSelected: false));
+    cubeFaces.add(SingleCubeComponentFaceModel(id: 4, isSelected: false));
+    cubeFaces.add(SingleCubeComponentFaceModel(id: 5, isSelected: false));
+    cubeFaces.add(SingleCubeComponentFaceModel(id: 6, isSelected: false));
+    cubeFaces.add(SingleCubeComponentFaceModel(id: 7, isSelected: false));
+    cubeFaces.add(SingleCubeComponentFaceModel(id: 8, isSelected: false));
   }
 
   void selectColor(Color color) {
@@ -68,35 +68,7 @@ class _CubeSetupPageState extends State<CubeSetupPage> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SingleCubeFace(cubeFaceModel: cubeFaces[6]),
-                  SingleCubeFace(cubeFaceModel: cubeFaces[7]),
-                  SingleCubeFace(cubeFaceModel: cubeFaces[8]),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SingleCubeFace(cubeFaceModel: cubeFaces[3]),
-                  SingleCubeFace(cubeFaceModel: cubeFaces[4]),
-                  SingleCubeFace(cubeFaceModel: cubeFaces[5]),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SingleCubeFace(cubeFaceModel: cubeFaces[0]),
-                  SingleCubeFace(cubeFaceModel: cubeFaces[1]),
-                  SingleCubeFace(cubeFaceModel: cubeFaces[2]),
-                ],
-              ),
-            ],
-          ),
+          SingleCubeFace(singleCubeComponentFaces: cubeFaces),
           const Gap(50),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -144,3 +116,4 @@ class _CubeSetupPageState extends State<CubeSetupPage> {
     );
   }
 }
+

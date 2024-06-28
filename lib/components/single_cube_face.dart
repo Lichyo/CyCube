@@ -1,26 +1,45 @@
 import 'package:flutter/material.dart';
-import 'package:cy_cube/cube/cube_face_model.dart';
+import 'package:cy_cube/cube/single_cube_component_face_model.dart';
+import 'package:cy_cube/components/single_cube_component_face.dart';
 
 class SingleCubeFace extends StatelessWidget {
   const SingleCubeFace({
     super.key,
-    required this.cubeFaceModel,
+    required this.singleCubeComponentFaces,
   });
 
-  final CubeFaceModel cubeFaceModel;
+  final List<SingleCubeComponentFaceModel> singleCubeComponentFaces;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 80,
-      height: 80,
-      decoration: BoxDecoration(
-        color: cubeFaceModel.color,
-        border: Border.all(
-          width: cubeFaceModel.isSelected ? 3 : 1,
-          color: cubeFaceModel.isSelected ? Colors.red : Colors.black,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SingleCubeComponentFace(cubeFaceModel: singleCubeComponentFaces[6], smaller: true,),
+            SingleCubeComponentFace(cubeFaceModel: singleCubeComponentFaces[7], smaller: true,),
+            SingleCubeComponentFace(cubeFaceModel: singleCubeComponentFaces[8], smaller: true,),
+          ],
         ),
-      ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SingleCubeComponentFace(cubeFaceModel: singleCubeComponentFaces[3], smaller: true,),
+            SingleCubeComponentFace(cubeFaceModel: singleCubeComponentFaces[4], smaller: true,),
+            SingleCubeComponentFace(cubeFaceModel: singleCubeComponentFaces[5], smaller: true,),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SingleCubeComponentFace(cubeFaceModel: singleCubeComponentFaces[0], smaller: true,),
+            SingleCubeComponentFace(cubeFaceModel: singleCubeComponentFaces[1], smaller: true,),
+            SingleCubeComponentFace(cubeFaceModel: singleCubeComponentFaces[2], smaller: true,),
+          ],
+        ),
+      ],
     );
   }
 }

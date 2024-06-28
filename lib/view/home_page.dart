@@ -1,5 +1,7 @@
-import 'package:cy_cube/cube/cube_rotation_table.dart';
+import 'package:cy_cube/components/cube_state_in_2D.dart';
+import 'package:cy_cube/cube/cube_constants.dart';
 import 'package:cy_cube/cube/cube_state.dart';
+import 'package:cy_cube/cube/cube_rotation_table.dart';
 import 'package:flutter/material.dart';
 import 'package:cy_cube/cube/cube.dart';
 import 'package:flutter/services.dart';
@@ -102,7 +104,7 @@ class _RubiksCubeState extends State<RubiksCube> {
             ],
             elevation: 5,
             title: Text(
-                roomID ?? 'The Cube',
+              roomID ?? 'The Cube',
               style: GoogleFonts.aboreto(
                 fontSize: 27.0,
                 fontWeight: FontWeight.w400,
@@ -113,7 +115,7 @@ class _RubiksCubeState extends State<RubiksCube> {
           body: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Gap(50),
+              const MaxGap(200),
               Transform(
                 origin: const Offset(0, 0),
                 alignment: Alignment.center,
@@ -150,6 +152,24 @@ class _RubiksCubeState extends State<RubiksCube> {
                     setState(() {});
                   },
                   child: const Text('create room'),
+                ),
+              ),
+              const MaxGap(200),
+              MaterialButton(
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return Expanded(
+                        child: CubeStateIn2D(cubeState: cubeState),
+                      );
+                    },
+                  );
+                  cubeState.show2DFace(facing: Facing.top);
+                },
+                child: Image.asset(
+                  'images/cube_icon.png',
+                  width: 80,
                 ),
               ),
             ],

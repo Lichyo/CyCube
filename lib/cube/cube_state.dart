@@ -1,8 +1,11 @@
+import 'dart:math';
+
 import 'package:cy_cube/cube/cube_component.dart';
 import 'single_cube_model.dart';
 import 'package:flutter/material.dart';
-import 'package:cy_cube/cube/cube_face_model.dart';
+import 'package:cy_cube/cube/single_cube_component_face_model.dart';
 import 'cube_constants.dart';
+import '../components/single_cube_face.dart';
 
 class CubeState {
   static List<SingleCubeModel> cubeModels = [];
@@ -240,7 +243,7 @@ class CubeState {
 
   void _setupSingleFace({
     required List<int> cubeIDs,
-    required List<CubeFaceModel> cubeFaces,
+    required List<SingleCubeComponentFaceModel> cubeFaces,
     required Facing facing,
   }) {
     int i = 0;
@@ -261,7 +264,8 @@ class CubeState {
     }
   }
 
-  void setupCubeWithScanningColor(List<List<CubeFaceModel>> cubeFaces) {
+  void setupCubeWithScanningColor(
+      List<List<SingleCubeComponentFaceModel>> cubeFaces) {
     for (int i = 0; i < cubeFaces.length; i++) {
       if (cubeFaces[i][4].color == Colors.white) {
         print('setup white face');
@@ -349,7 +353,7 @@ class CubeState {
     List<String> cubeStatus = [];
     for (Facing cubeFace in cubeFaces) {
       for (int cubeFaceID in cubeFaceIDs[cubeFace]!) {
-        String cubeColor = CubeState._transformColorToString(
+        String cubeColor = _transformColorToString(
             CubeState.cubeModels[cubeFaceID].component.cubeColor[cubeFace]!);
         cubeStatus.add(cubeColor);
       }
@@ -360,9 +364,10 @@ class CubeState {
   void setCubeState({required List<String> cubeStatus}) {
     int index = 0;
     for (Facing cubeFace in cubeFaces) {
-      List<CubeFaceModel> cubeFaceModes = [];
+      List<SingleCubeComponentFaceModel> cubeFaceModes = [];
       for (int cubeFaceID in cubeFaceIDs[cubeFace]!) {
-        CubeFaceModel cubeFaceModel = CubeFaceModel(
+        SingleCubeComponentFaceModel cubeFaceModel =
+            SingleCubeComponentFaceModel(
           id: cubeFaceID,
           color: _transformStringToColor(cubeStatus[index++]),
           isSelected: false,
@@ -375,5 +380,30 @@ class CubeState {
         facing: cubeFace,
       );
     }
+  }
+
+  SingleCubeFace show2DFace({required Facing facing}) {
+    List<SingleCubeComponentFaceModel> singleCubeComponentFaceModel = [];
+    List<int> cubeFaceIndex = [];
+    cubeFaceIndex.add(cubeFaceIDs[facing]![6]);
+    cubeFaceIndex.add(cubeFaceIDs[facing]![7]);
+    cubeFaceIndex.add(cubeFaceIDs[facing]![8]);
+    cubeFaceIndex.add(cubeFaceIDs[facing]![3]);
+    cubeFaceIndex.add(cubeFaceIDs[facing]![4]);
+    cubeFaceIndex.add(cubeFaceIDs[facing]![5]);
+    cubeFaceIndex.add(cubeFaceIDs[facing]![0]);
+    cubeFaceIndex.add(cubeFaceIDs[facing]![1]);
+    cubeFaceIndex.add(cubeFaceIDs[facing]![2]);
+    for (int index in cubeFaceIndex) {
+      singleCubeComponentFaceModel.add(
+        SingleCubeComponentFaceModel(
+          id: index,
+          color: cubeModels[index].component.cubeColor[facing],
+          isSelected: false,
+        ),
+      );
+    }
+    return SingleCubeFace(
+        singleCubeComponentFaces: singleCubeComponentFaceModel);
   }
 }
