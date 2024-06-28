@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:cy_cube/cube/cube_component.dart';
 import 'single_cube_model.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +7,11 @@ import '../components/single_cube_face.dart';
 
 class CubeState {
   static List<SingleCubeModel> cubeModels = [];
+  static List<int> indexWithCubeStack = [];
+  Function()? onStateChange;
+
+  static bool isFirstAdjustRight = false;
+  static bool isFirstAdjustLeft = false;
   final Map<Facing, Color> defaultCubeColor = {
     Facing.top: Colors.white,
     Facing.down: Colors.yellow,
@@ -17,7 +20,6 @@ class CubeState {
     Facing.front: Colors.green,
     Facing.back: Colors.blue,
   };
-  Function()? onStateChange;
 
   void setOnStateChange(Function()? callback) {
     onStateChange = callback;
@@ -268,42 +270,36 @@ class CubeState {
       List<List<SingleCubeComponentFaceModel>> cubeFaces) {
     for (int i = 0; i < cubeFaces.length; i++) {
       if (cubeFaces[i][4].color == Colors.white) {
-        print('setup white face');
         _setupSingleFace(
           cubeIDs: [24, 25, 26, 15, 16, 17, 6, 7, 8],
           cubeFaces: cubeFaces[i],
           facing: Facing.top,
         );
       } else if (cubeFaces[i][4].color == Colors.yellow) {
-        print('setup yellow face');
         _setupSingleFace(
           cubeIDs: [0, 1, 2, 9, 10, 11, 18, 19, 20],
           cubeFaces: cubeFaces[i],
           facing: Facing.down,
         );
       } else if (cubeFaces[i][4].color == Colors.red) {
-        print('setup red face');
         _setupSingleFace(
           cubeIDs: [20, 11, 2, 23, 14, 5, 26, 17, 8],
           cubeFaces: cubeFaces[i],
           facing: Facing.right,
         );
       } else if (cubeFaces[i][4].color == Colors.orange) {
-        print('setup orange face');
         _setupSingleFace(
           cubeIDs: [0, 9, 18, 3, 12, 21, 6, 15, 24],
           cubeFaces: cubeFaces[i],
           facing: Facing.left,
         );
       } else if (cubeFaces[i][4].color == Colors.blue) {
-        print('setup blue face');
         _setupSingleFace(
           cubeIDs: [2, 1, 0, 5, 4, 3, 8, 7, 6],
           cubeFaces: cubeFaces[i],
           facing: Facing.back,
         );
       } else {
-        print('setup green face');
         _setupSingleFace(
           cubeIDs: [18, 19, 20, 21, 22, 23, 24, 25, 26],
           cubeFaces: cubeFaces[i],
@@ -405,5 +401,13 @@ class CubeState {
     }
     return SingleCubeFace(
         singleCubeComponentFaces: singleCubeComponentFaceModel);
+  }
+
+  void adjustCubeStack({required Offset offset}) {
+    if (isFirstAdjustRight == false && offset.dx > 45) {
+      _shift([8, 6, 24, 26], [17, 7, 15, 25]); // u
+      _shift([0, 18, 20, 2], [9, 19, 11, 1]); // d
+      _shift([20, 11, 2, 23], [26, 17, 8, 5]); // r
+    }
   }
 }

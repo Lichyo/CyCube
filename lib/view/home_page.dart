@@ -2,6 +2,7 @@ import 'package:cy_cube/components/cube_state_in_2D.dart';
 import 'package:cy_cube/cube/cube_constants.dart';
 import 'package:cy_cube/cube/cube_state.dart';
 import 'package:cy_cube/cube/cube_rotation_table.dart';
+import 'package:cy_cube/view/cube_setup_page.dart';
 import 'package:flutter/material.dart';
 import 'package:cy_cube/cube/cube.dart';
 import 'package:flutter/services.dart';
@@ -9,6 +10,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'dart:math';
 import 'package:gap/gap.dart';
 import 'package:cy_cube/service/database_service.dart';
+import 'package:cy_cube/cube/single_cube_component_face_model.dart';
 
 class RubiksCube extends StatefulWidget {
   const RubiksCube({super.key});
@@ -50,6 +52,50 @@ class _RubiksCubeState extends State<RubiksCube> {
           });
         },
         child: Scaffold(
+          drawer: Drawer(
+            child: ListView(
+              children: [
+                const DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                  ),
+                  child: Text(
+                    'CyCube',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                    ),
+                  ),
+                ),
+                ListTile(
+                  title: const Text('Reset'),
+                  onTap: () {
+                    cubeState = CubeState();
+                    setState(() {});
+                  },
+                ),
+                ListTile(
+                  title: const Text('Detection ( OpenCV )'),
+                  onTap: () {
+                    setState(() {});
+                  },
+                ),
+                ListTile(
+                  title: const Text('Detection ( Manual )'),
+                  onTap: () async {
+                    var data = await Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const CubeSetupPage(),
+                      ),
+                    );
+                    List<List<SingleCubeComponentFaceModel>> cubeFaces = data[0];
+                    cubeState.setupCubeWithScanningColor(cubeFaces);
+                    setState(() {});
+                  },
+                ),
+              ],
+            ),
+          ),
           appBar: AppBar(
             actions: [
               IconButton(
