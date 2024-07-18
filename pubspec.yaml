@@ -34,7 +34,7 @@ dependencies:
 
   vector_math: ^2.1.4
   google_fonts: ^6.1.0
-  image_picker: ^1.0.5
+  image_picker: ^1.1.2
   font_awesome_flutter: ^10.6.0
   gap: ^3.0.1
   camera: ^0.8.0
@@ -47,6 +47,8 @@ dependencies:
   firebase_auth: ^5.1.1
   dio: ^5.4.3+1
   image: ^3.0.2
+  google_mlkit_object_detection: ^0.13.0
+  google_mlkit_commons: ^0.7.1
 
 dev_dependencies:
   flutter_test:

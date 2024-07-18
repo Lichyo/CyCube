@@ -7,7 +7,7 @@ import '../components/single_cube_face.dart';
 
 class CubeState {
   static List<SingleCubeModel> cubeModels = [];
-  static List<int> indexWithCubeStack = [];
+  bool isInit = false;
   Function()? onStateChange;
 
   static bool isFirstAdjustRight = false;
@@ -57,6 +57,7 @@ class CubeState {
   }
 
   CubeState() {
+    print('isInit : $isInit');
     int id = 0;
     for (int z = -1; z < 2; z++) {
       for (int y = -1; y < 2; y++) {
@@ -76,6 +77,7 @@ class CubeState {
         }
       }
     }
+    arrangeCubeFace();
   }
 
   void rotate(String rotation) {
@@ -403,11 +405,44 @@ class CubeState {
         singleCubeComponentFaces: singleCubeComponentFaceModel);
   }
 
-  void adjustCubeStack({required Offset offset}) {
-    if (isFirstAdjustRight == false && offset.dx > 45) {
-      _shift([8, 6, 24, 26], [17, 7, 15, 25]); // u
-      _shift([0, 18, 20, 2], [9, 19, 11, 1]); // d
-      _shift([20, 11, 2, 23], [26, 17, 8, 5]); // r
+  void arrange() {
+    arrangeCubeFace();
+    arrangeCubeModel();
+  }
+
+  void arrangeCubeModel() {
+    List<SingleCubeModel> list = [];
+    for (int index in cubeArrangeX) {
+      list.add(cubeModels[index]);
+    }
+    cubeModels = list;
+  }
+
+  void arrangeCubeFace() {
+    if (isInit == true) {
+      for (SingleCubeModel cubeModel in cubeModels) {
+        List<Widget> cubeFaces = cubeModel.component.cubeFaces;
+        List<Widget> arrangedCubeFaces = [];
+        arrangedCubeFaces.add(cubeFaces[2]);
+        arrangedCubeFaces.add(cubeFaces[1]);
+        arrangedCubeFaces.add(cubeFaces[5]);
+        arrangedCubeFaces.add(cubeFaces[0]);
+        arrangedCubeFaces.add(cubeFaces[4]);
+        arrangedCubeFaces.add(cubeFaces[3]);
+        cubeModel.component.cubeFaces = arrangedCubeFaces;
+      }
+      arrangeCubeModel();
+    } else {
+      for (SingleCubeModel cubeModel in cubeModels) {
+        final cube = cubeModel.component.cube;
+        cubeModel.component.cubeFaces.add(cube[Facing.back]!);
+        cubeModel.component.cubeFaces.add(cube[Facing.down]!);
+        cubeModel.component.cubeFaces.add(cube[Facing.left]!);
+        cubeModel.component.cubeFaces.add(cube[Facing.right]!);
+        cubeModel.component.cubeFaces.add(cube[Facing.top]!);
+        cubeModel.component.cubeFaces.add(cube[Facing.front]!);
+      }
+      isInit = true;
     }
   }
 }

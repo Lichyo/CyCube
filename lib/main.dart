@@ -12,8 +12,8 @@ void main() async {
   runApp(
     const MaterialApp(
       debugShowCheckedModeBanner: false,
-      // home: RubiksCube(),
-      home: ColorDetectionPage(),
+      home: RubiksCube(),
+      // home: ColorDetectionPage(),
     ),
   );
 }

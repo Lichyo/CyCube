@@ -25,6 +25,8 @@ class _RubiksCubeState extends State<RubiksCube> {
   String? roomID;
   bool isJoinCourseRoom = false;
   bool isCreateRoom = false;
+  bool isArranged = false;
+  bool secondArranged = false;
 
   @override
   void initState() {
@@ -49,6 +51,11 @@ class _RubiksCubeState extends State<RubiksCube> {
         onPanUpdate: (detail) {
           setState(() {
             _offset += detail.delta;
+            if (_offset.dx <= -90 && isArranged == false) {
+              cubeState.arrangeCubeFace();
+              print('arranged');
+              isArranged = true;
+            }
           });
         },
         child: Scaffold(
@@ -88,7 +95,8 @@ class _RubiksCubeState extends State<RubiksCube> {
                         builder: (context) => const CubeSetupPage(),
                       ),
                     );
-                    List<List<SingleCubeComponentFaceModel>> cubeFaces = data[0];
+                    List<List<SingleCubeComponentFaceModel>> cubeFaces =
+                        data[0];
                     cubeState.setupCubeWithScanningColor(cubeFaces);
                     setState(() {});
                   },
@@ -216,6 +224,9 @@ class _RubiksCubeState extends State<RubiksCube> {
                   width: 80,
                 ),
               ),
+              TextButton(onPressed: () {
+
+              }, child: const Text('Test Button')),
             ],
           ),
         ),

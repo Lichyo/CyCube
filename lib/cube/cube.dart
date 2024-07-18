@@ -15,7 +15,9 @@ class Cube extends StatelessWidget {
               cube.y, // 向下遞增
               cube.z, // 向前遞增
             ),
-          child: cube.component,
+          child: Stack(
+            children: cube.component.cubeFaces,
+          ),
         ),
       );
     }

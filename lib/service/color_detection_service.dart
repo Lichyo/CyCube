@@ -1,22 +1,15 @@
-import 'dart:typed_data';
-import 'package:image/image.dart' as img;
+import 'dart:io';
+import 'package:camera/camera.dart';
+import 'package:google_mlkit_commons/google_mlkit_commons.dart';
+import 'package:flutter/services.dart';
 
 class ColorDetectionService {
-  static Uint8List capture({
-    required int width,
-    required int height,
-    required Uint8List bytes,
-  }) {
-    print('bytes length : ${bytes.lengthInBytes}');
-    // img.Image image = img.Image.fromBytes(
-    //   width,
-    //   height,
-    //   bytes,
-    //   format: img.Format.bgra,
-    // );
-    return bytes;
-    // List<int> jpg = Uint8List.fromList(img.encodeJpg(image));
-    // print('jpg length: ${jpg.length}');
-    // return jpg;
-  }
+  final _orientations = {
+    DeviceOrientation.portraitUp: 0,
+    DeviceOrientation.landscapeLeft: 90,
+    DeviceOrientation.portraitDown: 180,
+    DeviceOrientation.landscapeRight: 270,
+  };
+
+
 }
