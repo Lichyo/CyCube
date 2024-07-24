@@ -6,7 +6,8 @@ class Cube extends StatelessWidget {
   final List<Widget> _cube = [];
 
   Cube({super.key}) {
-    for (SingleCubeModel cube in CubeState.cubeModels) {
+    for (int index in CubeState.indexWithStack) {
+      final SingleCubeModel cube = CubeState.cubeModels[index];
       _cube.add(
         Transform(
           transform: Matrix4.identity()

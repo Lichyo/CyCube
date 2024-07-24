@@ -8,7 +8,6 @@ import '../components/single_cube_face.dart';
 class CubeState {
   static List<SingleCubeModel> cubeModels = [];
   static List<int> indexWithStack = [];
-  static List<int> indexWithRotation = [];
   bool isInit = false;
   Function()? onStateChange;
 
@@ -30,7 +29,7 @@ class CubeState {
               z: z * cubeWidth,
             ),
           );
-          indexWithRotation.add(id);
+          indexWithStack.add(id);
           id++;
         }
       }
@@ -311,7 +310,7 @@ class CubeState {
     }
   }
 
-  static String _transformColorToString(Color color) {
+  static String transformColorToString(Color color) {
     if (color == Colors.red) {
       return 'red';
     } else if (color == Colors.orange) {
@@ -351,7 +350,7 @@ class CubeState {
     List<String> cubeStatus = [];
     for (Facing cubeFace in cubeFaces) {
       for (int cubeFaceID in cubeFaceIDs[cubeFace]!) {
-        String cubeColor = _transformColorToString(
+        String cubeColor = transformColorToString(
             CubeState.cubeModels[cubeFaceID].component.cubeColor[cubeFace]!);
         cubeStatus.add(cubeColor);
       }
@@ -411,11 +410,13 @@ class CubeState {
   }
 
   void arrangeCubeModel() {
-    List<SingleCubeModel> list = [];
+    List<int> list = [];
     for (int index in cubeArrangeX) {
-      list.add(cubeModels[index]);
+      list.add(indexWithStack[index]);
     }
-    cubeModels = list;
+    print('origin : $indexWithStack');
+    indexWithStack = list;
+    print('after: $list\n');
   }
 
   void arrangeCubeFace() {

@@ -53,6 +53,7 @@ class _RubiksCubeState extends State<RubiksCube> {
             _offset += detail.delta;
             if (_offset.dx <= -90 && isArranged == false) {
               cubeState.arrangeCubeFace();
+              setState(() {});
               isArranged = true;
             }
           });
@@ -207,7 +208,7 @@ class _RubiksCubeState extends State<RubiksCube> {
                   child: const Text('create room'),
                 ),
               ),
-              const MaxGap(200),
+              const MaxGap(100),
               MaterialButton(
                 onPressed: () {
                   showDialog(
@@ -224,7 +225,9 @@ class _RubiksCubeState extends State<RubiksCube> {
                 ),
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                  cubeState.arrangeCubeModel();
+                },
                 child: const Text('Test Button'),
               ),
             ],

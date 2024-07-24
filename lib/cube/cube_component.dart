@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
 import 'cube_constants.dart';
+import 'cube_state.dart';
 
 class CubeComponent extends StatelessWidget {
   Map<Facing, Widget> cube = {};
   final Map<Facing, Color> cubeColor;
   List<Widget> cubeFaces = [];
+  List<String> cubeFaceNames = [];
 
   CubeComponent({
     super.key,
@@ -118,6 +120,14 @@ class CubeComponent extends StatelessWidget {
     cubeFaces.add(cube[Facing.right]!);
     cubeFaces.add(cube[Facing.top]!);
     cubeFaces.add(cube[Facing.front]!);
+    cubeFaceNames = [
+      CubeState.transformColorToString(cubeColor[Facing.back]!),
+      CubeState.transformColorToString(cubeColor[Facing.down]!),
+      CubeState.transformColorToString(cubeColor[Facing.left]!),
+      CubeState.transformColorToString(cubeColor[Facing.right]!),
+      CubeState.transformColorToString(cubeColor[Facing.top]!),
+      CubeState.transformColorToString(cubeColor[Facing.front]!),
+    ];
   }
 
   @override
