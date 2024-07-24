@@ -53,7 +53,6 @@ class _RubiksCubeState extends State<RubiksCube> {
             _offset += detail.delta;
             if (_offset.dx <= -90 && isArranged == false) {
               cubeState.arrangeCubeFace();
-              print('arranged');
               isArranged = true;
             }
           });
@@ -224,9 +223,10 @@ class _RubiksCubeState extends State<RubiksCube> {
                   width: 80,
                 ),
               ),
-              TextButton(onPressed: () {
-
-              }, child: const Text('Test Button')),
+              TextButton(
+                onPressed: () {},
+                child: const Text('Test Button'),
+              ),
             ],
           ),
         ),

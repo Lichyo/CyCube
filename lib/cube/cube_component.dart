@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'dart:math';
 import 'cube_constants.dart';
 
-class CubeComponent {
+class CubeComponent extends StatelessWidget {
   Map<Facing, Widget> cube = {};
   final Map<Facing, Color> cubeColor;
   List<Widget> cubeFaces = [];
 
   CubeComponent({
+    super.key,
     isBlack = false,
     required this.cubeColor,
   }) {
@@ -111,5 +112,18 @@ class CubeComponent {
         ),
       ),
     };
+    cubeFaces.add(cube[Facing.back]!);
+    cubeFaces.add(cube[Facing.down]!);
+    cubeFaces.add(cube[Facing.left]!);
+    cubeFaces.add(cube[Facing.right]!);
+    cubeFaces.add(cube[Facing.top]!);
+    cubeFaces.add(cube[Facing.front]!);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: cubeFaces,
+    );
   }
 }

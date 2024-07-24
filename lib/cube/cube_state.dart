@@ -7,11 +7,37 @@ import '../components/single_cube_face.dart';
 
 class CubeState {
   static List<SingleCubeModel> cubeModels = [];
+  static List<int> indexWithStack = [];
+  static List<int> indexWithRotation = [];
   bool isInit = false;
   Function()? onStateChange;
 
   static bool isFirstAdjustRight = false;
   static bool isFirstAdjustLeft = false;
+
+  CubeState() {
+    int id = 0;
+    for (int z = -1; z < 2; z++) {
+      for (int y = -1; y < 2; y++) {
+        for (int x = -1; x < 2; x++) {
+          cubeModels.add(
+            SingleCubeModel(
+              component: CubeComponent(
+                cubeColor: Map.from(defaultCubeColor),
+              ),
+              x: x * cubeWidth,
+              y: -y * cubeWidth,
+              z: z * cubeWidth,
+            ),
+          );
+          indexWithRotation.add(id);
+          id++;
+        }
+      }
+    }
+    arrangeCubeFace();
+  }
+
   final Map<Facing, Color> defaultCubeColor = {
     Facing.top: Colors.white,
     Facing.down: Colors.yellow,
@@ -45,7 +71,6 @@ class CubeState {
         updatedCubeColor = _updateZColorReverse(cube: cubeModels[id]);
       }
       cubeModels[id] = SingleCubeModel(
-        id: id,
         component: CubeComponent(
           cubeColor: updatedCubeColor,
         ),
@@ -54,30 +79,6 @@ class CubeState {
         z: cubeModels[id].z,
       );
     }
-  }
-
-  CubeState() {
-    print('isInit : $isInit');
-    int id = 0;
-    for (int z = -1; z < 2; z++) {
-      for (int y = -1; y < 2; y++) {
-        for (int x = -1; x < 2; x++) {
-          cubeModels.add(
-            SingleCubeModel(
-              id: id,
-              component: CubeComponent(
-                cubeColor: Map.from(defaultCubeColor),
-              ),
-              x: x * cubeWidth,
-              y: -y * cubeWidth,
-              z: z * cubeWidth,
-            ),
-          );
-          id++;
-        }
-      }
-    }
-    arrangeCubeFace();
   }
 
   void rotate(String rotation) {
@@ -256,7 +257,6 @@ class CubeState {
           Map.from(cubeModels[id].component.cubeColor);
       updatedCubeColor[facing] = cubeFaces[i].color!;
       cubeModels[id] = SingleCubeModel(
-        id: id,
         component: CubeComponent(
           cubeColor: updatedCubeColor,
         ),
@@ -406,7 +406,7 @@ class CubeState {
   }
 
   void arrange() {
-    arrangeCubeFace();
+    // arrangeCubeFace();
     arrangeCubeModel();
   }
 
@@ -420,6 +420,7 @@ class CubeState {
 
   void arrangeCubeFace() {
     if (isInit == true) {
+      print('arranged');
       for (SingleCubeModel cubeModel in cubeModels) {
         List<Widget> cubeFaces = cubeModel.component.cubeFaces;
         List<Widget> arrangedCubeFaces = [];
@@ -433,15 +434,6 @@ class CubeState {
       }
       arrangeCubeModel();
     } else {
-      for (SingleCubeModel cubeModel in cubeModels) {
-        final cube = cubeModel.component.cube;
-        cubeModel.component.cubeFaces.add(cube[Facing.back]!);
-        cubeModel.component.cubeFaces.add(cube[Facing.down]!);
-        cubeModel.component.cubeFaces.add(cube[Facing.left]!);
-        cubeModel.component.cubeFaces.add(cube[Facing.right]!);
-        cubeModel.component.cubeFaces.add(cube[Facing.top]!);
-        cubeModel.component.cubeFaces.add(cube[Facing.front]!);
-      }
       isInit = true;
     }
   }
