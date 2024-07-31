@@ -27,6 +27,7 @@ class _RubiksCubeState extends State<RubiksCube> {
   bool isCreateRoom = false;
   bool isArrangedRight = false;
   bool isArrangedLeft = false;
+  int arrangeCount = 0;
 
   @override
   void initState() {
@@ -51,10 +52,14 @@ class _RubiksCubeState extends State<RubiksCube> {
         onPanUpdate: (detail) {
           setState(() {
             _offset += detail.delta;
-            // if (_offset.dx <= -90 && isArrangedRight == false && isArrangedLeft == false) {
-            //   cubeState.arrangeCubeFace();
-            //   isArrangedRight = true;
-            // }
+            print('cube : ${(_offset.dx / 90).floor()}, counter : $arrangeCount');
+            if ((_offset.dx / 90).floor() < arrangeCount-1) {
+              arrangeCount--;
+              cubeState.arrangeCubeFace('right');
+            } else if ((_offset.dx / 90).floor() > arrangeCount-1) {
+              arrangeCount++;
+              cubeState.arrangeCubeFace('left');
+            }
           });
         },
         child: Scaffold(

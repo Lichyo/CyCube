@@ -415,10 +415,11 @@ class CubeState {
         list.add(indexWithStack[index]);
       }
     }
-    print('origin : $indexWithStack');
+    // print('origin : $indexWithStack');
     indexWithStack = list;
-    print('after: $list\n');
+    // print('after: $list\n');
   }
+  
 
   void arrangeCubeFace(String arrangeSide) {
     if (arrangeSide == 'right') {
@@ -428,6 +429,7 @@ class CubeState {
       _arrangedSingleCubeFace([3, 1, 0, 5, 4, 2]);
       _arrangeCubeModel('left');
     }
+    print('arrangeSide: $arrangeSide');
   }
 
   void _arrangedSingleCubeFace(List<int> cubeFaceIndex) {
