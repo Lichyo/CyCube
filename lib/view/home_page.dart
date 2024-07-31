@@ -51,11 +51,10 @@ class _RubiksCubeState extends State<RubiksCube> {
         onPanUpdate: (detail) {
           setState(() {
             _offset += detail.delta;
-            if (_offset.dx <= -90 && isArranged == false) {
-              cubeState.arrangeCubeFace();
-              setState(() {});
-              isArranged = true;
-            }
+            // if (_offset.dx <= -90 && isArranged == false) {
+            //
+            //   isArranged = true;
+            // }
           });
         },
         child: Scaffold(
@@ -226,7 +225,8 @@ class _RubiksCubeState extends State<RubiksCube> {
               ),
               TextButton(
                 onPressed: () {
-                  cubeState.arrangeCubeModel();
+                  cubeState.arrangeCubeFace();
+                  setState(() {});
                 },
                 child: const Text('Test Button'),
               ),
