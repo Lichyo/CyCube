@@ -5,11 +5,11 @@ import 'dart:math';
 
 class CubeComponent extends StatelessWidget {
   List<Widget> cubeFaces = [];
-  Map<Facing, Color> cubeColor = {};
+  final Map<Facing, Color> cubeColor;
 
   CubeComponent({
     super.key,
-    required cubeColor,
+    required this.cubeColor,
   }) {
     Map<Facing, Widget> cubeElements = {
       Facing.top: CubeFace(
