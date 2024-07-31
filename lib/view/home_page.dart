@@ -1,16 +1,16 @@
 import 'package:cy_cube/components/cube_state_in_2D.dart';
 import 'package:cy_cube/cube/cube_constants.dart';
 import 'package:cy_cube/cube/cube_state.dart';
-import 'package:cy_cube/cube/cube_rotation_table.dart';
+import 'package:cy_cube/components/cube_rotation_table.dart';
 import 'package:cy_cube/view/cube_setup_page.dart';
 import 'package:flutter/material.dart';
-import 'package:cy_cube/cube/cube.dart';
+import 'package:cy_cube/cube/cube_view/cube.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:math';
 import 'package:gap/gap.dart';
 import 'package:cy_cube/service/database_service.dart';
-import 'package:cy_cube/cube/single_cube_component_face_model.dart';
+import 'package:cy_cube/cube/cube_model/single_cube_component_face_model.dart';
 
 class RubiksCube extends StatefulWidget {
   const RubiksCube({super.key});
@@ -25,8 +25,8 @@ class _RubiksCubeState extends State<RubiksCube> {
   String? roomID;
   bool isJoinCourseRoom = false;
   bool isCreateRoom = false;
-  bool isArranged = false;
-  bool secondArranged = false;
+  bool isArrangedRight = false;
+  bool isArrangedLeft = false;
 
   @override
   void initState() {
@@ -51,9 +51,9 @@ class _RubiksCubeState extends State<RubiksCube> {
         onPanUpdate: (detail) {
           setState(() {
             _offset += detail.delta;
-            // if (_offset.dx <= -90 && isArranged == false) {
-            //
-            //   isArranged = true;
+            // if (_offset.dx <= -90 && isArrangedRight == false && isArrangedLeft == false) {
+            //   cubeState.arrangeCubeFace();
+            //   isArrangedRight = true;
             // }
           });
         },
@@ -223,12 +223,24 @@ class _RubiksCubeState extends State<RubiksCube> {
                   width: 80,
                 ),
               ),
-              TextButton(
-                onPressed: () {
-                  cubeState.arrangeCubeFace();
-                  setState(() {});
-                },
-                child: const Text('Test Button'),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      cubeState.arrangeCubeFace('left');
+                      setState(() {});
+                    },
+                    child: const Text('arrange left'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      cubeState.arrangeCubeFace('right');
+                      setState(() {});
+                    },
+                    child: const Text('arrange right'),
+                  ),
+                ],
               ),
             ],
           ),

@@ -1,7 +1,7 @@
-import 'package:cy_cube/cube/cube_component.dart';
-import 'single_cube_model.dart';
+import 'package:cy_cube/cube/cube_view/cube_component.dart';
+import 'cube_model/single_cube_model.dart';
 import 'package:flutter/material.dart';
-import 'package:cy_cube/cube/single_cube_component_face_model.dart';
+import 'package:cy_cube/cube/cube_model/single_cube_component_face_model.dart';
 import 'cube_constants.dart';
 import '../components/single_cube_face.dart';
 
@@ -34,7 +34,7 @@ class CubeState {
         }
       }
     }
-    arrangeCubeFace();
+    // arrangeCubeFace('right'); ????
   }
 
   final Map<Facing, Color> defaultCubeColor = {
@@ -109,20 +109,6 @@ class CubeState {
     if (onStateChange != null) {
       onStateChange!();
     }
-  }
-
-  void _shift(List<int> cornerIds, List<int> edgeIds) {
-    final CubeComponent cornerComponent = cubeModels[cornerIds[0]].component;
-    cubeModels[cornerIds[0]].component = cubeModels[cornerIds[1]].component;
-    cubeModels[cornerIds[1]].component = cubeModels[cornerIds[2]].component;
-    cubeModels[cornerIds[2]].component = cubeModels[cornerIds[3]].component;
-    cubeModels[cornerIds[3]].component = cornerComponent;
-
-    final CubeComponent edgeComponent = cubeModels[edgeIds[0]].component;
-    cubeModels[edgeIds[0]].component = cubeModels[edgeIds[1]].component;
-    cubeModels[edgeIds[1]].component = cubeModels[edgeIds[2]].component;
-    cubeModels[edgeIds[2]].component = cubeModels[edgeIds[3]].component;
-    cubeModels[edgeIds[3]].component = edgeComponent;
   }
 
   void rMove() {
@@ -243,6 +229,20 @@ class CubeState {
     cubeColor[Facing.front] = cubeColor[Facing.left]!;
     cubeColor[Facing.left] = color;
     return cubeColor;
+  }
+
+  void _shift(List<int> cornerIds, List<int> edgeIds) {
+    final CubeComponent cornerComponent = cubeModels[cornerIds[0]].component;
+    cubeModels[cornerIds[0]].component = cubeModels[cornerIds[1]].component;
+    cubeModels[cornerIds[1]].component = cubeModels[cornerIds[2]].component;
+    cubeModels[cornerIds[2]].component = cubeModels[cornerIds[3]].component;
+    cubeModels[cornerIds[3]].component = cornerComponent;
+
+    final CubeComponent edgeComponent = cubeModels[edgeIds[0]].component;
+    cubeModels[edgeIds[0]].component = cubeModels[edgeIds[1]].component;
+    cubeModels[edgeIds[1]].component = cubeModels[edgeIds[2]].component;
+    cubeModels[edgeIds[2]].component = cubeModels[edgeIds[3]].component;
+    cubeModels[edgeIds[3]].component = edgeComponent;
   }
 
   void _setupSingleFace({
@@ -404,38 +404,39 @@ class CubeState {
         singleCubeComponentFaces: singleCubeComponentFaceModel);
   }
 
-  void arrange() {
-    // arrangeCubeFace();
-    arrangeCubeModel();
-  }
-
-  void arrangeCubeModel() {
+  void _arrangeCubeModel(String arrangedSide) {
     List<int> list = [];
-    for (int index in cubeArrangeX) {
-      list.add(indexWithStack[index]);
+    if (arrangedSide == 'right') {
+      for (int index in cubeArrangeX) {
+        list.add(indexWithStack[index]);
+      }
+    } else {
+      for (int index in cubeArrangeXReverse) {
+        list.add(indexWithStack[index]);
+      }
     }
     print('origin : $indexWithStack');
     indexWithStack = list;
     print('after: $list\n');
   }
 
-  void arrangeCubeFace() {
-    if (isInit == true) {
-      print('arranged');
-      for (SingleCubeModel cubeModel in cubeModels) {
-        List<Widget> cubeFaces = cubeModel.component.cubeFaces;
-        List<Widget> arrangedCubeFaces = [];
-        arrangedCubeFaces.add(cubeFaces[2]);
-        arrangedCubeFaces.add(cubeFaces[1]);
-        arrangedCubeFaces.add(cubeFaces[5]);
-        arrangedCubeFaces.add(cubeFaces[0]);
-        arrangedCubeFaces.add(cubeFaces[4]);
-        arrangedCubeFaces.add(cubeFaces[3]);
-        cubeModel.component.cubeFaces = arrangedCubeFaces;
-      }
-      arrangeCubeModel();
+  void arrangeCubeFace(String arrangeSide) {
+    if (arrangeSide == 'right') {
+      _arrangedSingleCubeFace([2, 1, 5, 0, 4, 3]);
+      _arrangeCubeModel('right');
     } else {
-      isInit = true;
+      _arrangedSingleCubeFace([3, 1, 0, 5, 4, 2]);
+      _arrangeCubeModel('left');
+    }
+  }
+
+  void _arrangedSingleCubeFace(List<int> cubeFaceIndex) {
+    List<Widget> arrangedCubeFaces = [];
+    for (SingleCubeModel cubeModel in cubeModels) {
+      for (int index in cubeFaceIndex) {
+        arrangedCubeFaces.add(cubeModel.component.cubeFaces[index]);
+      }
+      cubeModel.component.cubeFaces = arrangedCubeFaces;
     }
   }
 }

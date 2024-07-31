@@ -1,4 +1,4 @@
-import 'cube_component.dart';
+import '../cube_view/cube_component.dart';
 
 class SingleCubeModel {
   final double x;

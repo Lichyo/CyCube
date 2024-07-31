@@ -1,6 +1,6 @@
-import 'package:cy_cube/cube/single_cube_model.dart';
+import 'package:cy_cube/cube/cube_model/single_cube_model.dart';
 import 'package:flutter/material.dart';
-import 'cube_state.dart';
+import '../cube_state.dart';
 
 class Cube extends StatelessWidget {
   final List<Widget> _cube = [];
