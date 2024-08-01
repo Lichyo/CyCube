@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 enum Facing { top, down, left, right, front, back }
 
@@ -30,3 +31,7 @@ const List<Facing> cubeFaces = [
   Facing.front,
   Facing.back,
 ];
+
+const List<int> cubeArrangeX = [18, 9, 0, 21, 12, 3, 24, 15, 6, 19, 10, 1, 22, 13, 4, 25, 16, 7, 20, 11, 2, 23, 14, 5, 26, 17, 8];
+const List<int> cubeArrangeXReverse = [2, 11, 20, 5, 14, 23, 8, 17, 26, 1, 10, 19, 4, 13, 22, 7, 16, 25, 0, 9, 18, 3, 12, 21, 6, 15, 24];
+

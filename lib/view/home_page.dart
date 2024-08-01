@@ -1,14 +1,16 @@
 import 'package:cy_cube/components/cube_state_in_2D.dart';
 import 'package:cy_cube/cube/cube_constants.dart';
 import 'package:cy_cube/cube/cube_state.dart';
-import 'package:cy_cube/cube/cube_rotation_table.dart';
+import 'package:cy_cube/components/cube_rotation_table.dart';
+import 'package:cy_cube/view/cube_setup_page.dart';
 import 'package:flutter/material.dart';
-import 'package:cy_cube/cube/cube.dart';
+import 'package:cy_cube/cube/cube_view/cube.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:math';
 import 'package:gap/gap.dart';
 import 'package:cy_cube/service/database_service.dart';
+import 'package:cy_cube/cube/cube_model/single_cube_component_face_model.dart';
 
 class RubiksCube extends StatefulWidget {
   const RubiksCube({super.key});
@@ -23,6 +25,9 @@ class _RubiksCubeState extends State<RubiksCube> {
   String? roomID;
   bool isJoinCourseRoom = false;
   bool isCreateRoom = false;
+  bool isArrangedRight = false;
+  bool isArrangedLeft = false;
+  int arrangeCount = 0;
 
   @override
   void initState() {
@@ -47,9 +52,62 @@ class _RubiksCubeState extends State<RubiksCube> {
         onPanUpdate: (detail) {
           setState(() {
             _offset += detail.delta;
+            print('cube : ${(_offset.dx / 90).floor()}, counter : $arrangeCount');
+            if ((_offset.dx / 90).floor() < arrangeCount-1) {
+              arrangeCount--;
+              cubeState.arrangeCube('right');
+            } else if ((_offset.dx / 90).floor() > arrangeCount-1) {
+              arrangeCount++;
+              cubeState.arrangeCube('left');
+            }
           });
         },
         child: Scaffold(
+          drawer: Drawer(
+            child: ListView(
+              children: [
+                const DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                  ),
+                  child: Text(
+                    'CyCube',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                    ),
+                  ),
+                ),
+                ListTile(
+                  title: const Text('Reset'),
+                  onTap: () {
+                    cubeState = CubeState();
+                    setState(() {});
+                  },
+                ),
+                ListTile(
+                  title: const Text('Detection ( OpenCV )'),
+                  onTap: () {
+                    setState(() {});
+                  },
+                ),
+                ListTile(
+                  title: const Text('Detection ( Manual )'),
+                  onTap: () async {
+                    var data = await Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const CubeSetupPage(),
+                      ),
+                    );
+                    List<List<SingleCubeComponentFaceModel>> cubeFaces =
+                        data[0];
+                    cubeState.setupCubeWithScanningColor(cubeFaces);
+                    setState(() {});
+                  },
+                ),
+              ],
+            ),
+          ),
           appBar: AppBar(
             actions: [
               IconButton(
@@ -154,15 +212,13 @@ class _RubiksCubeState extends State<RubiksCube> {
                   child: const Text('create room'),
                 ),
               ),
-              const MaxGap(200),
+              const MaxGap(100),
               MaterialButton(
                 onPressed: () {
                   showDialog(
                     context: context,
                     builder: (BuildContext context) {
-                      return Expanded(
-                        child: CubeStateIn2D(cubeState: cubeState),
-                      );
+                      return CubeStateIn2D(cubeState: cubeState);
                     },
                   );
                   cubeState.show2DFace(facing: Facing.top);
@@ -171,6 +227,25 @@ class _RubiksCubeState extends State<RubiksCube> {
                   'images/cube_icon.png',
                   width: 80,
                 ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      cubeState.arrangeCube('left');
+                      setState(() {});
+                    },
+                    child: const Text('arrange left'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      cubeState.arrangeCube('right');
+                      setState(() {});
+                    },
+                    child: const Text('arrange right'),
+                  ),
+                ],
               ),
             ],
           ),

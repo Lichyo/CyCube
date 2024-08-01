@@ -1,14 +1,42 @@
-import 'dart:math';
-
-import 'package:cy_cube/cube/cube_component.dart';
-import 'single_cube_model.dart';
+import 'package:cy_cube/cube/cube_view/cube_component.dart';
+import 'cube_model/single_cube_model.dart';
 import 'package:flutter/material.dart';
-import 'package:cy_cube/cube/single_cube_component_face_model.dart';
+import 'package:cy_cube/cube/cube_model/single_cube_component_face_model.dart';
 import 'cube_constants.dart';
 import '../components/single_cube_face.dart';
 
 class CubeState {
   static List<SingleCubeModel> cubeModels = [];
+  static List<int> indexWithStack = [];
+  bool isInit = false;
+  Function()? onStateChange;
+
+  static bool isFirstAdjustRight = false;
+  static bool isFirstAdjustLeft = false;
+
+  CubeState() {
+    int id = 0;
+    for (int z = -1; z < 2; z++) {
+      for (int y = -1; y < 2; y++) {
+        for (int x = -1; x < 2; x++) {
+          cubeModels.add(
+            SingleCubeModel(
+              component: CubeComponent(
+                cubeColor: Map.from(defaultCubeColor),
+              ),
+              x: x * cubeWidth,
+              y: -y * cubeWidth,
+              z: z * cubeWidth,
+            ),
+          );
+          indexWithStack.add(id);
+          id++;
+        }
+      }
+    }
+    // arrangeCubeFace('right'); ????
+  }
+
   final Map<Facing, Color> defaultCubeColor = {
     Facing.top: Colors.white,
     Facing.down: Colors.yellow,
@@ -17,7 +45,6 @@ class CubeState {
     Facing.front: Colors.green,
     Facing.back: Colors.blue,
   };
-  Function()? onStateChange;
 
   void setOnStateChange(Function()? callback) {
     onStateChange = callback;
@@ -43,7 +70,6 @@ class CubeState {
         updatedCubeColor = _updateZColorReverse(cube: cubeModels[id]);
       }
       cubeModels[id] = SingleCubeModel(
-        id: id,
         component: CubeComponent(
           cubeColor: updatedCubeColor,
         ),
@@ -51,28 +77,6 @@ class CubeState {
         y: cubeModels[id].y,
         z: cubeModels[id].z,
       );
-    }
-  }
-
-  CubeState() {
-    int id = 0;
-    for (int z = -1; z < 2; z++) {
-      for (int y = -1; y < 2; y++) {
-        for (int x = -1; x < 2; x++) {
-          cubeModels.add(
-            SingleCubeModel(
-              id: id,
-              component: CubeComponent(
-                cubeColor: Map.from(defaultCubeColor),
-              ),
-              x: x * cubeWidth,
-              y: -y * cubeWidth,
-              z: z * cubeWidth,
-            ),
-          );
-          id++;
-        }
-      }
     }
   }
 
@@ -105,20 +109,6 @@ class CubeState {
     if (onStateChange != null) {
       onStateChange!();
     }
-  }
-
-  void _shift(List<int> cornerIds, List<int> edgeIds) {
-    final CubeComponent cornerComponent = cubeModels[cornerIds[0]].component;
-    cubeModels[cornerIds[0]].component = cubeModels[cornerIds[1]].component;
-    cubeModels[cornerIds[1]].component = cubeModels[cornerIds[2]].component;
-    cubeModels[cornerIds[2]].component = cubeModels[cornerIds[3]].component;
-    cubeModels[cornerIds[3]].component = cornerComponent;
-
-    final CubeComponent edgeComponent = cubeModels[edgeIds[0]].component;
-    cubeModels[edgeIds[0]].component = cubeModels[edgeIds[1]].component;
-    cubeModels[edgeIds[1]].component = cubeModels[edgeIds[2]].component;
-    cubeModels[edgeIds[2]].component = cubeModels[edgeIds[3]].component;
-    cubeModels[edgeIds[3]].component = edgeComponent;
   }
 
   void rMove() {
@@ -241,6 +231,20 @@ class CubeState {
     return cubeColor;
   }
 
+  void _shift(List<int> cornerIds, List<int> edgeIds) {
+    final CubeComponent cornerComponent = cubeModels[cornerIds[0]].component;
+    cubeModels[cornerIds[0]].component = cubeModels[cornerIds[1]].component;
+    cubeModels[cornerIds[1]].component = cubeModels[cornerIds[2]].component;
+    cubeModels[cornerIds[2]].component = cubeModels[cornerIds[3]].component;
+    cubeModels[cornerIds[3]].component = cornerComponent;
+
+    final CubeComponent edgeComponent = cubeModels[edgeIds[0]].component;
+    cubeModels[edgeIds[0]].component = cubeModels[edgeIds[1]].component;
+    cubeModels[edgeIds[1]].component = cubeModels[edgeIds[2]].component;
+    cubeModels[edgeIds[2]].component = cubeModels[edgeIds[3]].component;
+    cubeModels[edgeIds[3]].component = edgeComponent;
+  }
+
   void _setupSingleFace({
     required List<int> cubeIDs,
     required List<SingleCubeComponentFaceModel> cubeFaces,
@@ -252,7 +256,6 @@ class CubeState {
           Map.from(cubeModels[id].component.cubeColor);
       updatedCubeColor[facing] = cubeFaces[i].color!;
       cubeModels[id] = SingleCubeModel(
-        id: id,
         component: CubeComponent(
           cubeColor: updatedCubeColor,
         ),
@@ -268,42 +271,36 @@ class CubeState {
       List<List<SingleCubeComponentFaceModel>> cubeFaces) {
     for (int i = 0; i < cubeFaces.length; i++) {
       if (cubeFaces[i][4].color == Colors.white) {
-        print('setup white face');
         _setupSingleFace(
           cubeIDs: [24, 25, 26, 15, 16, 17, 6, 7, 8],
           cubeFaces: cubeFaces[i],
           facing: Facing.top,
         );
       } else if (cubeFaces[i][4].color == Colors.yellow) {
-        print('setup yellow face');
         _setupSingleFace(
           cubeIDs: [0, 1, 2, 9, 10, 11, 18, 19, 20],
           cubeFaces: cubeFaces[i],
           facing: Facing.down,
         );
       } else if (cubeFaces[i][4].color == Colors.red) {
-        print('setup red face');
         _setupSingleFace(
           cubeIDs: [20, 11, 2, 23, 14, 5, 26, 17, 8],
           cubeFaces: cubeFaces[i],
           facing: Facing.right,
         );
       } else if (cubeFaces[i][4].color == Colors.orange) {
-        print('setup orange face');
         _setupSingleFace(
           cubeIDs: [0, 9, 18, 3, 12, 21, 6, 15, 24],
           cubeFaces: cubeFaces[i],
           facing: Facing.left,
         );
       } else if (cubeFaces[i][4].color == Colors.blue) {
-        print('setup blue face');
         _setupSingleFace(
           cubeIDs: [2, 1, 0, 5, 4, 3, 8, 7, 6],
           cubeFaces: cubeFaces[i],
           facing: Facing.back,
         );
       } else {
-        print('setup green face');
         _setupSingleFace(
           cubeIDs: [18, 19, 20, 21, 22, 23, 24, 25, 26],
           cubeFaces: cubeFaces[i],
@@ -313,7 +310,7 @@ class CubeState {
     }
   }
 
-  static String _transformColorToString(Color color) {
+  static String transformColorToString(Color color) {
     if (color == Colors.red) {
       return 'red';
     } else if (color == Colors.orange) {
@@ -353,7 +350,7 @@ class CubeState {
     List<String> cubeStatus = [];
     for (Facing cubeFace in cubeFaces) {
       for (int cubeFaceID in cubeFaceIDs[cubeFace]!) {
-        String cubeColor = _transformColorToString(
+        String cubeColor = transformColorToString(
             CubeState.cubeModels[cubeFaceID].component.cubeColor[cubeFace]!);
         cubeStatus.add(cubeColor);
       }
@@ -405,5 +402,48 @@ class CubeState {
     }
     return SingleCubeFace(
         singleCubeComponentFaces: singleCubeComponentFaceModel);
+  }
+
+  void arrangeCube(String arrangeSide) {
+    if (arrangeSide == 'right') {
+      _arrangeCubeModel('right');
+      _arrangedSingleCubeFace([2, 1, 5, 0, 4, 3]);
+    } else {
+      _arrangeCubeModel('left');
+      _arrangedSingleCubeFace([3, 1, 0, 5, 4, 2]);
+    }
+    print('arrangeSide: $arrangeSide');
+  }
+
+  void _arrangeCubeModel(String arrangedSide) {
+    List<int> list = [];
+    if (arrangedSide == 'right') {
+      for (int index in cubeArrangeX) {
+        list.add(indexWithStack[index]);
+      }
+    } else if (arrangedSide == 'left') {
+      for (int index in cubeArrangeXReverse) {
+        list.add(indexWithStack[index]);
+      }
+    }
+    indexWithStack = list;
+  }
+
+  void _arrangedSingleCubeFace(List<int> cubeFaceIndex) {
+    for (SingleCubeModel cubeModel in cubeModels) {
+      List<Widget> arrangedCubeFaces = [];
+      for (int index in cubeFaceIndex) {
+        arrangedCubeFaces.add(cubeModel.component.cubeFaces![index]);
+      }
+      cubeModel.component = CubeComponent(
+        cubeColor: cubeModel.component.cubeColor,
+        cubeFaces: arrangedCubeFaces,
+      );
+    }
+  }
+
+  void debugPrint({required int cubeModelIndex}) {
+    print('cubeModelIndex: $cubeModelIndex');
+    print('cubeModel: ${cubeModels[cubeModelIndex].component.cubeFaces}');
   }
 }
