@@ -55,10 +55,10 @@ class _RubiksCubeState extends State<RubiksCube> {
             print('cube : ${(_offset.dx / 90).floor()}, counter : $arrangeCount');
             if ((_offset.dx / 90).floor() < arrangeCount-1) {
               arrangeCount--;
-              cubeState.arrangeCubeFace('right');
+              cubeState.arrangeCube('right');
             } else if ((_offset.dx / 90).floor() > arrangeCount-1) {
               arrangeCount++;
-              cubeState.arrangeCubeFace('left');
+              cubeState.arrangeCube('left');
             }
           });
         },
@@ -233,14 +233,14 @@ class _RubiksCubeState extends State<RubiksCube> {
                 children: [
                   TextButton(
                     onPressed: () {
-                      cubeState.arrangeCubeFace('left');
+                      cubeState.arrangeCube('left');
                       setState(() {});
                     },
                     child: const Text('arrange left'),
                   ),
                   TextButton(
                     onPressed: () {
-                      cubeState.arrangeCubeFace('right');
+                      cubeState.arrangeCube('right');
                       setState(() {});
                     },
                     child: const Text('arrange right'),

@@ -404,41 +404,46 @@ class CubeState {
         singleCubeComponentFaces: singleCubeComponentFaceModel);
   }
 
+  void arrangeCube(String arrangeSide) {
+    if (arrangeSide == 'right') {
+      _arrangeCubeModel('right');
+      _arrangedSingleCubeFace([2, 1, 5, 0, 4, 3]);
+    } else {
+      _arrangeCubeModel('left');
+      _arrangedSingleCubeFace([3, 1, 0, 5, 4, 2]);
+    }
+    print('arrangeSide: $arrangeSide');
+  }
+
   void _arrangeCubeModel(String arrangedSide) {
     List<int> list = [];
     if (arrangedSide == 'right') {
       for (int index in cubeArrangeX) {
         list.add(indexWithStack[index]);
       }
-    } else {
+    } else if (arrangedSide == 'left') {
       for (int index in cubeArrangeXReverse) {
         list.add(indexWithStack[index]);
       }
     }
-    // print('origin : $indexWithStack');
     indexWithStack = list;
-    // print('after: $list\n');
-  }
-  
-
-  void arrangeCubeFace(String arrangeSide) {
-    if (arrangeSide == 'right') {
-      _arrangedSingleCubeFace([2, 1, 5, 0, 4, 3]);
-      _arrangeCubeModel('right');
-    } else {
-      _arrangedSingleCubeFace([3, 1, 0, 5, 4, 2]);
-      _arrangeCubeModel('left');
-    }
-    print('arrangeSide: $arrangeSide');
   }
 
   void _arrangedSingleCubeFace(List<int> cubeFaceIndex) {
-    List<Widget> arrangedCubeFaces = [];
     for (SingleCubeModel cubeModel in cubeModels) {
+      List<Widget> arrangedCubeFaces = [];
       for (int index in cubeFaceIndex) {
-        arrangedCubeFaces.add(cubeModel.component.cubeFaces[index]);
+        arrangedCubeFaces.add(cubeModel.component.cubeFaces![index]);
       }
-      cubeModel.component.cubeFaces = arrangedCubeFaces;
+      cubeModel.component = CubeComponent(
+        cubeColor: cubeModel.component.cubeColor,
+        cubeFaces: arrangedCubeFaces,
+      );
     }
+  }
+
+  void debugPrint({required int cubeModelIndex}) {
+    print('cubeModelIndex: $cubeModelIndex');
+    print('cubeModel: ${cubeModels[cubeModelIndex].component.cubeFaces}');
   }
 }
