@@ -27,7 +27,8 @@ class _RubiksCubeState extends State<RubiksCube> {
   bool isCreateRoom = false;
   bool isArrangedRight = false;
   bool isArrangedLeft = false;
-  int arrangeCount = 0;
+  int arrangeCountX = 0;
+  int arrangeCountY = 0;
 
   @override
   void initState() {
@@ -52,13 +53,23 @@ class _RubiksCubeState extends State<RubiksCube> {
         onPanUpdate: (detail) {
           setState(() {
             _offset += detail.delta;
-            print('cube : ${(_offset.dx / 90).floor()}, counter : $arrangeCount');
-            if ((_offset.dx / 90).floor() < arrangeCount-1) {
-              arrangeCount--;
+            // print('cube : ${(_offset.dx / 90).floor()}, counter : $arrangeCountX');
+            if ((_offset.dx / 90).floor() < arrangeCountX - 1) {
+              arrangeCountX--;
               cubeState.arrangeCube('right');
-            } else if ((_offset.dx / 90).floor() > arrangeCount-1) {
-              arrangeCount++;
+            } else if ((_offset.dx / 90).floor() > arrangeCountX - 1) {
+              arrangeCountX++;
               cubeState.arrangeCube('left');
+            }
+            // print('arrangeCountY : $arrangeCountY, offset : ${(_offset.dy / 90).floor() + 1}');
+            if ((_offset.dy / 90).floor() + 1 > 0 && arrangeCountY == 0) {
+              print('section 1');
+              arrangeCountY++;
+              cubeState.arrangeCube('up');
+            } else if ((_offset.dy / 90).floor() + 1 == 0 && arrangeCountY == 1) {
+              print('section 2');
+              arrangeCountY--;
+              cubeState.arrangeCube('down');
             }
           });
         },
