@@ -2,7 +2,9 @@ import 'package:cy_cube/components/cube_state_in_2D.dart';
 import 'package:cy_cube/cube/cube_constants.dart';
 import 'package:cy_cube/cube/cube_state.dart';
 import 'package:cy_cube/components/cube_rotation_table.dart';
-import 'package:cy_cube/view/cube_setup_page.dart';
+import 'package:cy_cube/view/cube_setup_page_auto.dart';
+import 'package:camera/camera.dart';
+import 'package:cy_cube/view/cube_setup_page_manual.dart';
 import 'package:flutter/material.dart';
 import 'package:cy_cube/cube/cube_view/cube.dart';
 import 'package:flutter/services.dart';
@@ -11,7 +13,6 @@ import 'dart:math';
 import 'package:gap/gap.dart';
 import 'package:cy_cube/service/database_service.dart';
 import 'package:cy_cube/cube/cube_model/single_cube_component_face_model.dart';
-import 'dart:async';
 
 class RubiksCube extends StatefulWidget {
   const RubiksCube({super.key});
@@ -123,8 +124,15 @@ class _RubiksCubeState extends State<RubiksCube> {
                     ),
                     ListTile(
                       title: const Text('Detection ( OpenCV )'),
-                      onTap: () {
-                        setState(() {});
+                      onTap: () async {
+                        List<CameraDescription> cameras = await availableCameras();
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => CubeSetupPageAuto(
+                              cameras: cameras,
+                            ),
+                          ),
+                        );
                       },
                     ),
                     ListTile(
@@ -198,7 +206,7 @@ class _RubiksCubeState extends State<RubiksCube> {
                 ],
                 elevation: 5,
                 title: Text(
-                  roomID ?? 'The Cube',
+                  roomID ?? 'CyCube',
                   style: GoogleFonts.aboreto(
                     fontSize: 27.0,
                     fontWeight: FontWeight.w400,
@@ -266,23 +274,9 @@ class _RubiksCubeState extends State<RubiksCube> {
                           width: 80,
                         ),
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          TextButton(
-                            onPressed: () {
-                              // showSnackBar(context, 'arrange left');
-                            },
-                            child: const Text('arrange left'),
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              cubeState.arrangeCube('right');
-                              setState(() {});
-                            },
-                            child: const Text('arrange right'),
-                          ),
-                        ],
+                      TextButton(
+                        onPressed: () {},
+                        child: const Text('test'),
                       ),
                     ],
                   );
