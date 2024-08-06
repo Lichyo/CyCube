@@ -22,7 +22,6 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
   late IO.Socket _socket;
   late CameraController controller;
   late Timer _timer;
-  final List<String> _messages = [];
   late CameraImage imageBuffer;
   Image? imageInWidget1;
   Image? imageInWidget2;
@@ -39,10 +38,18 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
     _socket.on('connect', (_) {
       print('connected');
     });
-    _socket.on('message', (data) {
+    _socket.on('receive_image', (data) {
       setState(() {
-        _messages.add(data);
+        if (toggle) {
+          imageInWidget1 = Image.memory(base64Decode(data));
+        } else {
+          imageInWidget2 = Image.memory(base64Decode(data));
+        }
+        toggle = !toggle;
       });
+    });
+    _socket.on('save_image', (data) {
+      print(data);
     });
     _socket.on('disconnect', (_) {
       print('disconnected');
@@ -79,13 +86,13 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          setState(() {
-            _timer = Timer.periodic(const Duration(milliseconds: 1000), (timer) {
-              convertCameraImageToJpeg(imageBuffer).then((value) {
-                _sendMessage(value);
-              });
+          _timer = Timer.periodic(const Duration(milliseconds: 80), (timer){
+            convertCameraImageToJpeg(imageBuffer).then((value) {
+              _sendMessage(value);
             });
+            _socket.emit('receive_image', 'send');
           });
+
         },
         child: const Icon(Icons.send),
       ),
@@ -114,7 +121,7 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
   }
 
   void _sendMessage(Uint8List sendMsg) {
-    _socket.emit('message', base64Encode(sendMsg));
+    _socket.emit('save_image', base64Encode(sendMsg));
   }
 
   @override
