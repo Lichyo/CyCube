@@ -5,6 +5,7 @@ import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'dart:async';
 import 'dart:convert';
 import 'package:image/image.dart' as img;
+import 'package:flutter/foundation.dart';
 
 class CubeSetupPageAuto extends StatefulWidget {
   CubeSetupPageAuto({
@@ -23,8 +24,8 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
   late CameraController controller;
   late Timer _timer;
   late CameraImage imageBuffer;
-  Image? imageInWidget1;
-  Image? imageInWidget2;
+  ValueNotifier<Image?> imageInWidget1 = ValueNotifier<Image?>(null);
+  ValueNotifier<Image?> imageInWidget2 = ValueNotifier<Image?>(null);
   bool toggle = true;
 
   @override
@@ -40,10 +41,11 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
     });
     _socket.on('receive_image', (data) {
       setState(() {
+        Uint8List imageData = base64Decode(data);
         if (toggle) {
-          imageInWidget1 = Image.memory(base64Decode(data));
+          imageInWidget1.value = Image.memory(imageData);
         } else {
-          imageInWidget2 = Image.memory(base64Decode(data));
+          imageInWidget2.value = Image.memory(imageData);
         }
         toggle = !toggle;
       });
@@ -86,13 +88,15 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _timer = Timer.periodic(const Duration(milliseconds: 80), (timer){
+          _timer = Timer.periodic(const Duration(milliseconds: 80), (timer) {
             convertCameraImageToJpeg(imageBuffer).then((value) {
               _sendMessage(value);
             });
-            _socket.emit('receive_image', 'send');
           });
-
+          // convertCameraImageToJpeg(imageBuffer).then((value) {
+          //   _sendMessage(value);
+          //   _socket.emit('receive_image', 'send');
+          // });
         },
         child: const Icon(Icons.send),
       ),
@@ -102,16 +106,24 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
           children: [
             Stack(
               children: [
-                if (imageInWidget1 != null)
-                  Opacity(
-                    opacity: toggle ? 1.0 : 0.0,
-                    child: imageInWidget1!,
-                  ),
-                if (imageInWidget2 != null)
-                  Opacity(
-                    opacity: toggle ? 0.0 : 1.0,
-                    child: imageInWidget2!,
-                  ),
+                ValueListenableBuilder<Image?>(
+                  valueListenable: imageInWidget1,
+                  builder: (context, image, child) {
+                    return Opacity(
+                      opacity: toggle ? 1.0 : 0.0,
+                      child: image ?? Container(),
+                    );
+                  },
+                ),
+                ValueListenableBuilder<Image?>(
+                  valueListenable: imageInWidget2,
+                  builder: (context, image, child) {
+                    return Opacity(
+                      opacity: toggle ? 0.0 : 1.0,
+                      child: image ?? Container(),
+                    );
+                  },
+                ),
               ],
             ),
           ],
@@ -132,19 +144,11 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
     super.dispose();
   }
 
-  void _convertAndDisplayImage(CameraImage image) async {
-    Uint8List jpegBytes = await convertCameraImageToJpeg(image);
-    setState(() {
-      if (toggle) {
-        imageInWidget1 = Image.memory(jpegBytes);
-      } else {
-        imageInWidget2 = Image.memory(jpegBytes);
-      }
-      toggle = !toggle;
-    });
+  Future<Uint8List> convertCameraImageToJpeg(CameraImage image) async {
+    return await compute(_convertImage, image);
   }
 
-  Future<Uint8List> convertCameraImageToJpeg(CameraImage image) async {
+  Uint8List _convertImage(CameraImage image) {
     final int width = image.width;
     final int height = image.height;
     final int uvRowStride = image.planes[1].bytesPerRow;
