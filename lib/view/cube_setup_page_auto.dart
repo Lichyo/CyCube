@@ -6,6 +6,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:image/image.dart' as img;
 import 'package:flutter/foundation.dart';
+import 'package:cy_cube/components/single_cube_face.dart';
+import 'package:cy_cube/cube/cube_model/single_cube_component_face_model.dart';
 
 class CubeSetupPageAuto extends StatefulWidget {
   CubeSetupPageAuto({
@@ -24,13 +26,29 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
   late CameraController controller;
   late Timer _timer;
   late CameraImage imageBuffer;
-  ValueNotifier<Image?> imageInWidget1 = ValueNotifier<Image?>(null);
-  ValueNotifier<Image?> imageInWidget2 = ValueNotifier<Image?>(null);
+  Image? imageInWidget1;
+  Image? imageInWidget2;
   bool toggle = true;
+  List<SingleCubeComponentFaceModel> cubeFaces = [];
+  List<List<SingleCubeComponentFaceModel>> allCubeFaces = [];
+
+  void initCubeFaces() {
+    cubeFaces = [];
+    cubeFaces.add(SingleCubeComponentFaceModel(id: 0));
+    cubeFaces.add(SingleCubeComponentFaceModel(id: 1));
+    cubeFaces.add(SingleCubeComponentFaceModel(id: 2));
+    cubeFaces.add(SingleCubeComponentFaceModel(id: 3));
+    cubeFaces.add(SingleCubeComponentFaceModel(id: 4));
+    cubeFaces.add(SingleCubeComponentFaceModel(id: 5));
+    cubeFaces.add(SingleCubeComponentFaceModel(id: 6));
+    cubeFaces.add(SingleCubeComponentFaceModel(id: 7));
+    cubeFaces.add(SingleCubeComponentFaceModel(id: 8));
+  }
 
   @override
   void initState() {
     super.initState();
+    initCubeFaces();
     _socket = IO.io('http://192.168.50.22:5000', <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
@@ -40,17 +58,19 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
       print('connected');
     });
     _socket.on('receive_image', (data) {
+      if (toggle) {
+        imageInWidget1 = Image.memory(base64Decode(data));
+      } else {
+        imageInWidget2 = Image.memory(base64Decode(data));
+      }
       setState(() {
-        Uint8List imageData = base64Decode(data);
-        if (toggle) {
-          imageInWidget1.value = Image.memory(imageData);
-        } else {
-          imageInWidget2.value = Image.memory(imageData);
-        }
         toggle = !toggle;
       });
     });
     _socket.on('save_image', (data) {
+      print(data);
+    });
+    _socket.on('return_cube_color', (data) {
       print(data);
     });
     _socket.on('disconnect', (_) {
@@ -88,14 +108,11 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _timer = Timer.periodic(const Duration(milliseconds: 80), (timer) {
+          // _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
             convertCameraImageToJpeg(imageBuffer).then((value) {
               _sendMessage(value);
             });
-          });
-          // convertCameraImageToJpeg(imageBuffer).then((value) {
-          //   _sendMessage(value);
-          //   _socket.emit('receive_image', 'send');
+            _socket.emit('receive_image', 'send');
           // });
         },
         child: const Icon(Icons.send),
@@ -106,26 +123,19 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
           children: [
             Stack(
               children: [
-                ValueListenableBuilder<Image?>(
-                  valueListenable: imageInWidget1,
-                  builder: (context, image, child) {
-                    return Opacity(
-                      opacity: toggle ? 1.0 : 0.0,
-                      child: image ?? Container(),
-                    );
-                  },
-                ),
-                ValueListenableBuilder<Image?>(
-                  valueListenable: imageInWidget2,
-                  builder: (context, image, child) {
-                    return Opacity(
-                      opacity: toggle ? 0.0 : 1.0,
-                      child: image ?? Container(),
-                    );
-                  },
-                ),
+                if (imageInWidget1 != null)
+                  Opacity(
+                    opacity: toggle ? 1.0 : 0.0,
+                    child: imageInWidget1!,
+                  ),
+                if (imageInWidget2 != null)
+                  Opacity(
+                    opacity: toggle ? 0.0 : 1.0,
+                    child: imageInWidget2!,
+                  ),
               ],
             ),
+            SingleCubeFace(singleCubeComponentFaces: cubeFaces),
           ],
         ),
       ),
@@ -145,10 +155,6 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
   }
 
   Future<Uint8List> convertCameraImageToJpeg(CameraImage image) async {
-    return await compute(_convertImage, image);
-  }
-
-  Uint8List _convertImage(CameraImage image) {
     final int width = image.width;
     final int height = image.height;
     final int uvRowStride = image.planes[1].bytesPerRow;

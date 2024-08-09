@@ -8,6 +8,6 @@ class SingleCubeComponentFaceModel {
   SingleCubeComponentFaceModel({
     required this.id,
     this.color = Colors.white,
-    required this.isSelected,
+    this.isSelected = false,
   });
 }
