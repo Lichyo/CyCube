@@ -28,14 +28,9 @@ class _CubeSetupPageState extends State<CubeSetupPage> {
   void initCubeFaces() {
     cubeFaces = [];
     cubeFaces.add(SingleCubeComponentFaceModel(id: 0, isSelected: true));
-    cubeFaces.add(SingleCubeComponentFaceModel(id: 1, isSelected: false));
-    cubeFaces.add(SingleCubeComponentFaceModel(id: 2, isSelected: false));
-    cubeFaces.add(SingleCubeComponentFaceModel(id: 3, isSelected: false));
-    cubeFaces.add(SingleCubeComponentFaceModel(id: 4, isSelected: false));
-    cubeFaces.add(SingleCubeComponentFaceModel(id: 5, isSelected: false));
-    cubeFaces.add(SingleCubeComponentFaceModel(id: 6, isSelected: false));
-    cubeFaces.add(SingleCubeComponentFaceModel(id: 7, isSelected: false));
-    cubeFaces.add(SingleCubeComponentFaceModel(id: 8, isSelected: false));
+    for (int i = 1; i < 9; i++) {
+      cubeFaces.add(SingleCubeComponentFaceModel(id: i));
+    }
   }
 
   void selectColor(Color color) {

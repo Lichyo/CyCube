@@ -8,6 +8,7 @@ import 'package:image/image.dart' as img;
 import 'package:flutter/foundation.dart';
 import 'package:cy_cube/components/single_cube_face.dart';
 import 'package:cy_cube/cube/cube_model/single_cube_component_face_model.dart';
+import 'package:gap/gap.dart';
 
 class CubeSetupPageAuto extends StatefulWidget {
   CubeSetupPageAuto({
@@ -34,15 +35,9 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
 
   void initCubeFaces() {
     cubeFaces = [];
-    cubeFaces.add(SingleCubeComponentFaceModel(id: 0));
-    cubeFaces.add(SingleCubeComponentFaceModel(id: 1));
-    cubeFaces.add(SingleCubeComponentFaceModel(id: 2));
-    cubeFaces.add(SingleCubeComponentFaceModel(id: 3));
-    cubeFaces.add(SingleCubeComponentFaceModel(id: 4));
-    cubeFaces.add(SingleCubeComponentFaceModel(id: 5));
-    cubeFaces.add(SingleCubeComponentFaceModel(id: 6));
-    cubeFaces.add(SingleCubeComponentFaceModel(id: 7));
-    cubeFaces.add(SingleCubeComponentFaceModel(id: 8));
+    for (int i = 0; i < 9; i++) {
+      cubeFaces.add(SingleCubeComponentFaceModel(id: i));
+    }
   }
 
   @override
@@ -71,7 +66,16 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
       print(data);
     });
     _socket.on('return_cube_color', (data) {
-      print(data);
+      setState(() {
+        try {
+          List<String> cubeColors = List<String>.from(data);
+          for (int i = 0; i < 9; i++) {
+            cubeFaces[i].color = getColor(cubeColors[i]);
+          }
+        } catch (e) {
+          print(e);
+        }
+      });
     });
     _socket.on('disconnect', (_) {
       print('disconnected');
@@ -100,6 +104,25 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
     });
   }
 
+  Color getColor(String color) {
+    switch (color) {
+      case 'white':
+        return Colors.white;
+      case 'yellow':
+        return Colors.yellow;
+      case 'orange':
+        return Colors.orange;
+      case 'red':
+        return Colors.red;
+      case 'green':
+        return Colors.green;
+      case 'blue':
+        return Colors.blue;
+      default:
+        return Colors.black;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -108,12 +131,12 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+          _timer = Timer.periodic(const Duration(milliseconds: 200), (timer) {
             convertCameraImageToJpeg(imageBuffer).then((value) {
               _sendMessage(value);
             });
             _socket.emit('receive_image', 'send');
-          // });
+          });
         },
         child: const Icon(Icons.send),
       ),
@@ -135,7 +158,20 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
                   ),
               ],
             ),
+            const MaxGap(50),
             SingleCubeFace(singleCubeComponentFaces: cubeFaces),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  allCubeFaces.add(cubeFaces);
+                  initCubeFaces();
+                });
+                if (allCubeFaces.length == 6) {
+                  Navigator.pop(context, [allCubeFaces]);
+                }
+              },
+              child: const Text('Next Face'),
+            ),
           ],
         ),
       ),

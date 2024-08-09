@@ -72,7 +72,7 @@ class _RubiksCubeState extends State<RubiksCube> {
                   dx = _offset.dx;
                 }
 
-                if (_offset.dy < 30 && _offset.dy > -30) {
+                if (_offset.dy < 50 && _offset.dy > -50) {
                   dy += detail.delta.dy;
                 }
 
@@ -125,14 +125,19 @@ class _RubiksCubeState extends State<RubiksCube> {
                     ListTile(
                       title: const Text('Detection ( OpenCV )'),
                       onTap: () async {
-                        List<CameraDescription> cameras = await availableCameras();
-                        Navigator.of(context).push(
+                        List<CameraDescription> cameras =
+                            await availableCameras();
+                        var data = await Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => CubeSetupPageAuto(
                               cameras: cameras,
                             ),
                           ),
                         );
+                        List<List<SingleCubeComponentFaceModel>> cubeFaces =
+                            data[0];
+                        cubeState.setupCubeWithScanningColor(cubeFaces);
+                        setState(() {});
                       },
                     ),
                     ListTile(
@@ -273,10 +278,6 @@ class _RubiksCubeState extends State<RubiksCube> {
                           'images/cube_icon.png',
                           width: 80,
                         ),
-                      ),
-                      TextButton(
-                        onPressed: () {},
-                        child: const Text('test'),
                       ),
                     ],
                   );

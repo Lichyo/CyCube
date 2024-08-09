@@ -1,5 +1,6 @@
 # CY-Cube
-CY-Cube is an interactive 3D Rubik's Cube model application that allows users to manipulate and solve the Rubik's Cube with basic rotations and different view orientations. The project also features an educational mode for teaching and learning purposes.
+CY-Cube is an interactive 3D Rubik's Cube model application that allows users to manipulate and solve the Rubik's Cube with basic rotations and different view orientations.
+The project also features an educational mode for teaching and learning purposes.
 
 # Features
 ## 3D Model
@@ -8,11 +9,11 @@ CY-Cube is an interactive 3D Rubik's Cube model application that allows users to
 
 ## Cube Setup
 - Manual input: Users can manually input colors to set up the cube.
-- Automatic setup: Using OpenCV for color recognition to automatically set up the cube (lower accuracy).
+- Automatic setup: Using OpenCV for color recognition to automatically set up the cube
 
 ## Model Extension
 - A button at the bottom displays the unfolded 2D view of the cube.
-- Clicking elsewhere returns to the main view.
+
 
 ## Educational Mode
 1. Students can manually input colors to set up the cube.

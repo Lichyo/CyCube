@@ -402,7 +402,9 @@ class CubeState {
       );
     }
     return SingleCubeFace(
-        singleCubeComponentFaces: singleCubeComponentFaceModel);
+      singleCubeComponentFaces: singleCubeComponentFaceModel,
+      smaller: true,
+    );
   }
 
   void arrangeCube(String arrangeSide) {
