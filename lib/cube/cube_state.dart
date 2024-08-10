@@ -1,3 +1,4 @@
+import 'package:cy_cube/cube/cube_controller/arrange_controller.dart';
 import 'package:cy_cube/cube/cube_view/cube_component.dart';
 import 'cube_model/single_cube_model.dart';
 import 'package:flutter/material.dart';
@@ -8,13 +9,11 @@ import '../components/single_cube_face.dart';
 class CubeState {
   static List<SingleCubeModel> cubeModels = [];
   static List<int> indexWithStack = [];
-  bool isInit = false;
-  Function()? onStateChange;
-
-  static bool isFirstAdjustRight = false;
-  static bool isFirstAdjustLeft = false;
+  Function()? _onStateChange;
 
   CubeState() {
+    cubeModels = [];
+    indexWithStack = [];
     int id = 0;
     for (int z = -1; z < 2; z++) {
       for (int y = -1; y < 2; y++) {
@@ -34,20 +33,10 @@ class CubeState {
         }
       }
     }
-    // arrangeCubeFace('right'); ????
   }
 
-  final Map<Facing, Color> defaultCubeColor = {
-    Facing.top: Colors.white,
-    Facing.down: Colors.yellow,
-    Facing.right: Colors.red,
-    Facing.left: Colors.orange,
-    Facing.front: Colors.green,
-    Facing.back: Colors.blue,
-  };
-
   void setOnStateChange(Function()? callback) {
-    onStateChange = callback;
+    _onStateChange = callback;
   }
 
   void _updateCubeComponent({
@@ -107,8 +96,8 @@ class CubeState {
     } else if (rotation == 'B\'') {
       bMoveReverse();
     } else if (rotation == '') {}
-    if (onStateChange != null) {
-      onStateChange!();
+    if (_onStateChange != null) {
+      _onStateChange!();
     }
   }
 
@@ -352,7 +341,7 @@ class CubeState {
     for (Facing cubeFace in cubeFaces) {
       for (int cubeFaceID in cubeFaceIDs[cubeFace]!) {
         String cubeColor = transformColorToString(
-            CubeState.cubeModels[cubeFaceID].component.cubeColor[cubeFace]!);
+            cubeModels[cubeFaceID].component.cubeColor[cubeFace]!);
         cubeStatus.add(cubeColor);
       }
     }
@@ -407,60 +396,7 @@ class CubeState {
     );
   }
 
-  void arrangeCube(String arrangeSide) {
-    if (arrangeSide == 'right') {
-      _arrangeCubeModel('right');
-      _arrangedSingleCubeFace([2, 1, 5, 0, 4, 3]);
-    } else if (arrangeSide == 'left') {
-      _arrangeCubeModel('left');
-      _arrangedSingleCubeFace([3, 1, 0, 5, 4, 2]);
-    } else if (arrangeSide == 'up') {
-      _arrangeCubeModel('up');
-      _arrangedSingleCubeFace([4, 0, 2, 3, 5, 1]);
-    } else if (arrangeSide == 'down') {
-      _arrangeCubeModel('down');
-      _arrangedSingleCubeFace([1, 5, 2, 3, 0, 4]);
-    }
-    print('arrangeSide: $arrangeSide');
-  }
-
-  void _arrangeCubeModel(String arrangedSide) {
-    List<int> list = [];
-    if (arrangedSide == 'right') {
-      for (int index in cubeArrangeX) {
-        list.add(indexWithStack[index]);
-      }
-    } else if (arrangedSide == 'left') {
-      for (int index in cubeArrangeXReverse) {
-        list.add(indexWithStack[index]);
-      }
-    } else if (arrangedSide == 'up') {
-      for (int index in cubeArrangeY) {
-        list.add(indexWithStack[index]);
-      }
-    } else if (arrangedSide == 'down') {
-      for (int index in cubeArrangeYReverse) {
-        list.add(indexWithStack[index]);
-      }
-    } else {
-      print('do nothing');
-    }
-    indexWithStack = list;
-  }
-
-  void _arrangedSingleCubeFace(List<int> cubeFaceIndex) {
-    for (SingleCubeModel cubeModel in cubeModels) {
-      List<Widget> arrangedCubeFaces = [];
-      List<int> arrangedCubeFaceIndex = [];
-      for (int index in cubeFaceIndex) {
-        arrangedCubeFaces.add(cubeModel.component.cubeFaces![index]);
-        arrangedCubeFaceIndex.add(cubeModel.component.cubeFaceIndex![index]);
-      }
-      cubeModel.component = CubeComponent(
-        cubeColor: cubeModel.component.cubeColor,
-        cubeFaces: arrangedCubeFaces,
-        cubeFaceIndex: arrangedCubeFaceIndex,
-      );
-    }
+  void arrangeCube({required String arrangeSide}) {
+    ArrangeController.arrangeCube(arrangeSide: arrangeSide);
   }
 }
