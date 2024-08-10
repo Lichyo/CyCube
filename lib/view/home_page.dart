@@ -120,6 +120,7 @@ class _RubiksCubeState extends State<RubiksCube> {
                       onTap: () {
                         cubeState.initCubeState();
                         setState(() {});
+                        Navigator.pop(context);
                       },
                     ),
                     ListTile(
