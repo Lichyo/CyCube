@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 class DatabaseServiceWithSocket {
   Future<int> createRoom(
       {required CubeState cubeState, required String email}) async {
-    final List<String> cubeStatus = cubeState.outputCubeState();
+    final List<String> cubeStatus = cubeState.generateCubeStatus();
     var response = await http.get(Uri.parse(
         'http://127.0.0.1:5000/room/create?cube_state=$cubeStatus&email=$email'));
     final int roomID = jsonDecode(response.body);
