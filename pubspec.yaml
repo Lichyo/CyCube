@@ -49,6 +49,8 @@ dependencies:
   image: ^3.0.2
   google_mlkit_object_detection: ^0.13.0
   google_mlkit_commons: ^0.7.1
+  web_socket_channel: ^3.0.1
+  socket_io_client: ^2.0.3+1
 
 dev_dependencies:
   flutter_test:

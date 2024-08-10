@@ -72,6 +72,7 @@ class CubeState {
       cubeModels[id] = SingleCubeModel(
         component: CubeComponent(
           cubeColor: updatedCubeColor,
+          cubeFaceIndex: cubeModels[id].component.cubeFaceIndex,
         ),
         x: cubeModels[id].x,
         y: cubeModels[id].y,
@@ -401,16 +402,24 @@ class CubeState {
       );
     }
     return SingleCubeFace(
-        singleCubeComponentFaces: singleCubeComponentFaceModel);
+      singleCubeComponentFaces: singleCubeComponentFaceModel,
+      smaller: true,
+    );
   }
 
   void arrangeCube(String arrangeSide) {
     if (arrangeSide == 'right') {
       _arrangeCubeModel('right');
       _arrangedSingleCubeFace([2, 1, 5, 0, 4, 3]);
-    } else {
+    } else if (arrangeSide == 'left') {
       _arrangeCubeModel('left');
       _arrangedSingleCubeFace([3, 1, 0, 5, 4, 2]);
+    } else if (arrangeSide == 'up') {
+      _arrangeCubeModel('up');
+      _arrangedSingleCubeFace([4, 0, 2, 3, 5, 1]);
+    } else if (arrangeSide == 'down') {
+      _arrangeCubeModel('down');
+      _arrangedSingleCubeFace([1, 5, 2, 3, 0, 4]);
     }
     print('arrangeSide: $arrangeSide');
   }
@@ -425,6 +434,16 @@ class CubeState {
       for (int index in cubeArrangeXReverse) {
         list.add(indexWithStack[index]);
       }
+    } else if (arrangedSide == 'up') {
+      for (int index in cubeArrangeY) {
+        list.add(indexWithStack[index]);
+      }
+    } else if (arrangedSide == 'down') {
+      for (int index in cubeArrangeYReverse) {
+        list.add(indexWithStack[index]);
+      }
+    } else {
+      print('do nothing');
     }
     indexWithStack = list;
   }
@@ -432,18 +451,16 @@ class CubeState {
   void _arrangedSingleCubeFace(List<int> cubeFaceIndex) {
     for (SingleCubeModel cubeModel in cubeModels) {
       List<Widget> arrangedCubeFaces = [];
+      List<int> arrangedCubeFaceIndex = [];
       for (int index in cubeFaceIndex) {
         arrangedCubeFaces.add(cubeModel.component.cubeFaces![index]);
+        arrangedCubeFaceIndex.add(cubeModel.component.cubeFaceIndex![index]);
       }
       cubeModel.component = CubeComponent(
         cubeColor: cubeModel.component.cubeColor,
         cubeFaces: arrangedCubeFaces,
+        cubeFaceIndex: arrangedCubeFaceIndex,
       );
     }
-  }
-
-  void debugPrint({required int cubeModelIndex}) {
-    print('cubeModelIndex: $cubeModelIndex');
-    print('cubeModel: ${cubeModels[cubeModelIndex].component.cubeFaces}');
   }
 }

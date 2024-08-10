@@ -14,8 +14,8 @@ class SingleCubeComponentFace extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: smaller ? 20 : 80,
-      height: smaller ? 20 : 80,
+      width: smaller ? 20 : 60,
+      height: smaller ? 20 : 60,
       decoration: BoxDecoration(
         color: cubeFaceModel.color,
         border: Border.all(
