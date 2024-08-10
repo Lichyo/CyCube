@@ -5,7 +5,7 @@ import 'package:cy_cube/cube/cube_view/cube_component.dart';
 import 'package:flutter/material.dart';
 
 class ArrangeController {
-  static void arrangeCube({
+  void arrangeCube({
     required String arrangeSide,
   }) {
     if (arrangeSide == 'right') {
@@ -23,7 +23,7 @@ class ArrangeController {
     }
   }
 
-  static void _arrangeCubeModel({
+  void _arrangeCubeModel({
     required String arrangedSide,
   }) {
     List<int> list = [];
@@ -47,7 +47,7 @@ class ArrangeController {
     CubeState.indexWithStack = list;
   }
 
-  static void _arrangedSingleCubeFace(List<int> cubeFaceIndex) {
+  void _arrangedSingleCubeFace(List<int> cubeFaceIndex) {
     for (SingleCubeModel cubeModel in CubeState.cubeModels) {
       List<Widget> arrangedCubeFaces = [];
       List<int> arrangedCubeFaceIndex = [];

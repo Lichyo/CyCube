@@ -4,7 +4,7 @@ import 'package:cy_cube/cube/cube_constants.dart';
 import 'package:cy_cube/cube/cube_state.dart';
 
 class ExtensionController {
-  static SingleCubeFace show2DFace({required Facing facing}) {
+  SingleCubeFace show2DFace({required Facing facing}) {
     List<SingleCubeComponentFaceModel> singleCubeComponentFaceModel = [];
     List<int> cubeFaceIndex = [];
     List<int> specificCubeFaceIndex = [6, 7, 8, 3, 4, 5, 0, 1, 2];  // from layer 0 to 2

@@ -7,7 +7,7 @@ import 'package:cy_cube/cube/cube_model/single_cube_model.dart';
 import 'package:cy_cube/cube/cube_view/cube_component.dart';
 
 class SetupController {
-  static List<String> generateCubeStatus() {
+  List<String> generateCubeStatus() {
     List<String> cubeStatus = [];
     for (Facing cubeFace in cubeFaces) {
       for (int cubeFaceID in cubeFaceIDs[cubeFace]!) {
@@ -19,7 +19,7 @@ class SetupController {
     return cubeStatus;
   }
 
-  static void setCubeStatus({required List<String> cubeStatus}) {
+  void setCubeStatus({required List<String> cubeStatus}) {
     int index = 0;
     for (Facing cubeFace in cubeFaces) {
       List<SingleCubeComponentFaceModel> cubeFaceModes = [];
@@ -40,7 +40,7 @@ class SetupController {
     }
   }
 
-  static void setupCubeWithScanningColor(
+  void setupCubeWithScanningColor(
       List<List<SingleCubeComponentFaceModel>> cubeFaces) {
     for (int i = 0; i < cubeFaces.length; i++) {
       if (cubeFaces[i][4].color == Colors.white) {
@@ -83,7 +83,7 @@ class SetupController {
     }
   }
 
-  static void _setupSingleFace({
+  void _setupSingleFace({
     required List<int> cubeIDs,
     required List<SingleCubeComponentFaceModel> cubeFaces,
     required Facing facing,

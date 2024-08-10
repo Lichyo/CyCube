@@ -118,7 +118,7 @@ class _RubiksCubeState extends State<RubiksCube> {
                     ListTile(
                       title: const Text('Reset'),
                       onTap: () {
-                        cubeState = CubeState();
+                        cubeState.initCubeState();
                         setState(() {});
                       },
                     ),
@@ -241,7 +241,7 @@ class _RubiksCubeState extends State<RubiksCube> {
                         visible: !isJoinCourseRoom,
                         child: CubeRotationTable(
                           onPressed: (rotation) {
-                            cubeState.rotate(rotation);
+                            cubeState.rotate(rotation: rotation);
                             if (roomID != null) {
                               DatabaseService.courseWithStudentPOV(
                                 rotation: rotation,
