@@ -1,10 +1,11 @@
 import 'package:cy_cube/cube/cube_controller/arrange_controller.dart';
+import 'package:cy_cube/cube/cube_controller/extension_controller.dart';
 import 'package:cy_cube/cube/cube_view/cube_component.dart';
 import 'cube_model/single_cube_model.dart';
 import 'package:flutter/material.dart';
 import 'package:cy_cube/cube/cube_model/single_cube_component_face_model.dart';
 import 'cube_constants.dart';
-import '../components/single_cube_face.dart';
+import 'package:cy_cube/components/single_cube_face.dart';
 
 class CubeState {
   static List<SingleCubeModel> cubeModels = [];
@@ -370,30 +371,7 @@ class CubeState {
   }
 
   SingleCubeFace show2DFace({required Facing facing}) {
-    List<SingleCubeComponentFaceModel> singleCubeComponentFaceModel = [];
-    List<int> cubeFaceIndex = [];
-    cubeFaceIndex.add(cubeFaceIDs[facing]![6]);
-    cubeFaceIndex.add(cubeFaceIDs[facing]![7]);
-    cubeFaceIndex.add(cubeFaceIDs[facing]![8]);
-    cubeFaceIndex.add(cubeFaceIDs[facing]![3]);
-    cubeFaceIndex.add(cubeFaceIDs[facing]![4]);
-    cubeFaceIndex.add(cubeFaceIDs[facing]![5]);
-    cubeFaceIndex.add(cubeFaceIDs[facing]![0]);
-    cubeFaceIndex.add(cubeFaceIDs[facing]![1]);
-    cubeFaceIndex.add(cubeFaceIDs[facing]![2]);
-    for (int index in cubeFaceIndex) {
-      singleCubeComponentFaceModel.add(
-        SingleCubeComponentFaceModel(
-          id: index,
-          color: cubeModels[index].component.cubeColor[facing],
-          isSelected: false,
-        ),
-      );
-    }
-    return SingleCubeFace(
-      singleCubeComponentFaces: singleCubeComponentFaceModel,
-      smaller: true,
-    );
+    return ExtensionController.show2DFace(facing: facing);
   }
 
   void arrangeCube({required String arrangeSide}) {
