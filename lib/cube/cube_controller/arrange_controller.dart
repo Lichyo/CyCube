@@ -2,10 +2,51 @@ import 'package:cy_cube/cube/cube_constants.dart';
 import 'package:cy_cube/cube/cube_model/single_cube_model.dart';
 import 'package:cy_cube/cube/cube_state.dart';
 import 'package:cy_cube/cube/cube_view/cube_component.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ArrangeController {
-  void arrangeCube({
+  static bool isArrangedRight = false;
+  static bool isArrangedLeft = false;
+  static int arrangeCountX = 0;
+  static int arrangeCountY = 0;
+  static double dy = 0;
+  static double dx = 0;
+  static Offset offset = Offset.zero;
+
+  void listenToArrange({
+    required DragUpdateDetails detail,
+  }) {
+    offset += detail.delta;
+
+    if (arrangeCountY == 0) {
+      dx = offset.dx;
+    }
+
+    if (offset.dy < 50 && offset.dy > -50) {
+      dy += detail.delta.dy;
+    }
+
+    if ((dx / 90).floor() < arrangeCountX - 1 && arrangeCountY == 0) {
+      arrangeCountX--;
+      _arrangeCube(arrangeSide: 'right');
+    } else if ((dx / 90).floor() > arrangeCountX - 1 && arrangeCountY == 0) {
+      arrangeCountX++;
+      _arrangeCube(arrangeSide: 'left');
+    } else if (arrangeCountY != 0) {
+      // Forbidden to Move
+    }
+
+    if ((offset.dy / 90).floor() + 1 > 0 && arrangeCountY == 0) {
+      arrangeCountY++;
+      _arrangeCube(arrangeSide: 'up');
+    } else if ((offset.dy / 90).floor() + 1 == 0 && arrangeCountY == 1) {
+      arrangeCountY--;
+      _arrangeCube(arrangeSide: 'down');
+    }
+  }
+
+  void _arrangeCube({
     required String arrangeSide,
   }) {
     if (arrangeSide == 'right') {
