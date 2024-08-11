@@ -79,11 +79,11 @@ class _RubiksCubeState extends State<RubiksCube> {
                 if ((dx / 90).floor() < arrangeCountX - 1 &&
                     arrangeCountY == 0) {
                   arrangeCountX--;
-                  cubeState.arrangeCube('right');
+                  cubeState.arrangeCube(arrangeSide: 'right');
                 } else if ((dx / 90).floor() > arrangeCountX - 1 &&
                     arrangeCountY == 0) {
                   arrangeCountX++;
-                  cubeState.arrangeCube('left');
+                  cubeState.arrangeCube(arrangeSide: 'left');
                 } else if (arrangeCountY != 0 && isSendWarning == false) {
                   showSnackBar(context, '請將方塊翻正後再做左右翻動');
                   isSendWarning = true;
@@ -91,11 +91,11 @@ class _RubiksCubeState extends State<RubiksCube> {
 
                 if ((_offset.dy / 90).floor() + 1 > 0 && arrangeCountY == 0) {
                   arrangeCountY++;
-                  cubeState.arrangeCube('up');
+                  cubeState.arrangeCube(arrangeSide: 'up');
                 } else if ((_offset.dy / 90).floor() + 1 == 0 &&
                     arrangeCountY == 1) {
                   arrangeCountY--;
-                  cubeState.arrangeCube('down');
+                  cubeState.arrangeCube(arrangeSide: 'down');
                 }
               });
             },
@@ -118,8 +118,9 @@ class _RubiksCubeState extends State<RubiksCube> {
                     ListTile(
                       title: const Text('Reset'),
                       onTap: () {
-                        cubeState = CubeState();
+                        cubeState.initCubeState();
                         setState(() {});
+                        Navigator.pop(context);
                       },
                     ),
                     ListTile(
@@ -241,10 +242,12 @@ class _RubiksCubeState extends State<RubiksCube> {
                         visible: !isJoinCourseRoom,
                         child: CubeRotationTable(
                           onPressed: (rotation) {
-                            cubeState.rotate(rotation);
+                            cubeState.rotate(rotation: rotation);
                             if (roomID != null) {
                               DatabaseService.courseWithStudentPOV(
-                                  rotation: rotation, roomID: roomID!);
+                                rotation: rotation,
+                                roomID: roomID!,
+                              );
                             }
                           },
                         ),

@@ -12,9 +12,9 @@ class Cube extends StatelessWidget {
         Transform(
           transform: Matrix4.identity()
             ..translate(
-              cube.x, // 向右遞增
-              cube.y, // 向下遞增
-              cube.z, // 向前遞增
+              cube.x,
+              cube.y,
+              cube.z,
             ),
           child: cube.component,
         ),

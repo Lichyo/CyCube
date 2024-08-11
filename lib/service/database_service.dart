@@ -9,7 +9,7 @@ class DatabaseService {
     required CubeState cubeState,
     required String email,
   }) async {
-    final List<String> cubeStatus = cubeState.outputCubeState();
+    final List<String> cubeStatus = cubeState.generateCubeStatus();
     int randomRoomID = Random().nextInt(900000) + 100000;
     String roomID = randomRoomID.toString();
     await _firestore.collection('rooms').doc(roomID).set({
@@ -35,7 +35,7 @@ class DatabaseService {
     for (String cubeState in data) {
       cubeStatus.add(cubeState.toString());
     }
-    cubeState.setCubeState(cubeStatus: cubeStatus);
+    cubeState.setCubeStatus(cubeStatus: cubeStatus);
     _startCourseWithTeacherPOV(roomID: roomID, cubeState: cubeState);
     return cubeStatus;
   }
@@ -48,7 +48,7 @@ class DatabaseService {
     _firestore.collection('rooms').doc(roomID).snapshots().listen((snapshot) {
       var data = snapshot.data();
       nextMove = data!['next_move'];
-      cubeState.rotate(nextMove);
+      cubeState.rotate(rotation: nextMove);
     });
   }
 
