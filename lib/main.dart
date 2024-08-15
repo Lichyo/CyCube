@@ -10,7 +10,7 @@ void main() async {
 
   runApp(
     const MaterialApp(
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: true,
       home: RubiksCube(),
     ),
   );

@@ -13,6 +13,8 @@ import 'dart:math';
 import 'package:gap/gap.dart';
 import 'package:cy_cube/service/database_service.dart';
 import 'package:cy_cube/cube/cube_model/single_cube_component_face_model.dart';
+import 'package:cy_cube/view/course_page.dart';
+import 'package:cy_cube/lab_page.dart';
 
 class RubiksCube extends StatefulWidget {
   const RubiksCube({super.key});
@@ -84,7 +86,7 @@ class _RubiksCubeState extends State<RubiksCube> {
                             await availableCameras();
                         var data = await Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => CubeSetupPageAuto(
+                            builder: (_) => CubeSetupPageAuto(
                               cameras: cameras,
                             ),
                           ),
@@ -107,6 +109,20 @@ class _RubiksCubeState extends State<RubiksCube> {
                             data[0];
                         _cubeState.setupCubeWithScanningColor(cubeFaces);
                         setState(() {});
+                      },
+                    ),
+                    ListTile(
+                      title: const Text('Course'),
+                      onTap: () async {
+                        List<CameraDescription> cameras =
+                            await availableCameras();
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => CoursePage(
+                              cameras: cameras,
+                            ),
+                          ),
+                        );
                       },
                     ),
                   ],
@@ -165,11 +181,20 @@ class _RubiksCubeState extends State<RubiksCube> {
                   ),
                 ],
                 elevation: 5,
-                title: Text(
-                  _roomID ?? 'CyCube',
-                  style: GoogleFonts.aboreto(
-                    fontSize: 27.0,
-                    fontWeight: FontWeight.w400,
+                title: GestureDetector(
+                  onDoubleTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const LabPage(),
+                      ),
+                    );
+                  },
+                  child: Text(
+                    _roomID ?? 'CyCube',
+                    style: GoogleFonts.aboreto(
+                      fontSize: 27.0,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                 ),
                 centerTitle: true,

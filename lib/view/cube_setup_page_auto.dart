@@ -9,6 +9,7 @@ import 'package:flutter/foundation.dart';
 import 'package:cy_cube/components/single_cube_face.dart';
 import 'package:cy_cube/cube/cube_model/single_cube_component_face_model.dart';
 import 'package:gap/gap.dart';
+import 'package:linear_progress_bar/linear_progress_bar.dart';
 
 class CubeSetupPageAuto extends StatefulWidget {
   CubeSetupPageAuto({
@@ -32,6 +33,7 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
   bool toggle = true;
   List<SingleCubeComponentFaceModel> cubeFaces = [];
   List<List<SingleCubeComponentFaceModel>> allCubeFaces = [];
+  Completer<void>? _imageLoadingCompleter;
 
   void initCubeFaces() {
     cubeFaces = [];
@@ -52,7 +54,11 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
     _socket.on('connect', (_) {
       print('connected');
     });
-    _socket.on('receive_image', (data) {
+    _socket.on('receive_image', (data) async {
+      if (_imageLoadingCompleter != null) {
+        await _imageLoadingCompleter!.future;
+      }
+      _imageLoadingCompleter = Completer<void>();
       if (toggle) {
         imageInWidget1 = Image.memory(base64Decode(data));
       } else {
@@ -61,9 +67,10 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
       setState(() {
         toggle = !toggle;
       });
+      _imageLoadingCompleter!.complete();
     });
     _socket.on('save_image', (data) {
-      print(data);
+      // print(data);
     });
     _socket.on('return_cube_color', (data) {
       setState(() {
@@ -73,7 +80,7 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
             cubeFaces[i].color = getColor(cubeColors[i]);
           }
         } catch (e) {
-          print(e);
+          // print(e);
         }
       });
     });
@@ -86,7 +93,6 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
       if (!mounted) {
         return;
       }
-      setState(() {});
       if (controller.value.isInitialized) {
         controller.startImageStream((image) {
           imageBuffer = image;
@@ -142,8 +148,13 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          // mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            LinearProgressIndicator(
+              value: allCubeFaces.length / 6,
+              valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
+              backgroundColor: Colors.grey,
+            ),
             Stack(
               children: [
                 if (imageInWidget1 != null)
