@@ -12,7 +12,9 @@ import 'package:flutter/cupertino.dart';
 class CubeState {
   static List<SingleCubeModel> cubeModels = [];
   static List<int> indexWithStack = [];
+
   double get cubeDx => ArrangeController.dx;
+
   double get cubeDy => ArrangeController.dy;
   Function()? _onStateChange;
   final SetupController _setupController = SetupController();
@@ -57,6 +59,10 @@ class CubeState {
     if (_onStateChange != null) {
       _onStateChange!();
     }
+  }
+
+  Color getColor({required String color}) {
+    return _setupController.getColor(color);
   }
 
   void setupCubeWithScanningColor(

@@ -9,9 +9,10 @@ void main() async {
   await FirebaseAuth.instance.signInAnonymously();
 
   runApp(
-    const MaterialApp(
+    MaterialApp(
       debugShowCheckedModeBanner: true,
-      home: RubiksCube(),
+      theme: ThemeData.dark(),
+      home: const RubiksCube(),
     ),
   );
 }

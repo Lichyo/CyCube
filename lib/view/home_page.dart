@@ -14,7 +14,6 @@ import 'package:gap/gap.dart';
 import 'package:cy_cube/service/database_service.dart';
 import 'package:cy_cube/cube/cube_model/single_cube_component_face_model.dart';
 import 'package:cy_cube/view/course_page.dart';
-import 'package:cy_cube/lab_page.dart';
 
 class RubiksCube extends StatefulWidget {
   const RubiksCube({super.key});
@@ -182,13 +181,7 @@ class _RubiksCubeState extends State<RubiksCube> {
                 ],
                 elevation: 5,
                 title: GestureDetector(
-                  onDoubleTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const LabPage(),
-                      ),
-                    );
-                  },
+                  onDoubleTap: () {},
                   child: Text(
                     _roomID ?? 'CyCube',
                     style: GoogleFonts.aboreto(

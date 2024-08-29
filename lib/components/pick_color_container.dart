@@ -5,9 +5,12 @@ class PickColorContainer extends StatelessWidget {
     super.key,
     required this.color,
     required this.onTap,
+    this.borderColor,
   });
+
   final Color color;
   final VoidCallback onTap;
+  final Color? borderColor;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +21,9 @@ class PickColorContainer extends StatelessWidget {
         height: 50,
         decoration: BoxDecoration(
           color: color,
-          border: Border.all(),
+          border: Border.all(
+            color: borderColor ?? const Color(0xFF000000),
+          ),
           borderRadius: BorderRadius.circular(10),
         ),
       ),

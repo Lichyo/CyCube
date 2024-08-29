@@ -1,15 +1,15 @@
-import 'dart:typed_data';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'dart:async';
+import 'package:cy_cube/components/pick_color_container.dart';
 import 'dart:convert';
-import 'package:image/image.dart' as img;
-import 'package:flutter/foundation.dart';
 import 'package:cy_cube/components/single_cube_face.dart';
+import 'package:cy_cube/service/image_controller.dart';
 import 'package:cy_cube/cube/cube_model/single_cube_component_face_model.dart';
 import 'package:gap/gap.dart';
-import 'package:linear_progress_bar/linear_progress_bar.dart';
+import 'package:cy_cube/config.dart';
 
 class CubeSetupPageAuto extends StatefulWidget {
   CubeSetupPageAuto({
@@ -26,14 +26,13 @@ class CubeSetupPageAuto extends StatefulWidget {
 class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
   late IO.Socket _socket;
   late CameraController controller;
-  late Timer _timer;
+  Timer? _timer;
   late CameraImage imageBuffer;
-  Image? imageInWidget1;
-  Image? imageInWidget2;
-  bool toggle = true;
+  bool initColorMode = false;
   List<SingleCubeComponentFaceModel> cubeFaces = [];
   List<List<SingleCubeComponentFaceModel>> allCubeFaces = [];
-  Completer<void>? _imageLoadingCompleter;
+  String currentColor = '';
+  bool startRecording = false;
 
   void initCubeFaces() {
     cubeFaces = [];
@@ -46,47 +45,29 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
   void initState() {
     super.initState();
     initCubeFaces();
-    _socket = IO.io('http://192.168.50.22:5000', <String, dynamic>{
+    _socket = IO.io(Config.serverIP, <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
     });
     _socket.connect();
-    _socket.on('connect', (_) {
-      print('connected');
-    });
+    _socket.emit("join", Config.user);
     _socket.on('receive_image', (data) async {
-      if (_imageLoadingCompleter != null) {
-        await _imageLoadingCompleter!.future;
-      }
-      _imageLoadingCompleter = Completer<void>();
-      if (toggle) {
-        imageInWidget1 = Image.memory(base64Decode(data));
-      } else {
-        imageInWidget2 = Image.memory(base64Decode(data));
-      }
-      setState(() {
-        toggle = !toggle;
-      });
-      _imageLoadingCompleter!.complete();
-    });
-    _socket.on('save_image', (data) {
-      // print(data);
+      await ImageController.updateImage(data);
+      setState(() {});
     });
     _socket.on('return_cube_color', (data) {
       setState(() {
         try {
           List<String> cubeColors = List<String>.from(data);
           for (int i = 0; i < 9; i++) {
-            cubeFaces[i].color = getColor(cubeColors[i]);
+            cubeFaces[i].color = ImageController.getColor(cubeColors[i]);
           }
         } catch (e) {
-          // print(e);
+          print(e);
         }
       });
     });
-    _socket.on('disconnect', (_) {
-      print('disconnected');
-    });
+    _socket.on("init_color_dataset", (data) {});
 
     controller = CameraController(widget.cameras[0], ResolutionPreset.low);
     controller.initialize().then((_) {
@@ -110,78 +91,155 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
     });
   }
 
-  Color getColor(String color) {
-    switch (color) {
-      case 'white':
-        return Colors.white;
-      case 'yellow':
-        return Colors.yellow;
-      case 'orange':
-        return Colors.orange;
-      case 'red':
-        return Colors.red;
-      case 'green':
-        return Colors.green;
-      case 'blue':
-        return Colors.blue;
-      default:
-        return Colors.black;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Cube Setup Auto'),
+        title: Text(
+          'CyCube Setup',
+          style: GoogleFonts.adamina(),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              setState(() {
+                initColorMode = !initColorMode;
+              });
+            },
+            icon: const Icon(
+              Icons.colorize,
+            ),
+          ),
+          IconButton(
+            onPressed: () {
+              if (_timer != null && _timer!.isActive) {
+                _timer!.cancel();
+              } else {
+                _timer =
+                    Timer.periodic(const Duration(milliseconds: 125), (timer) {
+                  ImageController.convertCameraImageToJpeg(imageBuffer)
+                      .then((value) {
+                    _socket.emit('save_image', base64Encode(value));
+                  });
+                  setState(() {
+                    _socket.emit('receive_image');
+                  });
+                  if (!initColorMode) {
+                    _socket.emit("initialize_cube_color");
+                  } else {
+                    if (startRecording) {
+                      _socket.emit("init_color_dataset", currentColor);
+                    }
+                  }
+                });
+              }
+            },
+            icon: const Icon(Icons.camera_alt),
+          ),
+          IconButton(
+            onPressed: () {
+              _socket.emit("clear_color_dataset");
+            },
+            icon: const Icon(Icons.delete),
+          ),
+        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _timer = Timer.periodic(const Duration(milliseconds: 200), (timer) {
-            convertCameraImageToJpeg(imageBuffer).then((value) {
-              _sendMessage(value);
+          if (initColorMode) {
+            setState(() {
+              startRecording = !startRecording;
             });
-            _socket.emit('receive_image', 'send');
-          });
+            if (startRecording) {
+              Future.delayed(const Duration(seconds: 5)).then((_) {
+                startRecording = false;
+              });
+            }
+          } else {
+            setState(() {
+              allCubeFaces.add(cubeFaces);
+              initCubeFaces();
+            });
+            if (allCubeFaces.length == 6) {
+              Navigator.pop(context, [allCubeFaces]);
+            }
+          }
         },
-        child: const Icon(Icons.send),
+        child: const Icon(Icons.arrow_forward),
       ),
       body: Center(
         child: Column(
-          // mainAxisAlignment: MainAxisAlignment.center,
           children: [
             LinearProgressIndicator(
               value: allCubeFaces.length / 6,
               valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
               backgroundColor: Colors.grey,
             ),
+            const MaxGap(50),
+            Visibility(
+              visible: !initColorMode,
+              child: SingleCubeFace(
+                singleCubeComponentFaces: cubeFaces,
+              ),
+            ),
+            Visibility(
+              visible: initColorMode,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  PickColorContainer(
+                    color: Colors.white,
+                    onTap: () {
+                      currentColor = 'white';
+                    },
+                  ),
+                  PickColorContainer(
+                    color: Colors.yellow,
+                    onTap: () {
+                      currentColor = 'yellow';
+                    },
+                  ),
+                  PickColorContainer(
+                    color: Colors.red,
+                    onTap: () {
+                      currentColor = 'red';
+                    },
+                  ),
+                  PickColorContainer(
+                    color: Colors.orange,
+                    onTap: () {
+                      currentColor = 'orange';
+                    },
+                  ),
+                  PickColorContainer(
+                    color: Colors.blue,
+                    onTap: () {
+                      currentColor = 'blue';
+                    },
+                  ),
+                  PickColorContainer(
+                    color: Colors.green,
+                    onTap: () {
+                      currentColor = 'green';
+                    },
+                  ),
+                ],
+              ),
+            ),
+            const Gap(80),
             Stack(
               children: [
-                if (imageInWidget1 != null)
+                if (ImageController.imageInWidget1 != null)
                   Opacity(
-                    opacity: toggle ? 1.0 : 0.0,
-                    child: imageInWidget1!,
+                    opacity: ImageController.toggle ? 1.0 : 0.0,
+                    child: ImageController.imageInWidget1!,
                   ),
-                if (imageInWidget2 != null)
+                if (ImageController.imageInWidget2 != null)
                   Opacity(
-                    opacity: toggle ? 0.0 : 1.0,
-                    child: imageInWidget2!,
+                    opacity: ImageController.toggle ? 0.0 : 1.0,
+                    child: ImageController.imageInWidget2!,
                   ),
               ],
-            ),
-            const MaxGap(50),
-            SingleCubeFace(singleCubeComponentFaces: cubeFaces),
-            TextButton(
-              onPressed: () {
-                setState(() {
-                  allCubeFaces.add(cubeFaces);
-                  initCubeFaces();
-                });
-                if (allCubeFaces.length == 6) {
-                  Navigator.pop(context, [allCubeFaces]);
-                }
-              },
-              child: const Text('Next Face'),
             ),
           ],
         ),
@@ -189,48 +247,12 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
     );
   }
 
-  void _sendMessage(Uint8List sendMsg) {
-    _socket.emit('save_image', base64Encode(sendMsg));
-  }
-
   @override
   void dispose() {
     _socket.dispose();
     controller.stopImageStream();
-    _timer.cancel();
+    _timer!.cancel();
+    ImageController.flashImage();
     super.dispose();
-  }
-
-  Future<Uint8List> convertCameraImageToJpeg(CameraImage image) async {
-    final int width = image.width;
-    final int height = image.height;
-    final int uvRowStride = image.planes[1].bytesPerRow;
-    final int uvPixelStride = image.planes[1].bytesPerPixel!;
-
-    var imgBuffer = img.Image(width, height);
-
-    for (int x = 0; x < width; x++) {
-      for (int y = 0; y < height; y++) {
-        final int uvIndex =
-            uvPixelStride * (x / 2).floor() + uvRowStride * (y / 2).floor();
-        final int index = y * width + x;
-
-        final yp = image.planes[0].bytes[index];
-        final up = image.planes[1].bytes[uvIndex];
-        final vp = image.planes[2].bytes[uvIndex];
-
-        int r = (yp + vp * 1436 / 1024 - 179).round().clamp(0, 255);
-        int g = (yp - up * 46549 / 131072 + 44 - vp * 93604 / 131072 + 91)
-            .round()
-            .clamp(0, 255);
-        int b = (yp + up * 1814 / 1024 - 227).round().clamp(0, 255);
-
-        imgBuffer.setPixel(x, y, img.getColor(r, g, b));
-      }
-    }
-    imgBuffer = img.copyRotate(imgBuffer, 90);
-    img.JpegEncoder jpegEncoder = img.JpegEncoder();
-    List<int> jpeg = jpegEncoder.encodeImage(imgBuffer);
-    return Uint8List.fromList(jpeg);
   }
 }
