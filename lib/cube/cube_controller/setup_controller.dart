@@ -7,6 +7,25 @@ import 'package:cy_cube/cube/cube_model/single_cube_model.dart';
 import 'package:cy_cube/cube/cube_view/cube_component.dart';
 
 class SetupController {
+  Color getColor(String color) {
+    switch (color) {
+      case 'white':
+        return Colors.white;
+      case 'yellow':
+        return Colors.yellow;
+      case 'orange':
+        return Colors.orange;
+      case 'red':
+        return Colors.red;
+      case 'green':
+        return Colors.green;
+      case 'blue':
+        return Colors.blue;
+      default:
+        return Colors.black;
+    }
+  }
+
   List<String> generateCubeStatus() {
     List<String> cubeStatus = [];
     for (Facing cubeFace in cubeFaces) {

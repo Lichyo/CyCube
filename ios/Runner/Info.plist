@@ -51,5 +51,9 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+    <string>We need access to the camera to scan the cube.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>your usage description here</string>
 </dict>
 </plist>

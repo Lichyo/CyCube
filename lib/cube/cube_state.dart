@@ -7,10 +7,15 @@ import 'package:cy_cube/cube/cube_model/single_cube_model.dart';
 import 'package:cy_cube/cube/cube_model/single_cube_component_face_model.dart';
 import 'package:cy_cube/cube/cube_constants.dart';
 import 'package:cy_cube/components/single_cube_face.dart';
+import 'package:flutter/cupertino.dart';
 
 class CubeState {
   static List<SingleCubeModel> cubeModels = [];
   static List<int> indexWithStack = [];
+
+  double get cubeDx => ArrangeController.dx;
+
+  double get cubeDy => ArrangeController.dy;
   Function()? _onStateChange;
   final SetupController _setupController = SetupController();
   final RotationController _rotationController = RotationController();
@@ -56,6 +61,10 @@ class CubeState {
     }
   }
 
+  Color getColor({required String color}) {
+    return _setupController.getColor(color);
+  }
+
   void setupCubeWithScanningColor(
       List<List<SingleCubeComponentFaceModel>> cubeFaces) {
     _setupController.setupCubeWithScanningColor(cubeFaces);
@@ -73,7 +82,7 @@ class CubeState {
     return _extensionController.show2DFace(facing: facing);
   }
 
-  void arrangeCube({required String arrangeSide}) {
-    _arrangeController.arrangeCube(arrangeSide: arrangeSide);
+  void listenToArrange({required DragUpdateDetails detail}) {
+    _arrangeController.listenToArrange(detail: detail);
   }
 }

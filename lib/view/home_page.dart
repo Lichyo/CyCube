@@ -13,6 +13,7 @@ import 'dart:math';
 import 'package:gap/gap.dart';
 import 'package:cy_cube/service/database_service.dart';
 import 'package:cy_cube/cube/cube_model/single_cube_component_face_model.dart';
+import 'package:cy_cube/view/course_page.dart';
 
 class RubiksCube extends StatefulWidget {
   const RubiksCube({super.key});
@@ -22,40 +23,22 @@ class RubiksCube extends StatefulWidget {
 }
 
 class _RubiksCubeState extends State<RubiksCube> {
-  Offset _offset = Offset.zero;
-  CubeState cubeState = CubeState();
-  String? roomID;
-  bool isJoinCourseRoom = false;
-  bool isCreateRoom = false;
-  bool isArrangedRight = false;
-  bool isArrangedLeft = false;
-  int arrangeCountX = 0;
-  int arrangeCountY = 0;
-  double dy = 0;
-  double dx = 0;
-  bool isSendWarning = false;
-
-  void showSnackBar(BuildContext context, String text) {
-    final snackBar = SnackBar(
-      content: Text(text),
-      duration: const Duration(seconds: 4),
-    );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
+  final CubeState _cubeState = CubeState();
+  String? _roomID;
+  bool _isJoinCourseRoom = false;
+  bool _isCreateRoom = false;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    cubeState.setOnStateChange(() {
+    _cubeState.setOnStateChange(() {
       setState(() {});
     });
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
-    cubeState.setOnStateChange(null);
+    _cubeState.setOnStateChange(null);
     super.dispose();
   }
 
@@ -67,36 +50,7 @@ class _RubiksCubeState extends State<RubiksCube> {
           return GestureDetector(
             onPanUpdate: (detail) {
               setState(() {
-                _offset += detail.delta;
-                if (arrangeCountY == 0) {
-                  dx = _offset.dx;
-                }
-
-                if (_offset.dy < 50 && _offset.dy > -50) {
-                  dy += detail.delta.dy;
-                }
-
-                if ((dx / 90).floor() < arrangeCountX - 1 &&
-                    arrangeCountY == 0) {
-                  arrangeCountX--;
-                  cubeState.arrangeCube(arrangeSide: 'right');
-                } else if ((dx / 90).floor() > arrangeCountX - 1 &&
-                    arrangeCountY == 0) {
-                  arrangeCountX++;
-                  cubeState.arrangeCube(arrangeSide: 'left');
-                } else if (arrangeCountY != 0 && isSendWarning == false) {
-                  showSnackBar(context, '請將方塊翻正後再做左右翻動');
-                  isSendWarning = true;
-                }
-
-                if ((_offset.dy / 90).floor() + 1 > 0 && arrangeCountY == 0) {
-                  arrangeCountY++;
-                  cubeState.arrangeCube(arrangeSide: 'up');
-                } else if ((_offset.dy / 90).floor() + 1 == 0 &&
-                    arrangeCountY == 1) {
-                  arrangeCountY--;
-                  cubeState.arrangeCube(arrangeSide: 'down');
-                }
+                _cubeState.listenToArrange(detail: detail);
               });
             },
             child: Scaffold(
@@ -118,8 +72,9 @@ class _RubiksCubeState extends State<RubiksCube> {
                     ListTile(
                       title: const Text('Reset'),
                       onTap: () {
-                        cubeState.initCubeState();
-                        setState(() {});
+                        setState(() {
+                          _cubeState.initCubeState();
+                        });
                         Navigator.pop(context);
                       },
                     ),
@@ -130,14 +85,14 @@ class _RubiksCubeState extends State<RubiksCube> {
                             await availableCameras();
                         var data = await Navigator.of(context).push(
                           MaterialPageRoute(
-                            builder: (context) => CubeSetupPageAuto(
+                            builder: (_) => CubeSetupPageAuto(
                               cameras: cameras,
                             ),
                           ),
                         );
                         List<List<SingleCubeComponentFaceModel>> cubeFaces =
                             data[0];
-                        cubeState.setupCubeWithScanningColor(cubeFaces);
+                        _cubeState.setupCubeWithScanningColor(cubeFaces);
                         setState(() {});
                       },
                     ),
@@ -151,8 +106,22 @@ class _RubiksCubeState extends State<RubiksCube> {
                         );
                         List<List<SingleCubeComponentFaceModel>> cubeFaces =
                             data[0];
-                        cubeState.setupCubeWithScanningColor(cubeFaces);
+                        _cubeState.setupCubeWithScanningColor(cubeFaces);
                         setState(() {});
+                      },
+                    ),
+                    ListTile(
+                      title: const Text('Course'),
+                      onTap: () async {
+                        List<CameraDescription> cameras =
+                            await availableCameras();
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => CoursePage(
+                              cameras: cameras,
+                            ),
+                          ),
+                        );
                       },
                     ),
                   ],
@@ -175,7 +144,7 @@ class _RubiksCubeState extends State<RubiksCube> {
                                   FilteringTextInputFormatter.digitsOnly,
                                 ],
                                 onChanged: (value) {
-                                  roomID = value;
+                                  _roomID = value;
                                 },
                               ),
                               Row(
@@ -192,10 +161,10 @@ class _RubiksCubeState extends State<RubiksCube> {
                                     onPressed: () async {
                                       await DatabaseService.joinRoom(
                                         email: 'lichyo003@gmail.com',
-                                        roomID: roomID!,
-                                        cubeState: cubeState,
+                                        roomID: _roomID!,
+                                        cubeState: _cubeState,
                                       );
-                                      isJoinCourseRoom = true;
+                                      _isJoinCourseRoom = true;
                                       setState(() {});
                                       Navigator.pop(context);
                                     },
@@ -211,11 +180,14 @@ class _RubiksCubeState extends State<RubiksCube> {
                   ),
                 ],
                 elevation: 5,
-                title: Text(
-                  roomID ?? 'CyCube',
-                  style: GoogleFonts.aboreto(
-                    fontSize: 27.0,
-                    fontWeight: FontWeight.w400,
+                title: GestureDetector(
+                  onDoubleTap: () {},
+                  child: Text(
+                    _roomID ?? 'CyCube',
+                    style: GoogleFonts.aboreto(
+                      fontSize: 27.0,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
                 ),
                 centerTitle: true,
@@ -230,8 +202,8 @@ class _RubiksCubeState extends State<RubiksCube> {
                         origin: const Offset(0, 0),
                         alignment: Alignment.center,
                         transform: Matrix4.identity()
-                          ..rotateX(dy * pi / 180)
-                          ..rotateY(dx * pi / 180)
+                          ..rotateX(_cubeState.cubeDy * pi / 180)
+                          ..rotateY(_cubeState.cubeDx * pi / 180)
                           ..setEntry(2, 2, 0.001),
                         child: Center(
                           child: Cube(),
@@ -239,28 +211,28 @@ class _RubiksCubeState extends State<RubiksCube> {
                       ),
                       const Gap(100),
                       Visibility(
-                        visible: !isJoinCourseRoom,
+                        visible: !_isJoinCourseRoom,
                         child: CubeRotationTable(
                           onPressed: (rotation) {
-                            cubeState.rotate(rotation: rotation);
-                            if (roomID != null) {
+                            _cubeState.rotate(rotation: rotation);
+                            if (_roomID != null) {
                               DatabaseService.courseWithStudentPOV(
                                 rotation: rotation,
-                                roomID: roomID!,
+                                roomID: _roomID!,
                               );
                             }
                           },
                         ),
                       ),
                       Visibility(
-                        visible: !isJoinCourseRoom && !isCreateRoom,
+                        visible: !_isJoinCourseRoom && !_isCreateRoom,
                         child: TextButton(
                           onPressed: () async {
-                            roomID = await DatabaseService.createRoom(
+                            _roomID = await DatabaseService.createRoom(
                               email: 'lichyo003@gmail.com',
-                              cubeState: cubeState,
+                              cubeState: _cubeState,
                             );
-                            isCreateRoom = true;
+                            _isCreateRoom = true;
                             setState(() {});
                           },
                           child: const Text('create room'),
@@ -272,10 +244,10 @@ class _RubiksCubeState extends State<RubiksCube> {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return CubeStateIn2D(cubeState: cubeState);
+                              return CubeStateIn2D(cubeState: _cubeState);
                             },
                           );
-                          cubeState.show2DFace(facing: Facing.top);
+                          _cubeState.show2DFace(facing: Facing.top);
                         },
                         child: Image.asset(
                           'images/cube_icon.png',
