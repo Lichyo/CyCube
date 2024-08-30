@@ -15,14 +15,14 @@ import 'package:cy_cube/service/database_service.dart';
 import 'package:cy_cube/cube/cube_model/single_cube_component_face_model.dart';
 import 'package:cy_cube/view/course_page.dart';
 
-class RubiksCube extends StatefulWidget {
-  const RubiksCube({super.key});
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
 
   @override
-  State<RubiksCube> createState() => _RubiksCubeState();
+  State<HomePage> createState() => _HomePageState();
 }
 
-class _RubiksCubeState extends State<RubiksCube> {
+class _HomePageState extends State<HomePage> {
   final CubeState _cubeState = CubeState();
   String? _roomID;
   bool _isJoinCourseRoom = false;
