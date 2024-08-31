@@ -13,7 +13,6 @@ import 'dart:math';
 import 'package:gap/gap.dart';
 import 'package:cy_cube/service/database_service.dart';
 import 'package:cy_cube/cube/cube_model/single_cube_component_face_model.dart';
-import 'package:cy_cube/view/course_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -108,20 +107,6 @@ class _HomePageState extends State<HomePage> {
                             data[0];
                         _cubeState.setupCubeWithScanningColor(cubeFaces);
                         setState(() {});
-                      },
-                    ),
-                    ListTile(
-                      title: const Text('Course'),
-                      onTap: () async {
-                        List<CameraDescription> cameras =
-                            await availableCameras();
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => CoursePage(
-                              cameras: cameras,
-                            ),
-                          ),
-                        );
                       },
                     ),
                   ],
