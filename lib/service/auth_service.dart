@@ -3,7 +3,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
-  User? get currentUser => _auth.currentUser;
+  static User? get currentUser => _auth.currentUser;
 
   Future<User?> signInAnonymously() async {
     try {

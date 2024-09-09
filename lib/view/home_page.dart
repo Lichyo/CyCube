@@ -1,5 +1,4 @@
 import 'package:cy_cube/components/cube_state_in_2D.dart';
-import 'package:cy_cube/cube/cube_constants.dart';
 import 'package:cy_cube/cube/cube_state.dart';
 import 'package:cy_cube/components/cube_rotation_table.dart';
 import 'package:cy_cube/view/cube_setup_page_auto.dart';
@@ -13,6 +12,7 @@ import 'dart:math';
 import 'package:gap/gap.dart';
 import 'package:cy_cube/service/database_service.dart';
 import 'package:cy_cube/cube/cube_model/single_cube_component_face_model.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -30,14 +30,10 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    _cubeState.setOnStateChange(() {
-      setState(() {});
-    });
   }
 
   @override
   void dispose() {
-    _cubeState.setOnStateChange(null);
     super.dispose();
   }
 
@@ -48,9 +44,8 @@ class _HomePageState extends State<HomePage> {
         builder: (BuildContext context) {
           return GestureDetector(
             onPanUpdate: (detail) {
-              setState(() {
-                _cubeState.listenToArrange(detail: detail);
-              });
+              Provider.of<CubeState>(context, listen: false)
+                  .listenToArrange(detail: detail);
             },
             child: Scaffold(
               drawer: Drawer(
@@ -71,9 +66,7 @@ class _HomePageState extends State<HomePage> {
                     ListTile(
                       title: const Text('Reset'),
                       onTap: () {
-                        setState(() {
-                          _cubeState.initCubeState();
-                        });
+                        Provider.of(context, listen: false).initCubeState();
                         Navigator.pop(context);
                       },
                     ),
@@ -91,8 +84,8 @@ class _HomePageState extends State<HomePage> {
                         );
                         List<List<SingleCubeComponentFaceModel>> cubeFaces =
                             data[0];
-                        _cubeState.setupCubeWithScanningColor(cubeFaces);
-                        setState(() {});
+                        Provider.of(context, listen: false)
+                            .setupCubeWithScanningColor(cubeFaces);
                       },
                     ),
                     ListTile(
@@ -105,8 +98,8 @@ class _HomePageState extends State<HomePage> {
                         );
                         List<List<SingleCubeComponentFaceModel>> cubeFaces =
                             data[0];
-                        _cubeState.setupCubeWithScanningColor(cubeFaces);
-                        setState(() {});
+                        Provider.of(context, listen: false)
+                            .setupCubeWithScanningColor(cubeFaces);
                       },
                     ),
                   ],
@@ -187,8 +180,10 @@ class _HomePageState extends State<HomePage> {
                         origin: const Offset(0, 0),
                         alignment: Alignment.center,
                         transform: Matrix4.identity()
-                          ..rotateX(_cubeState.cubeDy * pi / 180)
-                          ..rotateY(_cubeState.cubeDx * pi / 180)
+                          ..rotateX(
+                              Provider.of<CubeState>(context).cubeDy * pi / 180)
+                          ..rotateY(
+                              Provider.of<CubeState>(context).cubeDx * pi / 180)
                           ..setEntry(2, 2, 0.001),
                         child: Center(
                           child: Cube(),
@@ -199,7 +194,8 @@ class _HomePageState extends State<HomePage> {
                         visible: !_isJoinCourseRoom,
                         child: CubeRotationTable(
                           onPressed: (rotation) {
-                            _cubeState.rotate(rotation: rotation);
+                            Provider.of<CubeState>(context, listen: false)
+                                .rotate(rotation: rotation);
                             if (_roomID != null) {
                               DatabaseService.courseWithStudentPOV(
                                 rotation: rotation,
@@ -229,10 +225,11 @@ class _HomePageState extends State<HomePage> {
                           showDialog(
                             context: context,
                             builder: (BuildContext context) {
-                              return CubeStateIn2D(cubeState: _cubeState);
+                              return CubeStateIn2D(
+                                  cubeState: Provider.of<CubeState>(context));
                             },
                           );
-                          _cubeState.show2DFace(facing: Facing.top);
+                          // Provider.of(context, listen: false).show2DFace(facing: Facing.top);
                         },
                         child: Image.asset(
                           'images/cube_icon.png',

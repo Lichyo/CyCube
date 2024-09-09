@@ -22,7 +22,6 @@ class _WelcomePageState extends State<WelcomePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    AuthService().signOut();
   }
 
   @override
@@ -53,7 +52,7 @@ class _WelcomePageState extends State<WelcomePage> {
                           setState(() {
                             _isLoading = false;
                           });
-                          if (AuthService().currentUser != null) {
+                          if (AuthService.currentUser != null) {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (_) => const HomePage()));
                           } else {
@@ -86,7 +85,7 @@ class _WelcomePageState extends State<WelcomePage> {
                           setState(() {
                             _isLoading = false;
                           });
-                          if (AuthService().currentUser != null) {
+                          if (AuthService.currentUser != null) {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (_) => const HomePage()));
                           } else {
@@ -106,7 +105,7 @@ class _WelcomePageState extends State<WelcomePage> {
                           setState(() {
                             _isLoading = true;
                           });
-                          if (AuthService().currentUser != null) {
+                          if (AuthService.currentUser != null) {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (_) => const HomePage()));
                           } else {
@@ -137,6 +136,7 @@ class _WelcomePageState extends State<WelcomePage> {
                           ],
                         ),
                       ),
+                      const MaxGap(50),
                     ],
                   ),
           );
