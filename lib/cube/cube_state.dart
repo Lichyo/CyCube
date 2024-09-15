@@ -81,7 +81,6 @@ class CubeState extends ChangeNotifier {
 
   void listenToArrange({required DragUpdateDetails detail}) {
     _arrangeController.listenToArrange(detail: detail);
-    print("arrange");
     notifyListeners();
   }
 }
