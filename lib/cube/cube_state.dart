@@ -16,7 +16,7 @@ class CubeState extends ChangeNotifier {
   double get cubeDx => ArrangeController.dx;
 
   double get cubeDy => ArrangeController.dy;
-  // Function()? _onStateChange;
+
   final SetupController _setupController = SetupController();
   final RotationController _rotationController = RotationController();
   final ExtensionController _extensionController = ExtensionController();
@@ -51,16 +51,9 @@ class CubeState extends ChangeNotifier {
     }
   }
 
-  // void setOnStateChange(Function()? callback) {
-  //   _onStateChange = callback;
-  // }
-
   void rotate({required String rotation}) {
     _rotationController.rotate(rotation: rotation);
     notifyListeners();
-    // if (_onStateChange != null) {
-    //   _onStateChange!();
-    // }
   }
 
   Color getColor({required String color}) {
@@ -88,6 +81,7 @@ class CubeState extends ChangeNotifier {
 
   void listenToArrange({required DragUpdateDetails detail}) {
     _arrangeController.listenToArrange(detail: detail);
+    print("arrange");
     notifyListeners();
   }
 }

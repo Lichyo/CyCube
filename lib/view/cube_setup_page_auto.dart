@@ -50,6 +50,9 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
       'autoConnect': false,
     });
     _socket.connect();
+    _socket.on("connect", (_) {
+      print("connected");
+    });
     _socket.emit("join", Config.user);
     _socket.on('receive_image', (data) async {
       await ImageController.updateImage(data);
