@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'dart:math';
 import 'package:cy_cube/cube/cube_constants.dart';
 import 'package:cy_cube/cube/cube_state.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CubePage extends StatelessWidget {
   const CubePage({
@@ -42,18 +43,7 @@ class CubePage extends StatelessWidget {
                     .rotate(rotation: rotation);
               },
             ),
-            TextButton(
-              onPressed: () async {
-                // _roomID = await DatabaseService.createRoom(
-                //   email: 'lichyo003@gmail.com',
-                //   cubeState: _cubeState,
-                // );
-                // _isCreateRoom = true;
-                // setState(() {});
-              },
-              child: const Text('create room'),
-            ),
-            const MaxGap(100),
+            const MaxGap(80),
             MaterialButton(
               onPressed: () {
                 showDialog(
@@ -65,9 +55,10 @@ class CubePage extends StatelessWidget {
                 Provider.of<CubeState>(context, listen: false)
                     .show2DFace(facing: Facing.top);
               },
-              child: Image.asset(
-                'images/cube_icon.png',
-                width: 80,
+
+              child: const FaIcon(
+                FontAwesomeIcons.cube,
+                size: 50,
               ),
             ),
           ],
