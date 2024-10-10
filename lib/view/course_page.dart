@@ -1,17 +1,20 @@
+import 'package:cy_cube/cube/cube_state.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:provider/provider.dart';
 import 'dart:typed_data';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'dart:async';
-import 'dart:convert';
 import 'package:image/image.dart' as img;
 import 'package:flutter/foundation.dart';
-import 'package:gap/gap.dart';
+import 'dart:convert';
+import 'package:cy_cube/config.dart';
+import 'package:cy_cube/cube/cube_view/cube_page.dart';
 
 class CoursePage extends StatefulWidget {
-  const CoursePage({super.key, required this.cameras});
-
-  final List<CameraDescription> cameras;
+  const CoursePage({
+    super.key,
+  });
 
   @override
   State<CoursePage> createState() => _CoursePageState();
@@ -26,30 +29,31 @@ class _CoursePageState extends State<CoursePage> {
   Image? imageInWidget2;
   bool toggle = true;
   bool startCourse = false;
+  String predictedResult = "";
+  DateTime previousTime = DateTime.now();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _socket = IO.io('http://192.168.50.22:5000', <String, dynamic>{
+    _socket = IO.io(Config.serverIP, <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
     });
     _socket.connect();
-    _socket.on('connect', (_) {
-      print('connected');
+    _socket.on('rotation', (data) {
+      setState(() {});
+      if (data["predictedResult"] != "wait") {
+        predictedResult = data["predictedResult"];
+      }
+      if (DateTime.now().difference(previousTime).inMilliseconds > 3000) {
+        Provider.of<CubeState>(context, listen: false)
+            .rotate(rotation: predictedResult);
+        previousTime = DateTime.now();
+        predictedResult = "clear";
+      }
     });
-    _socket.on('save_image', (data) {
-      print(data);
-    });
-    _socket.on('predict', (data) {
-      print(data);
-    });
-    _socket.on('disconnect', (_) {
-      print('disconnected');
-    });
-
-    controller = CameraController(widget.cameras[1], ResolutionPreset.low);
+    controller = CameraController(Config.camera!, ResolutionPreset.low);
     controller.initialize().then((_) {
       if (!mounted) {
         return;
@@ -81,29 +85,49 @@ class _CoursePageState extends State<CoursePage> {
             _timer.cancel();
             startCourse = false;
           } else {
-            _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+            _timer = Timer.periodic(const Duration(milliseconds: 150), (timer) {
               convertCameraImageToJpeg(imageBuffer).then((value) {
-                _socket.emit('predict', base64Encode(value));
+                _socket.emit('rotation', base64Encode(value));
               });
-              print('send image');
             });
             startCourse = true;
           }
         },
         child: const Icon(Icons.camera),
       ),
-      appBar: AppBar(
-        title: const Text('Course Page'),
+      body: Stack(
+        children: [
+          Center(
+            child: CameraPreview(
+              controller,
+            ),
+          ),
+          Positioned(
+            top: 600,
+            left: MediaQuery.of(context).size.width / 2 - 10,
+            child: CubePage(),
+          ),
+          Positioned(
+            top: 130,
+            left: 20,
+            child: Text(
+              "predictedResult : $predictedResult",
+              style: const TextStyle(
+                fontSize: 30,
+                color: Colors.black,
+              ),
+            ),
+          ),
+        ],
       ),
-      body: CameraPreview(controller),
     );
   }
 
   @override
   void dispose() {
     _socket.dispose();
-    controller.stopImageStream();
-    _timer.cancel();
+    // controller.stopImageStream();
+    // _timer.cancel();
     super.dispose();
   }
 

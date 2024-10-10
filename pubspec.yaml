@@ -35,7 +35,7 @@ dependencies:
   vector_math: ^2.1.4
   google_fonts: ^6.1.0
   image_picker: ^1.1.2
-  font_awesome_flutter: ^10.6.0
+  font_awesome_flutter: ^10.7.0
   gap: ^3.0.1
   camera: ^0.8.0
   path_provider: ^2.1.2
@@ -47,6 +47,9 @@ dependencies:
   image: ^3.0.2
   socket_io_client: ^2.0.3+1
   linear_progress_bar: ^1.1.2
+  lottie: ^3.1.2
+  google_sign_in: ^6.2.1
+  provider: ^6.1.2
 
 
 dev_dependencies:

@@ -7,16 +7,17 @@ import 'package:cy_cube/cube/cube_model/single_cube_model.dart';
 import 'package:cy_cube/cube/cube_model/single_cube_component_face_model.dart';
 import 'package:cy_cube/cube/cube_constants.dart';
 import 'package:cy_cube/components/single_cube_face.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'dart:core';
 
-class CubeState {
+class CubeState extends ChangeNotifier {
   static List<SingleCubeModel> cubeModels = [];
   static List<int> indexWithStack = [];
 
   double get cubeDx => ArrangeController.dx;
 
   double get cubeDy => ArrangeController.dy;
-  Function()? _onStateChange;
+
   final SetupController _setupController = SetupController();
   final RotationController _rotationController = RotationController();
   final ExtensionController _extensionController = ExtensionController();
@@ -24,6 +25,7 @@ class CubeState {
 
   CubeState() {
     initCubeState();
+    notifyListeners();
   }
 
   void initCubeState() {
@@ -50,15 +52,9 @@ class CubeState {
     }
   }
 
-  void setOnStateChange(Function()? callback) {
-    _onStateChange = callback;
-  }
-
   void rotate({required String rotation}) {
     _rotationController.rotate(rotation: rotation);
-    if (_onStateChange != null) {
-      _onStateChange!();
-    }
+    notifyListeners();
   }
 
   Color getColor({required String color}) {
@@ -68,6 +64,7 @@ class CubeState {
   void setupCubeWithScanningColor(
       List<List<SingleCubeComponentFaceModel>> cubeFaces) {
     _setupController.setupCubeWithScanningColor(cubeFaces);
+    notifyListeners();
   }
 
   List<String> generateCubeStatus() {
@@ -76,6 +73,7 @@ class CubeState {
 
   void setCubeStatus({required List<String> cubeStatus}) {
     _setupController.setCubeStatus(cubeStatus: cubeStatus);
+    notifyListeners();
   }
 
   SingleCubeFace show2DFace({required Facing facing}) {
@@ -84,5 +82,6 @@ class CubeState {
 
   void listenToArrange({required DragUpdateDetails detail}) {
     _arrangeController.listenToArrange(detail: detail);
+    notifyListeners();
   }
 }

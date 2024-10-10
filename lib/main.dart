@@ -1,18 +1,27 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cy_cube/config.dart';
+import 'package:cy_cube/view/welcome_page.dart';
 import 'package:flutter/material.dart';
-import 'view/home_page.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
+import 'package:cy_cube/cube/cube_state.dart';
+import 'package:cy_cube/service/auth_service.dart';
+import 'package:cy_cube/view/home_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  await FirebaseAuth.instance.signInAnonymously();
+  await Config.initCamera();
 
   runApp(
-    MaterialApp(
-      debugShowCheckedModeBanner: true,
-      theme: ThemeData.dark(),
-      home: const RubiksCube(),
+    ChangeNotifierProvider(
+      create: (context) => CubeState(),
+      child: MaterialApp(
+        theme: ThemeData.dark(),
+        debugShowCheckedModeBanner: true,
+        home: AuthService.currentUser != null
+            ? const HomePage()
+            : const WelcomePage(),
+      ),
     ),
   );
 }

@@ -25,7 +25,7 @@ class CubeSetupPageAuto extends StatefulWidget {
 
 class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
   late IO.Socket _socket;
-  late CameraController controller;
+  late CameraController _controller;
   Timer? _timer;
   late CameraImage imageBuffer;
   bool initColorMode = false;
@@ -50,6 +50,9 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
       'autoConnect': false,
     });
     _socket.connect();
+    _socket.on("connect", (_) {
+      print("connected");
+    });
     _socket.emit("join", Config.user);
     _socket.on('receive_image', (data) async {
       await ImageController.updateImage(data);
@@ -69,13 +72,13 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
     });
     _socket.on("init_color_dataset", (data) {});
 
-    controller = CameraController(widget.cameras[0], ResolutionPreset.low);
-    controller.initialize().then((_) {
+    _controller = CameraController(widget.cameras[0], ResolutionPreset.low);
+    _controller.initialize().then((_) {
       if (!mounted) {
         return;
       }
-      if (controller.value.isInitialized) {
-        controller.startImageStream((image) {
+      if (_controller.value.isInitialized) {
+        _controller.startImageStream((image) {
           imageBuffer = image;
         });
       }
@@ -250,7 +253,7 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
   @override
   void dispose() {
     _socket.dispose();
-    controller.stopImageStream();
+    _controller.stopImageStream();
     _timer!.cancel();
     ImageController.flashImage();
     super.dispose();
