@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:cy_cube/cube/cube_constants.dart';
 import 'package:cy_cube/cube/cube_state.dart';
+import 'package:provider/provider.dart';
 
 const double size = 65;
 
 class CubeStateIn2D extends StatelessWidget {
   const CubeStateIn2D({
     super.key,
-    required this.cubeState,
   });
 
-  final CubeState cubeState;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +24,7 @@ class CubeStateIn2D extends StatelessWidget {
                 width: size,
                 height: size,
               ),
-              cubeState.show2DFace(facing: Facing.top),
+              Provider.of<CubeState>(context, listen: false).show2DFace(facing: Facing.top),
               const SizedBox(
                 width: size,
                 height: size,
@@ -39,10 +38,10 @@ class CubeStateIn2D extends StatelessWidget {
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              cubeState.show2DFace(facing: Facing.left),
-              cubeState.show2DFace(facing: Facing.front),
-              cubeState.show2DFace(facing: Facing.right),
-              cubeState.show2DFace(facing: Facing.back),
+              Provider.of<CubeState>(context, listen: false).show2DFace(facing: Facing.left),
+              Provider.of<CubeState>(context, listen: false).show2DFace(facing: Facing.front),
+              Provider.of<CubeState>(context, listen: false).show2DFace(facing: Facing.right),
+              Provider.of<CubeState>(context, listen: false).show2DFace(facing: Facing.back),
             ],
           ),
           Row(
@@ -52,7 +51,7 @@ class CubeStateIn2D extends StatelessWidget {
                 width: size,
                 height: size,
               ),
-              cubeState.show2DFace(facing: Facing.down),
+              Provider.of<CubeState>(context, listen: false).show2DFace(facing: Facing.down),
               const SizedBox(
                 width: size,
                 height: size,

@@ -4,6 +4,8 @@ import 'package:cy_cube/cube/cube_view/cube_page.dart';
 import 'package:provider/provider.dart';
 import 'package:cy_cube/view/course_page.dart';
 import 'package:cy_cube/view/lab.dart';
+import 'dart:core';
+import 'package:camera/camera.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,12 +25,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   List<Widget> _pages = [];
+  List<int> executionTimes = [];
+  late List<CameraDescription> cameras;
 
   @override
   void initState() {
     super.initState();
     _pages = <Widget>[
-      CubePage(cubeState: _cubeState),
+      CubePage(),
       const CoursePage(),
       const Lab(),
     ];
@@ -44,9 +48,6 @@ class _HomePageState extends State<HomePage> {
                 .listenToArrange(detail: detail);
           },
           child: Scaffold(
-            appBar: AppBar(
-              title: const Text('CyCube'),
-            ),
             bottomNavigationBar: BottomNavigationBar(
               items: const [
                 BottomNavigationBarItem(

@@ -1,3 +1,4 @@
+
 import 'package:cy_cube/components/cube_state_in_2D.dart';
 import 'package:flutter/material.dart';
 import 'package:cy_cube/cube/cube_view/cube.dart';
@@ -10,12 +11,12 @@ import 'package:cy_cube/cube/cube_state.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CubePage extends StatelessWidget {
-  const CubePage({
+  CubePage({
     super.key,
-    required CubeState cubeState,
-  }) : _cubeState = cubeState;
+  });
 
-  final CubeState _cubeState;
+  List<int> executionTimes = [];
+  int count = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +25,7 @@ class CubePage extends StatelessWidget {
         return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const MaxGap(200),
+            // const MaxGap(200),
             Transform(
               origin: const Offset(0, 0),
               alignment: Alignment.center,
@@ -36,31 +37,30 @@ class CubePage extends StatelessWidget {
                 child: Cube(),
               ),
             ),
-            const Gap(100),
-            CubeRotationTable(
-              onPressed: (rotation) {
-                Provider.of<CubeState>(context, listen: false)
-                    .rotate(rotation: rotation);
-              },
-            ),
-            const MaxGap(80),
-            MaterialButton(
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return CubeStateIn2D(cubeState: _cubeState);
-                  },
-                );
-                Provider.of<CubeState>(context, listen: false)
-                    .show2DFace(facing: Facing.top);
-              },
-
-              child: const FaIcon(
-                FontAwesomeIcons.cube,
-                size: 50,
-              ),
-            ),
+            // const Gap(100),
+            // CubeRotationTable(
+            //   onPressed: (rotation) {
+            //     Provider.of<CubeState>(context, listen: false)
+            //         .rotate(rotation: rotation);
+            //   },
+            // ),
+            // const MaxGap(80),
+            // MaterialButton(
+            //   onPressed: () {
+            //     showDialog(
+            //       context: context,
+            //       builder: (BuildContext context) {
+            //         return const CubeStateIn2D();
+            //       },
+            //     );
+            //     Provider.of<CubeState>(context, listen: false)
+            //         .show2DFace(facing: Facing.top);
+            //   },
+            //   child: const FaIcon(
+            //     FontAwesomeIcons.cube,
+            //     size: 50,
+            //   ),
+            // ),
           ],
         );
       },
