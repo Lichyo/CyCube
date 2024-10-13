@@ -30,6 +30,7 @@ class _CoursePageState extends State<CoursePage> {
   bool toggle = true;
   bool startCourse = false;
   String predictedResult = "";
+  String probability = "";
   DateTime previousTime = DateTime.now();
 
   @override
@@ -45,6 +46,7 @@ class _CoursePageState extends State<CoursePage> {
       setState(() {});
       if (data["predictedResult"] != "wait") {
         predictedResult = data["predictedResult"];
+        probability = data["probability"];
       }
       if (DateTime.now().difference(previousTime).inMilliseconds > 3000) {
         Provider.of<CubeState>(context, listen: false)
@@ -81,27 +83,48 @@ class _CoursePageState extends State<CoursePage> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          if (startCourse) {
-            _timer.cancel();
-            startCourse = false;
-          } else {
-            _timer = Timer.periodic(const Duration(milliseconds: 150), (timer) {
-              convertCameraImageToJpeg(imageBuffer).then((value) {
-                _socket.emit('rotation', base64Encode(value));
+          showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: const Text("Course Setup"),
+                  content:  Container(
+                    height: 200,
+                    width: 200,
+                    child: Column(
+                    ),
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text("OK"),
+                    ),
+                  ],
+                );
               });
-            });
-            startCourse = true;
-          }
+          // if (startCourse) {
+          //   _timer.cancel();
+          //   startCourse = false;
+          // } else {
+          //   _timer = Timer.periodic(const Duration(milliseconds: 150), (timer) {
+          //     convertCameraImageToJpeg(imageBuffer).then((value) {
+          //       _socket.emit('rotation', base64Encode(value));
+          //     });
+          //   });
+          //   startCourse = true;
+          // }
         },
         child: const Icon(Icons.camera),
       ),
       body: Stack(
         children: [
-          Center(
-            child: CameraPreview(
-              controller,
-            ),
-          ),
+          // Center(
+          //   child: CameraPreview(
+          //     controller,
+          //   ),
+          // ),
           Positioned(
             top: 600,
             left: MediaQuery.of(context).size.width / 2 - 10,
@@ -111,9 +134,9 @@ class _CoursePageState extends State<CoursePage> {
             top: 130,
             left: 20,
             child: Text(
-              "predictedResult : $predictedResult",
+              "predictedResult : $predictedResult, probability : $probability",
               style: const TextStyle(
-                fontSize: 30,
+                fontSize: 20,
                 color: Colors.black,
               ),
             ),
@@ -126,8 +149,8 @@ class _CoursePageState extends State<CoursePage> {
   @override
   void dispose() {
     _socket.dispose();
-    // controller.stopImageStream();
-    // _timer.cancel();
+    controller.stopImageStream();
+    _timer.cancel();
     super.dispose();
   }
 

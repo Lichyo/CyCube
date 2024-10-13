@@ -1,4 +1,3 @@
-
 import 'package:cy_cube/components/cube_state_in_2D.dart';
 import 'package:flutter/material.dart';
 import 'package:cy_cube/cube/cube_view/cube.dart';
@@ -37,30 +36,6 @@ class CubePage extends StatelessWidget {
                 child: Cube(),
               ),
             ),
-            // const Gap(100),
-            // CubeRotationTable(
-            //   onPressed: (rotation) {
-            //     Provider.of<CubeState>(context, listen: false)
-            //         .rotate(rotation: rotation);
-            //   },
-            // ),
-            // const MaxGap(80),
-            // MaterialButton(
-            //   onPressed: () {
-            //     showDialog(
-            //       context: context,
-            //       builder: (BuildContext context) {
-            //         return const CubeStateIn2D();
-            //       },
-            //     );
-            //     Provider.of<CubeState>(context, listen: false)
-            //         .show2DFace(facing: Facing.top);
-            //   },
-            //   child: const FaIcon(
-            //     FontAwesomeIcons.cube,
-            //     size: 50,
-            //   ),
-            // ),
           ],
         );
       },

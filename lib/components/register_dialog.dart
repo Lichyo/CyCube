@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class RegisterDialog extends StatefulWidget {
-  final Function(String username, String email, String password) onRegister;
+  final Function(String username, String email, String password, String role) onRegister;
 
   RegisterDialog({required this.onRegister});
 
@@ -13,6 +13,7 @@ class _RegisterDialogState extends State<RegisterDialog> {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  String _selectedRole = 'Student';
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +35,25 @@ class _RegisterDialogState extends State<RegisterDialog> {
             decoration: const InputDecoration(labelText: 'Password'),
             obscureText: true,
           ),
+          Row(
+            children: [
+              DropdownButton<String>(
+                value: _selectedRole,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    _selectedRole = newValue!;
+                  });
+                },
+                items: <String>['Teacher', 'Student']
+                    .map<DropdownMenuItem<String>>((String value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+            ],
+          )
         ],
       ),
       actions: [
@@ -49,6 +69,7 @@ class _RegisterDialogState extends State<RegisterDialog> {
               _usernameController.text,
               _emailController.text,
               _passwordController.text,
+              _selectedRole,
             );
             Navigator.pop(context);
           },

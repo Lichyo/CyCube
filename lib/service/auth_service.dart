@@ -1,28 +1,24 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AuthService {
   static final FirebaseAuth _auth = FirebaseAuth.instance;
+  static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   static User? get currentUser => _auth.currentUser;
 
-  Future<User?> signInAnonymously() async {
-    try {
-      final UserCredential userCredential = await _auth.signInAnonymously();
-      return userCredential.user;
-    } catch (e) {
-      print(e);
-      return null;
-    }
-  }
-
-  Future<User?> signInWithEmailAndPassword(
-      String email, String password) async {
+  Future<User?> signInWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) async {
     try {
       final UserCredential userCredential =
           await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
       );
+
       return userCredential.user;
     } catch (e) {
       print(e);
@@ -30,14 +26,24 @@ class AuthService {
     }
   }
 
-  Future<User?> signUpWithEmailAndPassword(
-      String email, String password) async {
+  Future<User?> signUpWithEmailAndPassword({
+    required String email,
+    required String password,
+    required String name,
+    required String role,
+  }) async {
     try {
       final UserCredential userCredential =
           await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+      final String uid = userCredential.user!.uid;
+      await _firestore.collection('users').doc(uid).set({
+        "email": email,
+        "name": name,
+        "role": role,
+      });
       return userCredential.user;
     } catch (e) {
       print(e);
