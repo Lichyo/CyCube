@@ -11,7 +11,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await Config.initCamera();
-  await AuthService().signOut();
+  // await AuthService().signOut();
 
   runApp(
     ChangeNotifierProvider(

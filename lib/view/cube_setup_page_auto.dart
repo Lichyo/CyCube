@@ -14,10 +14,7 @@ import 'package:cy_cube/config.dart';
 class CubeSetupPageAuto extends StatefulWidget {
   CubeSetupPageAuto({
     super.key,
-    required this.cameras,
   });
-
-  List<CameraDescription> cameras;
 
   @override
   State<CubeSetupPageAuto> createState() => _CubeSetupPageAutoState();
@@ -72,7 +69,7 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
     });
     _socket.on("init_color_dataset", (data) {});
 
-    _controller = CameraController(widget.cameras[0], ResolutionPreset.low);
+    _controller = CameraController(Config.cameras![0], ResolutionPreset.low);
     _controller.initialize().then((_) {
       if (!mounted) {
         return;

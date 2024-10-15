@@ -1,4 +1,5 @@
 import 'package:cy_cube/cube/cube_view/cube.dart';
+import 'package:cy_cube/cube/cube_view/cube_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -22,7 +23,7 @@ class _HomePageState extends State<HomePage> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const MaxGap(200),
-        Cube(),
+        CubePage(),
         const Gap(100),
         CubeRotationTable(
           onPressed: (rotation) {

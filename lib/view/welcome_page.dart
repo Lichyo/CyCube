@@ -27,6 +27,7 @@ class _WelcomePageState extends State<WelcomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text('CyCube'),
       ),
@@ -71,7 +72,7 @@ class _WelcomePageState extends State<WelcomePage> {
                             builder: (BuildContext context) {
                               return RegisterDialog(
                                 onRegister: (String username, String email,
-                                    String password, String role) async {
+                                    String password) async {
                                   setState(() {
                                     _isLoading = true;
                                   });
@@ -80,7 +81,6 @@ class _WelcomePageState extends State<WelcomePage> {
                                     email: email,
                                     password: password,
                                     name: username,
-                                    role: role,
                                   );
                                 },
                               );

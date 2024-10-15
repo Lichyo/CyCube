@@ -30,7 +30,6 @@ class AuthService {
     required String email,
     required String password,
     required String name,
-    required String role,
   }) async {
     try {
       final UserCredential userCredential =
@@ -42,7 +41,6 @@ class AuthService {
       await _firestore.collection('users').doc(uid).set({
         "email": email,
         "name": name,
-        "role": role,
       });
       return userCredential.user;
     } catch (e) {

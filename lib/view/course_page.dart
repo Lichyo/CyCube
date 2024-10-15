@@ -1,6 +1,7 @@
 import 'package:cy_cube/cube/cube_state.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
 import 'dart:typed_data';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -10,6 +11,7 @@ import 'package:flutter/foundation.dart';
 import 'dart:convert';
 import 'package:cy_cube/config.dart';
 import 'package:cy_cube/cube/cube_view/cube_page.dart';
+import 'init_course_page.dart';
 
 class CoursePage extends StatefulWidget {
   const CoursePage({
@@ -32,6 +34,7 @@ class _CoursePageState extends State<CoursePage> {
   String predictedResult = "";
   String probability = "";
   DateTime previousTime = DateTime.now();
+  bool isChecked = false;
 
   @override
   void initState() {
@@ -55,7 +58,8 @@ class _CoursePageState extends State<CoursePage> {
         predictedResult = "clear";
       }
     });
-    controller = CameraController(Config.camera!, ResolutionPreset.low);
+
+    controller = CameraController(Config.cameras![0], ResolutionPreset.low);
     controller.initialize().then((_) {
       if (!mounted) {
         return;
@@ -83,27 +87,6 @@ class _CoursePageState extends State<CoursePage> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  title: const Text("Course Setup"),
-                  content:  Container(
-                    height: 200,
-                    width: 200,
-                    child: Column(
-                    ),
-                  ),
-                  actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                      child: const Text("OK"),
-                    ),
-                  ],
-                );
-              });
           // if (startCourse) {
           //   _timer.cancel();
           //   startCourse = false;
@@ -118,31 +101,32 @@ class _CoursePageState extends State<CoursePage> {
         },
         child: const Icon(Icons.camera),
       ),
-      body: Stack(
-        children: [
-          // Center(
-          //   child: CameraPreview(
-          //     controller,
-          //   ),
-          // ),
-          Positioned(
-            top: 600,
-            left: MediaQuery.of(context).size.width / 2 - 10,
-            child: CubePage(),
-          ),
-          Positioned(
-            top: 130,
-            left: 20,
-            child: Text(
-              "predictedResult : $predictedResult, probability : $probability",
-              style: const TextStyle(
-                fontSize: 20,
-                color: Colors.black,
-              ),
-            ),
-          ),
-        ],
-      ),
+      body: InitCoursePage(),
+      // body: Stack(
+      //   children: [
+      //     Center(
+      //       child: CameraPreview(
+      //         controller,
+      //       ),
+      //     ),
+      //     Positioned(
+      //       top: 600,
+      //       left: MediaQuery.of(context).size.width / 2 - 10,
+      //       child: CubePage(),
+      //     ),
+      //     Positioned(
+      //       top: 130,
+      //       left: 20,
+      //       child: Text(
+      //         "predictedResult : $predictedResult, probability : $probability",
+      //         style: const TextStyle(
+      //           fontSize: 20,
+      //           color: Colors.black,
+      //         ),
+      //       ),
+      //     ),
+      //   ],
+      // ),
     );
   }
 
