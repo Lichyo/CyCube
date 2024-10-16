@@ -22,9 +22,7 @@ class CubeSetupPageAuto extends StatefulWidget {
 
 class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
   late IO.Socket _socket;
-  late CameraController _controller;
   Timer? _timer;
-  late CameraImage imageBuffer;
   bool initColorMode = false;
   List<SingleCubeComponentFaceModel> cubeFaces = [];
   List<List<SingleCubeComponentFaceModel>> allCubeFaces = [];
@@ -68,25 +66,9 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
       });
     });
     _socket.on("init_color_dataset", (data) {});
-
-    _controller = CameraController(Config.cameras![0], ResolutionPreset.low);
-    _controller.initialize().then((_) {
-      if (!mounted) {
-        return;
-      }
-      if (_controller.value.isInitialized) {
-        _controller.startImageStream((image) {
-          imageBuffer = image;
-        });
-      }
-    }).catchError((Object e) {
-      if (e is CameraException) {
-        switch (e.code) {
-          case 'CameraAccessDenied':
-            break;
-          default:
-            break;
-        }
+    ImageController.initializeCamera(Config.cameras![0]).then((_) {
+      if (mounted) {
+        setState(() {});
       }
     });
   }
@@ -117,7 +99,8 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
               } else {
                 _timer =
                     Timer.periodic(const Duration(milliseconds: 125), (timer) {
-                  ImageController.convertCameraImageToJpeg(imageBuffer)
+                  ImageController.convertCameraImageToJpeg(
+                          ImageController.imageBuffer!)
                       .then((value) {
                     _socket.emit('save_image', base64Encode(value));
                   });
@@ -250,9 +233,7 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
   @override
   void dispose() {
     _socket.dispose();
-    _controller.stopImageStream();
     _timer!.cancel();
-    ImageController.flashImage();
     super.dispose();
   }
 }

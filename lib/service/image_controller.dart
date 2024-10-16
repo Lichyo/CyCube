@@ -10,6 +10,8 @@ class ImageController {
   static Image? imageInWidget2;
   static bool toggle = true;
   static Completer<void>? _imageLoadingCompleter;
+  static CameraController? controller;
+  static CameraImage? imageBuffer;
 
   static Color getColor(String color) {
     switch (color) {
@@ -80,5 +82,30 @@ class ImageController {
   static flashImage() {
     imageInWidget1 = null;
     imageInWidget2 = null;
+  }
+
+  static Future<void> initializeCamera(CameraDescription camera) async {
+    controller = CameraController(camera, ResolutionPreset.low);
+    try {
+      await controller!.initialize();
+      if (controller!.value.isInitialized) {
+        controller!.startImageStream((image) {
+          imageBuffer = image;
+        });
+      }
+    } catch (e) {
+      if (e is CameraException) {
+        switch (e.code) {
+          case 'CameraAccessDenied':
+            break;
+          default:
+            break;
+        }
+      }
+    }
+  }
+
+  static void disposeCamera() {
+    controller?.dispose();
   }
 }
