@@ -1,6 +1,5 @@
 import 'package:cy_cube/cube/cube_state.dart';
 import 'package:flutter/material.dart';
-import 'package:cy_cube/cube/cube_view/cube_page.dart';
 import 'package:provider/provider.dart';
 import 'package:cy_cube/view/course_page.dart';
 import 'package:cy_cube/view/lab.dart';
@@ -17,7 +16,6 @@ class RoutePage extends StatefulWidget {
 
 class _RoutePageState extends State<RoutePage> {
   int _selectedIndex = 0;
-  final CubeState _cubeState = CubeState();
 
   void _onItemTapped(int index) {
     setState(() {

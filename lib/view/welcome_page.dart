@@ -38,9 +38,9 @@ class _WelcomePageState extends State<WelcomePage> {
                 ? const CircularProgressIndicator()
                 : Column(
                     children: [
-                      Lottie.network(
-                        Config.lottieCubeAsset,
-                      ),
+                      // Lottie.network(
+                      //   Config.lottieCubeAsset,
+                      // ),
                       const Gap(30),
                       const Text('Welcome to CyCube'),
                       EmailPasswordForm(

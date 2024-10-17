@@ -24,10 +24,7 @@ class DefaultFirebaseOptions {
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
-        throw UnsupportedError(
-          'DefaultFirebaseOptions have not been configured for android - '
-          'you can reconfigure this by running the FlutterFire CLI again.',
-        );
+        return android;
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
@@ -53,13 +50,20 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBc-dAEe6wV5g8EIdhPVrrC3DhK2LoM4t4',
-    appId: '1:332722357217:ios:bc5baa3db7b3bc15d248a0',
-    messagingSenderId: '332722357217',
-    projectId: 'cy-cube',
-    storageBucket: 'cy-cube.appspot.com',
-    androidClientId: '332722357217-3q6e81ecn212643dclak75lrqtm4t6se.apps.googleusercontent.com',
-    iosClientId: '332722357217-l5gsia3v2c08gn4n7gah5vi5i0gsvd6g.apps.googleusercontent.com',
-    iosBundleId: 'com.lcy.cyCube.RunnerTests',
+    apiKey: 'AIzaSyBZ5QXF4Wzh-RuZWM_TLhBA1GurkP1Pugs',
+    appId: '1:116929185399:ios:9e65d22a9bc10a997ae872',
+    messagingSenderId: '116929185399',
+    projectId: 'cy-cube-a25ad',
+    storageBucket: 'cy-cube-a25ad.appspot.com',
+    iosBundleId: 'com.lcy.cyCube',
   );
+
+  static const FirebaseOptions android = FirebaseOptions(
+    apiKey: 'AIzaSyD52XNdmEqbFj4xKbOzjx3L8LVLTQ764TA',
+    appId: '1:116929185399:android:41346488c3e79cbb7ae872',
+    messagingSenderId: '116929185399',
+    projectId: 'cy-cube-a25ad',
+    storageBucket: 'cy-cube-a25ad.appspot.com',
+  );
+
 }

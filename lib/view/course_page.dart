@@ -162,7 +162,6 @@ class _CoursePageState extends State<CoursePage> {
                                   context: context,
                                 );
                               });
-
                               Provider.of<CubeState>(context, listen: false)
                                   .setupCubeWithScanningColor(cubeFaces);
                               print("room ID : " + roomIDController.text);
