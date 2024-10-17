@@ -29,7 +29,7 @@ class _CoursePageState extends State<CoursePage> {
   Image? imageInWidget1;
   Image? imageInWidget2;
   bool toggle = true;
-  bool startCourse = false;
+  bool isCourseStart = false;
   String predictedResult = "";
   String probability = "";
   DateTime previousTime = DateTime.now();
@@ -42,6 +42,30 @@ class _CoursePageState extends State<CoursePage> {
     // TODO: implement initState
     super.initState();
     _initializeSocket();
+  }
+
+  void startCourse() {
+    ImageController.initializeCamera(Config.cameras![1]).then((_) {
+      if (mounted) {
+        setState(() {});
+      }
+    });
+    if (isCourseStart) {
+      _timer.cancel();
+      isCourseStart = false;
+    } else {
+      _timer = Timer.periodic(const Duration(milliseconds: 70), (timer) {
+        print("Emit rotation");
+        ImageController.convertCameraImageToJpeg(ImageController.imageBuffer!)
+            .then((value) {
+          _socket.emit('rotation', base64Encode(value));
+        });
+      });
+      isCourseStart = true;
+    }
+    setState(() {
+      isJoinRoom = true;
+    });
   }
 
   void _initializeSocket() {
@@ -59,51 +83,30 @@ class _CoursePageState extends State<CoursePage> {
   @override
   Widget build(BuildContext context) {
     return isJoinRoom
-        ? Scaffold(
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {
-                if (startCourse) {
-                  _timer.cancel();
-                  startCourse = false;
-                } else {
-                  _timer =
-                      Timer.periodic(const Duration(milliseconds: 70), (timer) {
-                    ImageController.convertCameraImageToJpeg(
-                            ImageController.imageBuffer!)
-                        .then((value) {
-                      _socket.emit('rotation', base64Encode(value));
-                    });
-                  });
-                  startCourse = true;
-                }
-              },
-              child: const Icon(Icons.camera),
-            ),
-            body: Stack(
-              children: [
-                Center(
-                  child: CameraPreview(
-                    ImageController.controller!,
+        ? Stack(
+            children: [
+              Center(
+                child: CameraPreview(
+                  ImageController.controller!,
+                ),
+              ),
+              Positioned(
+                top: 600,
+                left: MediaQuery.of(context).size.width / 2 - 10,
+                child: CubePage(),
+              ),
+              Positioned(
+                top: 130,
+                left: 20,
+                child: Text(
+                  "result : $predictedResult, probability : $probability",
+                  style: const TextStyle(
+                    fontSize: 20,
+                    color: Colors.black,
                   ),
                 ),
-                Positioned(
-                  top: 600,
-                  left: MediaQuery.of(context).size.width / 2 - 10,
-                  child: CubePage(),
-                ),
-                Positioned(
-                  top: 130,
-                  left: 20,
-                  child: Text(
-                    "result : $predictedResult, probability : $probability",
-                    style: const TextStyle(
-                      fontSize: 20,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           )
         : isLoad
             ? const Center(child: CircularProgressIndicator())
@@ -133,13 +136,16 @@ class _CoursePageState extends State<CoursePage> {
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () async {
-                              setState(() {
-                                isLoad = true;
-                              });
-
-                              setState(() {
-                                isLoad = false;
-                              });
+                              try {
+                                await DatabaseService.joinRoom(
+                                    roomID: roomIDController.text,
+                                    context: context);
+                                setState(() {
+                                  isJoinRoom = true;
+                                });
+                              } catch (e) {
+                                print(e);
+                              }
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.blue, // Background color
@@ -155,28 +161,24 @@ class _CoursePageState extends State<CoursePage> {
                         ),
                         const Gap(10),
                         SizedBox(
-                          width: double
-                              .infinity, // Match the width of the TextField
+                          width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () async {
                               var data = await Navigator.of(context).push(
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          CubeSetupPageAuto()));
+                                          CubeSetupPageAuto(socket: _socket)));
                               List<List<SingleCubeComponentFaceModel>>
                                   cubeFaces = data[0];
                               Provider.of<CubeState>(context, listen: false)
                                   .setupCubeWithScanningColor(cubeFaces);
-                              ImageController.initializeCamera(
-                                      Config.cameras![0])
-                                  .then((_) {
-                                if (mounted) {
-                                  setState(() {});
-                                }
-                              });
+                              roomIDController.text =
+                                  await DatabaseService.createRoom(
+                                      context: context);
                               setState(() {
                                 isJoinRoom = true;
-                                _initializeSocket();
+                                isCourseStart = true;
+                                startCourse();
                               });
                             },
                             style: ElevatedButton.styleFrom(
