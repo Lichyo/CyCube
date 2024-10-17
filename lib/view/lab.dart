@@ -42,32 +42,54 @@ class _LabState extends State<Lab> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    _timer.cancel();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const MaxGap(50),
-        Row(
+        Stack(
           children: [
-            Text(
-              "Predicted Result: $predictedResult",
-              style: const TextStyle(
-                fontSize: 30.0,
+            CameraPreview(ImageController.controller!),
+            Positioned(
+              top: 50,
+              child: Text(
+                "Predicted Result: $predictedResult",
+                style: const TextStyle(
+                  fontSize: 30.0,
+                ),
               ),
             ),
           ],
         ),
-        CameraPreview(ImageController.controller!),
         const Gap(30),
         TextButton(
           onPressed: () {
-            ImageController.convertCameraImageToJpeg(
-                    ImageController.imageBuffer!)
-                .then((value) {
-              _socket.emit('rotation', base64Encode(value));
+            Timer.periodic(const Duration(milliseconds: 100), (timer) {
+              ImageController.convertCameraImageToJpeg(
+                      ImageController.imageBuffer!)
+                  .then((value) {
+                _socket.emit('rotation', base64Encode(value));
+              });
             });
           },
           child: const Text(
             "Start",
+            style: TextStyle(
+              fontSize: 30.0,
+            ),
+          ),
+        ),
+        TextButton(
+          onPressed: () {
+            _timer.cancel();
+          },
+          child: const Text(
+            "Stop",
             style: TextStyle(
               fontSize: 30.0,
             ),

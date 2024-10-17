@@ -177,7 +177,6 @@ class _CoursePageState extends State<CoursePage> {
                                       context: context);
                               setState(() {
                                 isJoinRoom = true;
-                                isCourseStart = true;
                                 startCourse();
                               });
                             },
