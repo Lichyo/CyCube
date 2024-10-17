@@ -1,20 +1,24 @@
+import 'package:provider/provider.dart';
 import 'package:cy_cube/cube/cube_state.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:math';
+import 'package:flutter/material.dart';
+
+import 'package:cy_cube/service/auth_service.dart';
 
 class DatabaseService {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   static Future<String> createRoom({
-    required CubeState cubeState,
-    required String email,
+    required BuildContext context,
   }) async {
-    final List<String> cubeStatus = cubeState.generateCubeStatus();
+    final List<String> cubeStatus =
+        Provider.of<CubeState>(context, listen: false).generateCubeStatus();
     int randomRoomID = Random().nextInt(900000) + 100000;
     String roomID = randomRoomID.toString();
     await _firestore.collection('rooms').doc(roomID).set({
       'cube_status': cubeStatus,
-      'student': email,
+      'student': AuthService.currentUser!.email,
       'teacher': '',
       'next_move': '',
     });
@@ -22,12 +26,11 @@ class DatabaseService {
   }
 
   static Future<List<String>> joinRoom({
-    required String email,
     required String roomID,
-    required CubeState cubeState,
+    required BuildContext context,
   }) async {
     await _firestore.collection('rooms').doc(roomID).update({
-      'teacher': email,
+      'teacher': "chiyu",
     });
     var roomData = await _firestore.collection('rooms').doc(roomID).get();
     final List<dynamic> data = roomData['cube_status'];
@@ -35,8 +38,11 @@ class DatabaseService {
     for (String cubeState in data) {
       cubeStatus.add(cubeState.toString());
     }
-    cubeState.setCubeStatus(cubeStatus: cubeStatus);
-    _startCourseWithTeacherPOV(roomID: roomID, cubeState: cubeState);
+    Provider.of<CubeState>(context, listen: false)
+        .setCubeStatus(cubeStatus: cubeStatus);
+    _startCourseWithTeacherPOV(
+        roomID: roomID,
+        cubeState: Provider.of<CubeState>(context, listen: false));
     return cubeStatus;
   }
 

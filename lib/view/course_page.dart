@@ -1,15 +1,17 @@
+import 'package:cy_cube/view/cube_setup_page_auto.dart';
 import 'package:cy_cube/cube/cube_state.dart';
+import 'package:cy_cube/service/database_service.dart';
+import 'package:cy_cube/service/image_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:gap/gap.dart';
 import 'package:provider/provider.dart';
-import 'dart:typed_data';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'dart:async';
-import 'package:image/image.dart' as img;
-import 'package:flutter/foundation.dart';
 import 'dart:convert';
 import 'package:cy_cube/config.dart';
 import 'package:cy_cube/cube/cube_view/cube_page.dart';
+import 'package:cy_cube/cube/cube_model/single_cube_component_face_model.dart';
 
 class CoursePage extends StatefulWidget {
   const CoursePage({
@@ -22,145 +24,188 @@ class CoursePage extends StatefulWidget {
 
 class _CoursePageState extends State<CoursePage> {
   late IO.Socket _socket;
-  late CameraController controller;
   late Timer _timer;
   late CameraImage imageBuffer;
   Image? imageInWidget1;
   Image? imageInWidget2;
   bool toggle = true;
-  bool startCourse = false;
+  bool isCourseStart = false;
   String predictedResult = "";
+  String probability = "";
   DateTime previousTime = DateTime.now();
+  TextEditingController roomIDController = TextEditingController();
+  bool isLoad = false;
+  bool isJoinRoom = false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _initializeSocket();
+  }
+
+  void startCourse() {
+    ImageController.initializeCamera(Config.cameras![1]).then((_) {
+      if (mounted) {
+        setState(() {});
+      }
+    });
+    if (isCourseStart) {
+      _timer.cancel();
+      isCourseStart = false;
+    } else {
+      _timer = Timer.periodic(const Duration(milliseconds: 70), (timer) {
+        print("Emit rotation");
+        ImageController.convertCameraImageToJpeg(ImageController.imageBuffer!)
+            .then((value) {
+          _socket.emit('rotation', base64Encode(value));
+        });
+      });
+      isCourseStart = true;
+    }
+    setState(() {
+      isJoinRoom = true;
+    });
+  }
+
+  void _initializeSocket() {
     _socket = IO.io(Config.serverIP, <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
     });
     _socket.connect();
     _socket.on('rotation', (data) {
-      setState(() {});
-      if (data["predictedResult"] != "wait") {
-        predictedResult = data["predictedResult"];
-      }
-      if (DateTime.now().difference(previousTime).inMilliseconds > 3000) {
-        Provider.of<CubeState>(context, listen: false)
-            .rotate(rotation: predictedResult);
-        previousTime = DateTime.now();
-        predictedResult = "clear";
-      }
-    });
-    controller = CameraController(Config.camera!, ResolutionPreset.low);
-    controller.initialize().then((_) {
-      if (!mounted) {
-        return;
-      }
-      setState(() {});
-      if (controller.value.isInitialized) {
-        controller.startImageStream((image) {
-          imageBuffer = image;
-        });
-      }
-    }).catchError((Object e) {
-      if (e is CameraException) {
-        switch (e.code) {
-          case 'CameraAccessDenied':
-            break;
-          default:
-            break;
-        }
-      }
+      Provider.of<CubeState>(context, listen: false)
+          .rotate(rotation: data.toString());
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          if (startCourse) {
-            _timer.cancel();
-            startCourse = false;
-          } else {
-            _timer = Timer.periodic(const Duration(milliseconds: 150), (timer) {
-              convertCameraImageToJpeg(imageBuffer).then((value) {
-                _socket.emit('rotation', base64Encode(value));
-              });
-            });
-            startCourse = true;
-          }
-        },
-        child: const Icon(Icons.camera),
-      ),
-      body: Stack(
-        children: [
-          Center(
-            child: CameraPreview(
-              controller,
-            ),
-          ),
-          Positioned(
-            top: 600,
-            left: MediaQuery.of(context).size.width / 2 - 10,
-            child: CubePage(),
-          ),
-          Positioned(
-            top: 130,
-            left: 20,
-            child: Text(
-              "predictedResult : $predictedResult",
-              style: const TextStyle(
-                fontSize: 30,
-                color: Colors.black,
+    return isJoinRoom
+        ? Stack(
+            children: [
+              Center(
+                child: CameraPreview(
+                  ImageController.controller!,
+                ),
               ),
-            ),
-          ),
-        ],
-      ),
-    );
+              Positioned(
+                top: 600,
+                left: MediaQuery.of(context).size.width / 2 - 10,
+                child: CubePage(),
+              ),
+              Positioned(
+                top: 130,
+                left: 20,
+                child: Text(
+                  "result : $predictedResult, probability : $probability",
+                  style: const TextStyle(
+                    fontSize: 20,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ],
+          )
+        : isLoad
+            ? const Center(child: CircularProgressIndicator())
+            : Column(
+                children: [
+                  const Gap(30),
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 16.0),
+                        TextField(
+                          controller: roomIDController,
+                          decoration: InputDecoration(
+                            labelText: 'Room ID',
+                            prefixIcon: const Icon(Icons.numbers),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                          keyboardType: TextInputType.number,
+                        ),
+                        const SizedBox(height: 16.0),
+                        const Gap(10),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              try {
+                                await DatabaseService.joinRoom(
+                                    roomID: roomIDController.text,
+                                    context: context);
+                                setState(() {
+                                  isJoinRoom = true;
+                                });
+                              } catch (e) {
+                                print(e);
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue, // Background color
+                              foregroundColor: Colors.white, // Text color
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 15.0),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                            child: const Text('Join the Room ( Teacher )'),
+                          ),
+                        ),
+                        const Gap(10),
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              var data = await Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          CubeSetupPageAuto(socket: _socket)));
+                              List<List<SingleCubeComponentFaceModel>>
+                                  cubeFaces = data[0];
+                              Provider.of<CubeState>(context, listen: false)
+                                  .setupCubeWithScanningColor(cubeFaces);
+                              roomIDController.text =
+                                  await DatabaseService.createRoom(
+                                      context: context);
+                              setState(() {
+                                isJoinRoom = true;
+                                isCourseStart = true;
+                                startCourse();
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey, // Background color
+                              foregroundColor: Colors.white, // Text color
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 15.0),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                            child: const Text(
+                                'Cube init & Create the Room ( Student )'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              );
   }
 
   @override
   void dispose() {
     _socket.dispose();
-    // controller.stopImageStream();
-    // _timer.cancel();
+    ImageController.controller!.stopImageStream();
+    _timer.cancel();
     super.dispose();
-  }
-
-  Future<Uint8List> convertCameraImageToJpeg(CameraImage image) async {
-    final int width = image.width;
-    final int height = image.height;
-    final int uvRowStride = image.planes[1].bytesPerRow;
-    final int uvPixelStride = image.planes[1].bytesPerPixel!;
-
-    var imgBuffer = img.Image(width, height);
-
-    for (int x = 0; x < width; x++) {
-      for (int y = 0; y < height; y++) {
-        final int uvIndex =
-            uvPixelStride * (x / 2).floor() + uvRowStride * (y / 2).floor();
-        final int index = y * width + x;
-
-        final yp = image.planes[0].bytes[index];
-        final up = image.planes[1].bytes[uvIndex];
-        final vp = image.planes[2].bytes[uvIndex];
-
-        int r = (yp + vp * 1436 / 1024 - 179).round().clamp(0, 255);
-        int g = (yp - up * 46549 / 131072 + 44 - vp * 93604 / 131072 + 91)
-            .round()
-            .clamp(0, 255);
-        int b = (yp + up * 1814 / 1024 - 227).round().clamp(0, 255);
-
-        imgBuffer.setPixel(x, y, img.getColor(r, g, b));
-      }
-    }
-    imgBuffer = img.copyRotate(imgBuffer, 90);
-    img.JpegEncoder jpegEncoder = img.JpegEncoder();
-    List<int> jpeg = jpegEncoder.encodeImage(imgBuffer);
-    return Uint8List.fromList(jpeg);
   }
 }

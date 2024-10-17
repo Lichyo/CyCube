@@ -18,23 +18,40 @@ class _RegisterDialogState extends State<RegisterDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       title: const Text('Register'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TextField(
-            controller: _usernameController,
-            decoration: const InputDecoration(labelText: 'Username'),
-          ),
-          TextField(
-            controller: _emailController,
-            decoration: const InputDecoration(labelText: 'Email'),
-          ),
-          TextField(
-            controller: _passwordController,
-            decoration: const InputDecoration(labelText: 'Password'),
-            obscureText: true,
-          ),
-        ],
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: _usernameController,
+              decoration: const InputDecoration(labelText: 'Username'),
+            ),
+            TextField(
+              controller: _emailController,
+              decoration: const InputDecoration(labelText: 'Email'),
+            ),
+            TextField(
+              controller: _passwordController,
+              decoration: const InputDecoration(labelText: 'Password'),
+              obscureText: true,
+            ),
+            // DropdownButton<String>(
+            //   value: _selectedRole,
+            //   onChanged: (String? newValue) {
+            //     setState(() {
+            //       _selectedRole = newValue!;
+            //     });
+            //   },
+            //   items: <String>['Teacher', 'Student']
+            //       .map<DropdownMenuItem<String>>((String value) {
+            //     return DropdownMenuItem<String>(
+            //       value: value,
+            //       child: Text(value),
+            //     );
+            //   }).toList(),
+            // ),
+          ],
+        ),
       ),
       actions: [
         TextButton(

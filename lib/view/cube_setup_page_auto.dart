@@ -10,24 +10,22 @@ import 'package:cy_cube/service/image_controller.dart';
 import 'package:cy_cube/cube/cube_model/single_cube_component_face_model.dart';
 import 'package:gap/gap.dart';
 import 'package:cy_cube/config.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class CubeSetupPageAuto extends StatefulWidget {
   CubeSetupPageAuto({
     super.key,
-    required this.cameras,
+    required this.socket,
   });
 
-  List<CameraDescription> cameras;
+  final IO.Socket socket;
 
   @override
   State<CubeSetupPageAuto> createState() => _CubeSetupPageAutoState();
 }
 
 class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
-  late IO.Socket _socket;
-  late CameraController _controller;
   Timer? _timer;
-  late CameraImage imageBuffer;
   bool initColorMode = false;
   List<SingleCubeComponentFaceModel> cubeFaces = [];
   List<List<SingleCubeComponentFaceModel>> allCubeFaces = [];
@@ -45,20 +43,12 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
   void initState() {
     super.initState();
     initCubeFaces();
-    _socket = IO.io(Config.serverIP, <String, dynamic>{
-      'transports': ['websocket'],
-      'autoConnect': false,
-    });
-    _socket.connect();
-    _socket.on("connect", (_) {
-      print("connected");
-    });
-    _socket.emit("join", Config.user);
-    _socket.on('receive_image', (data) async {
+    widget.socket.emit("join", Config.user);
+    widget.socket.on('receive_image', (data) async {
       await ImageController.updateImage(data);
       setState(() {});
     });
-    _socket.on('return_cube_color', (data) {
+    widget.socket.on('return_cube_color', (data) {
       setState(() {
         try {
           List<String> cubeColors = List<String>.from(data);
@@ -70,26 +60,10 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
         }
       });
     });
-    _socket.on("init_color_dataset", (data) {});
-
-    _controller = CameraController(widget.cameras[0], ResolutionPreset.low);
-    _controller.initialize().then((_) {
-      if (!mounted) {
-        return;
-      }
-      if (_controller.value.isInitialized) {
-        _controller.startImageStream((image) {
-          imageBuffer = image;
-        });
-      }
-    }).catchError((Object e) {
-      if (e is CameraException) {
-        switch (e.code) {
-          case 'CameraAccessDenied':
-            break;
-          default:
-            break;
-        }
+    widget.socket.on("init_color_dataset", (data) {});
+    ImageController.initializeCamera(Config.cameras![0]).then((_) {
+      if (mounted) {
+        setState(() {});
       }
     });
   }
@@ -120,18 +94,19 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
               } else {
                 _timer =
                     Timer.periodic(const Duration(milliseconds: 125), (timer) {
-                  ImageController.convertCameraImageToJpeg(imageBuffer)
+                  ImageController.convertCameraImageToJpeg(
+                          ImageController.imageBuffer!)
                       .then((value) {
-                    _socket.emit('save_image', base64Encode(value));
+                    widget.socket.emit('save_image', base64Encode(value));
                   });
                   setState(() {
-                    _socket.emit('receive_image');
+                    widget.socket.emit('receive_image');
                   });
                   if (!initColorMode) {
-                    _socket.emit("initialize_cube_color");
+                    widget.socket.emit("initialize_cube_color");
                   } else {
                     if (startRecording) {
-                      _socket.emit("init_color_dataset", currentColor);
+                      widget.socket.emit("init_color_dataset", currentColor);
                     }
                   }
                 });
@@ -141,7 +116,7 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
           ),
           IconButton(
             onPressed: () {
-              _socket.emit("clear_color_dataset");
+              widget.socket.emit("clear_color_dataset");
             },
             icon: const Icon(Icons.delete),
           ),
@@ -252,10 +227,7 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
 
   @override
   void dispose() {
-    _socket.dispose();
-    _controller.stopImageStream();
     _timer!.cancel();
-    ImageController.flashImage();
     super.dispose();
   }
 }

@@ -1,4 +1,4 @@
-import 'package:cy_cube/view/home_page.dart';
+import 'package:cy_cube/view/route_page.dart';
 import 'package:cy_cube/components/email_password_form.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cy_cube/service/auth_service.dart';
@@ -27,6 +27,7 @@ class _WelcomePageState extends State<WelcomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text('CyCube'),
       ),
@@ -47,14 +48,14 @@ class _WelcomePageState extends State<WelcomePage> {
                           setState(() {
                             _isLoading = true;
                           });
-                          await AuthService()
-                              .signInWithEmailAndPassword(email, password);
+                          await AuthService().signInWithEmailAndPassword(
+                              email: email, password: password);
                           setState(() {
                             _isLoading = false;
                           });
                           if (AuthService.currentUser != null) {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => const HomePage()));
+                                builder: (_) => const RoutePage()));
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
@@ -77,7 +78,10 @@ class _WelcomePageState extends State<WelcomePage> {
                                   });
                                   await AuthService()
                                       .signUpWithEmailAndPassword(
-                                          email, password);
+                                    email: email,
+                                    password: password,
+                                    name: username,
+                                  );
                                 },
                               );
                             },
@@ -87,7 +91,7 @@ class _WelcomePageState extends State<WelcomePage> {
                           });
                           if (AuthService.currentUser != null) {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => const HomePage()));
+                                builder: (_) => const RoutePage()));
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
@@ -107,7 +111,7 @@ class _WelcomePageState extends State<WelcomePage> {
                           });
                           if (AuthService.currentUser != null) {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (_) => const HomePage()));
+                                builder: (_) => const RoutePage()));
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
