@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>332722357217-l5gsia3v2c08gn4n7gah5vi5i0gsvd6g.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.332722357217-l5gsia3v2c08gn4n7gah5vi5i0gsvd6g</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>332722357217-3q6e81ecn212643dclak75lrqtm4t6se.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBc-dAEe6wV5g8EIdhPVrrC3DhK2LoM4t4</string>
+	<key>GCM_SENDER_ID</key>
+	<string>332722357217</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.lcy.cyCube.RunnerTests</string>
+	<key>PROJECT_ID</key>
+	<string>cy-cube</string>
+	<key>STORAGE_BUCKET</key>
+	<string>cy-cube.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:332722357217:ios:bc5baa3db7b3bc15d248a0</string>
+</dict>
+</plist>

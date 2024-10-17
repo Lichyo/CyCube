@@ -43,6 +43,11 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
   void initState() {
     super.initState();
     initCubeFaces();
+    ImageController.initializeCamera(Config.cameras![0]).then((_) {
+      if (mounted) {
+        setState(() {});
+      }
+    });
     widget.socket.emit("join", Config.user);
     widget.socket.on('receive_image', (data) async {
       await ImageController.updateImage(data);
@@ -61,11 +66,6 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
       });
     });
     widget.socket.on("init_color_dataset", (data) {});
-    ImageController.initializeCamera(Config.cameras![0]).then((_) {
-      if (mounted) {
-        setState(() {});
-      }
-    });
   }
 
   @override

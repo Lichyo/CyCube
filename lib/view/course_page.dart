@@ -25,17 +25,11 @@ class CoursePage extends StatefulWidget {
 class _CoursePageState extends State<CoursePage> {
   late IO.Socket _socket;
   late Timer _timer;
-  late CameraImage imageBuffer;
-  Image? imageInWidget1;
-  Image? imageInWidget2;
-  bool toggle = true;
   bool isCourseStart = false;
-  String predictedResult = "";
-  String probability = "";
-  DateTime previousTime = DateTime.now();
   TextEditingController roomIDController = TextEditingController();
   bool isLoad = false;
   bool isJoinRoom = false;
+  String _predictionResult = "";
 
   @override
   void initState() {
@@ -50,21 +44,11 @@ class _CoursePageState extends State<CoursePage> {
         setState(() {});
       }
     });
-    if (isCourseStart) {
-      _timer.cancel();
-      isCourseStart = false;
-    } else {
-      _timer = Timer.periodic(const Duration(milliseconds: 70), (timer) {
-        print("Emit rotation");
-        ImageController.convertCameraImageToJpeg(ImageController.imageBuffer!)
-            .then((value) {
-          _socket.emit('rotation', base64Encode(value));
-        });
+    _timer = Timer.periodic(const Duration(milliseconds: 70), (timer) {
+      ImageController.convertCameraImageToJpeg(ImageController.imageBuffer!)
+          .then((value) {
+        _socket.emit('rotation', base64Encode(value));
       });
-      isCourseStart = true;
-    }
-    setState(() {
-      isJoinRoom = true;
     });
   }
 
@@ -99,7 +83,7 @@ class _CoursePageState extends State<CoursePage> {
                 top: 130,
                 left: 20,
                 child: Text(
-                  "result : $predictedResult, probability : $probability",
+                  "result : $_predictionResult",
                   style: const TextStyle(
                     fontSize: 20,
                     color: Colors.black,
@@ -165,18 +149,26 @@ class _CoursePageState extends State<CoursePage> {
                           child: ElevatedButton(
                             onPressed: () async {
                               var data = await Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          CubeSetupPageAuto(socket: _socket)));
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      CubeSetupPageAuto(socket: _socket),
+                                ),
+                              );
                               List<List<SingleCubeComponentFaceModel>>
                                   cubeFaces = data[0];
+                              setState(() async {
+                                roomIDController.text =
+                                    await DatabaseService.createRoom(
+                                  context: context,
+                                );
+                              });
+
                               Provider.of<CubeState>(context, listen: false)
                                   .setupCubeWithScanningColor(cubeFaces);
-                              roomIDController.text =
-                                  await DatabaseService.createRoom(
-                                      context: context);
+                              print("room ID : " + roomIDController.text);
                               setState(() {
                                 isJoinRoom = true;
+                                isCourseStart = true;
                                 startCourse();
                               });
                             },
