@@ -30,9 +30,6 @@ class DatabaseService {
     required String roomID,
     required BuildContext context,
   }) async {
-    // await _firestore.collection('rooms').doc(roomID).update({
-    //   'teacher': "chiyu",
-    // });
     var roomData = await _firestore.collection('rooms').doc(roomID).get();
     final List<dynamic> data = roomData['cube_status'];
     List<String> cubeStatus = [];
@@ -41,14 +38,11 @@ class DatabaseService {
     }
     Provider.of<CubeState>(context, listen: false)
         .setCubeStatus(cubeStatus: cubeStatus);
-    _startCourseWithTeacherPOV(
-      roomID: roomID,
-      context: context,
-    );
+    startCourseWithTeacherPOV(roomID: roomID, context: context);
     return cubeStatus;
   }
 
-  static Future<void> _startCourseWithTeacherPOV({
+  static Future<void> startCourseWithTeacherPOV({
     required String roomID,
     required BuildContext context,
   }) async {
@@ -56,11 +50,12 @@ class DatabaseService {
     _firestore.collection('rooms').doc(roomID).snapshots().listen((snapshot) {
       var data = snapshot.data();
       nextMove = data!['next_move'];
+      print("next move : $nextMove");
       Provider.of<CubeState>(context, listen: false).rotate(rotation: nextMove);
     });
   }
 
-  static Future<void> courseWithStudentPOV({
+  static Future<void> updateCubeStateWithStudentPOV({
     required String rotation,
     required String roomID,
   }) async {

@@ -67,6 +67,8 @@ class _CoursePageState extends State<CoursePage> {
       if (data != "wait") {
         Provider.of<CubeState>(context, listen: false)
             .rotate(rotation: data.toString());
+        DatabaseService.updateCubeStateWithStudentPOV(
+            rotation: data.toString(), roomID: roomIDController.text);
         setState(() {
           _predictionResult = data.toString();
         });
@@ -144,6 +146,10 @@ class _CoursePageState extends State<CoursePage> {
                                 roomID: roomIDController.text,
                                 context: context,
                               );
+                              setState(() {
+                                isJoinRoom = true;
+                                isCourseStart = true;
+                              });
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.blue, // Background color
