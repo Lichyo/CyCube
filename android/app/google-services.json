@@ -12,7 +12,20 @@
           "package_name": "com.lcy.cy_cube"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "116929185399-8dup7gsr2c6qoje7d0ns8paa7dq3n0m3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lcy.cy_cube",
+            "certificate_hash": "f7f34aeeb046faf6bfe1c7045ab11552e12a8789"
+          }
+        },
+        {
+          "client_id": "116929185399-cpia57nomjdf8nebvoj0jlkdhvkcag1d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyD52XNdmEqbFj4xKbOzjx3L8LVLTQ764TA"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "116929185399-cpia57nomjdf8nebvoj0jlkdhvkcag1d.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "116929185399-5ppst9ucd7ghv3kstn19mdo9hv0o38au.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.lcy.cyCube"
+              }
+            }
+          ]
         }
       }
     }
