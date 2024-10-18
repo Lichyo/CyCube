@@ -30,9 +30,9 @@ class DatabaseService {
     required String roomID,
     required BuildContext context,
   }) async {
-    await _firestore.collection('rooms').doc(roomID).update({
-      'teacher': "chiyu",
-    });
+    // await _firestore.collection('rooms').doc(roomID).update({
+    //   'teacher': "chiyu",
+    // });
     var roomData = await _firestore.collection('rooms').doc(roomID).get();
     final List<dynamic> data = roomData['cube_status'];
     List<String> cubeStatus = [];

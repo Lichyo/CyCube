@@ -41,6 +41,9 @@ class _CoursePageState extends State<CoursePage> {
 
   void startCourse() {
     _initializeSocket();
+    if (ImageController.controller != null) {
+      ImageController.controller!.dispose();
+    }
     ImageController.initializeCamera(Config.cameras![1]).then((_) {
       if (mounted) {
         setState(() {});
@@ -61,8 +64,13 @@ class _CoursePageState extends State<CoursePage> {
     });
     _socket.connect();
     _socket.on('rotation', (data) {
-      Provider.of<CubeState>(context, listen: false)
-          .rotate(rotation: data.toString());
+      if (data != "wait") {
+        Provider.of<CubeState>(context, listen: false)
+            .rotate(rotation: data.toString());
+        setState(() {
+          _predictionResult = data.toString();
+        });
+      }
     });
   }
 
@@ -86,11 +94,16 @@ class _CoursePageState extends State<CoursePage> {
               Positioned(
                 top: 130,
                 left: 20,
-                child: Text(
-                  "Rotation : $_predictionResult",
-                  style: const TextStyle(
-                    fontSize: 30,
-                    color: Colors.black,
+                child: Container(
+                  color: Colors.white,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  child: Text(
+                    "Rotation : $_predictionResult",
+                    style: const TextStyle(
+                      fontSize: 30,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               ),
@@ -127,23 +140,10 @@ class _CoursePageState extends State<CoursePage> {
                               setState(() {
                                 role = "teacher";
                               });
-                              try {
-                                final List<String> cubeStatus =
-                                    Provider.of<CubeState>(context,
-                                            listen: false)
-                                        .generateCubeStatus();
-                                print(cubeStatus);
-                                // await DatabaseService.joinRoom(
-                                //   roomID: roomIDController.text,
-                                //   context: context,
-                                // );
-                                // _initializeSocket();
-                                // setState(() {
-                                //   isJoinRoom = true;
-                                // });
-                              } catch (e) {
-                                print(e);
-                              }
+                              await DatabaseService.joinRoom(
+                                roomID: roomIDController.text,
+                                context: context,
+                              );
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.blue, // Background color
@@ -175,11 +175,13 @@ class _CoursePageState extends State<CoursePage> {
                                   cubeFaces = data[0];
                               Provider.of<CubeState>(context, listen: false)
                                   .setupCubeWithScanningColor(cubeFaces);
+                              await DatabaseService.createRoom(
+                                  context: context);
                               print("room ID : " + roomIDController.text);
                               setState(() {
                                 isJoinRoom = true;
                                 isCourseStart = true;
-                                // startCourse();
+                                startCourse();
                               });
                             },
                             style: ElevatedButton.styleFrom(
