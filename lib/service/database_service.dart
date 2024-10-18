@@ -14,6 +14,7 @@ class DatabaseService {
   }) async {
     final List<String> cubeStatus =
         Provider.of<CubeState>(context, listen: false).generateCubeStatus();
+    print(cubeStatus);
     int randomRoomID = Random().nextInt(900000) + 100000;
     String roomID = randomRoomID.toString();
     await _firestore.collection('rooms').doc(roomID).set({
@@ -41,20 +42,21 @@ class DatabaseService {
     Provider.of<CubeState>(context, listen: false)
         .setCubeStatus(cubeStatus: cubeStatus);
     _startCourseWithTeacherPOV(
-        roomID: roomID,
-        cubeState: Provider.of<CubeState>(context, listen: false));
+      roomID: roomID,
+      context: context,
+    );
     return cubeStatus;
   }
 
   static Future<void> _startCourseWithTeacherPOV({
     required String roomID,
-    required CubeState cubeState,
+    required BuildContext context,
   }) async {
     String nextMove = '';
     _firestore.collection('rooms').doc(roomID).snapshots().listen((snapshot) {
       var data = snapshot.data();
       nextMove = data!['next_move'];
-      cubeState.rotate(rotation: nextMove);
+      Provider.of<CubeState>(context, listen: false).rotate(rotation: nextMove);
     });
   }
 

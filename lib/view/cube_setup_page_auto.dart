@@ -227,7 +227,9 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
 
   @override
   void dispose() {
-    _timer!.cancel();
+    if (_timer != null || _timer!.isActive) {
+      _timer!.cancel();
+    }
     super.dispose();
   }
 }
