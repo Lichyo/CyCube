@@ -50,8 +50,8 @@ class DatabaseService {
     _firestore.collection('rooms').doc(roomID).snapshots().listen((snapshot) {
       var data = snapshot.data();
       nextMove = data!['next_move'];
-      print("next move : $nextMove");
       Provider.of<CubeState>(context, listen: false).rotate(rotation: nextMove);
+      Provider.of<CubeState>(context).nextMove = nextMove;
     });
   }
 

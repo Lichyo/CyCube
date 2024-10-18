@@ -13,10 +13,15 @@ import 'dart:core';
 class CubeState extends ChangeNotifier {
   static List<SingleCubeModel> cubeModels = [];
   static List<int> indexWithStack = [];
+  static String _nextMove = '';
 
   double get cubeDx => ArrangeController.dx;
-
+  String get nextMove => _nextMove;
   double get cubeDy => ArrangeController.dy;
+
+  void set nextMove(String move) {
+    _nextMove = move;
+  }
 
   final SetupController _setupController = SetupController();
   final RotationController _rotationController = RotationController();

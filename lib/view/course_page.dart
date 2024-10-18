@@ -93,22 +93,24 @@ class _CoursePageState extends State<CoursePage> {
                 left: MediaQuery.of(context).size.width / 2 - 10,
                 child: CubePage(),
               ),
-              Positioned(
-                top: 130,
-                left: 20,
-                child: Container(
-                  color: Colors.white,
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  child: Text(
-                    "Rotation : $_predictionResult",
-                    style: const TextStyle(
-                      fontSize: 30,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-              ),
+              role == "student"
+                  ? Positioned(
+                      top: 130,
+                      left: 20,
+                      child: Container(
+                        color: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 5),
+                        child: Text(
+                          "Rotation : $_predictionResult",
+                          style: const TextStyle(
+                            fontSize: 30,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    )
+                  : Container(),
             ],
           )
         : isLoad
