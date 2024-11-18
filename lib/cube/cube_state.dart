@@ -9,11 +9,19 @@ import 'package:cy_cube/cube/cube_constants.dart';
 import 'package:cy_cube/components/single_cube_face.dart';
 import 'package:flutter/material.dart';
 import 'dart:core';
+import 'package:cy_cube/cube/object_pool.dart';
 
 class CubeState extends ChangeNotifier {
   static List<SingleCubeModel> cubeModels = [];
   static List<int> indexWithStack = [];
   static String _nextMove = '';
+
+  final ObjectPool<SingleCubeModel> _cubeModelPool = ObjectPool(() => SingleCubeModel(
+    component: CubeComponent(cubeColor: Map.from(defaultCubeColor)),
+    x: 0,
+    y: 0,
+    z: 0,
+  ));
 
   double get cubeDx => ArrangeController.dx;
   String get nextMove => _nextMove;
@@ -40,16 +48,14 @@ class CubeState extends ChangeNotifier {
     for (int z = -1; z < 2; z++) {
       for (int y = -1; y < 2; y++) {
         for (int x = -1; x < 2; x++) {
-          cubeModels.add(
-            SingleCubeModel(
-              component: CubeComponent(
-                cubeColor: Map.from(defaultCubeColor),
-              ),
-              x: x * cubeWidth,
-              y: -y * cubeWidth,
-              z: z * cubeWidth,
-            ),
+          final cubeModel = _cubeModelPool.borrowObject();
+          cubeModel.reset(
+            component: CubeComponent(cubeColor: Map.from(defaultCubeColor)),
+            x: x * cubeWidth,
+            y: -y * cubeWidth,
+            z: z * cubeWidth,
           );
+          cubeModels.add(cubeModel);
           indexWithStack.add(id);
           id++;
         }
@@ -66,8 +72,7 @@ class CubeState extends ChangeNotifier {
     return _setupController.getColor(color);
   }
 
-  void setupCubeWithScanningColor(
-      List<List<SingleCubeComponentFaceModel>> cubeFaces) {
+  void setupCubeWithScanningColor(List<List<SingleCubeComponentFaceModel>> cubeFaces) {
     _setupController.setupCubeWithScanningColor(cubeFaces);
     notifyListeners();
   }
