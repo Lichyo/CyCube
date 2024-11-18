@@ -23,7 +23,7 @@ class _LabState extends State<Lab> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    ImageController.initializeCamera(Config.cameras![1]).then((_) {
+    ImageController.initializeCamera(Config.cameras![0]).then((_) {
       if (mounted) {
         setState(() {});
       }
@@ -34,8 +34,8 @@ class _LabState extends State<Lab> {
     });
     _socket.connect();
     _socket.on('rotation', (data) {
-      print("Received rotation");
       setState(() {
+        print(data);
         predictedResult = data;
       });
     });
@@ -45,53 +45,41 @@ class _LabState extends State<Lab> {
   void dispose() {
     // TODO: implement dispose
     _timer.cancel();
+    _socket.close();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Stack(
       children: [
-        Stack(
-          children: [
-            CameraPreview(ImageController.controller!),
-            Positioned(
-              top: 50,
-              child: Text(
-                "Predicted Result: $predictedResult",
-                style: const TextStyle(
-                  fontSize: 30.0,
-                ),
-              ),
-            ),
-          ],
-        ),
-        const Gap(30),
-        TextButton(
-          onPressed: () {
-            Timer.periodic(const Duration(milliseconds: 100), (timer) {
-              ImageController.convertCameraImageToJpeg(
-                      ImageController.imageBuffer!)
-                  .then((value) {
-                _socket.emit('rotation', base64Encode(value));
-              });
-            });
-          },
-          child: const Text(
-            "Start",
-            style: TextStyle(
+        Center(child: CameraPreview(ImageController.controller!)),
+        Positioned(
+          top: 50,
+          child: Text(
+            "Predicted Result: $predictedResult",
+            style: const TextStyle(
               fontSize: 30.0,
             ),
           ),
         ),
-        TextButton(
-          onPressed: () {
-            _timer.cancel();
-          },
-          child: const Text(
-            "Stop",
-            style: TextStyle(
-              fontSize: 30.0,
+        Positioned(
+          top: 650,
+          left: 150,
+          child: TextButton(
+            onPressed: () {
+              _timer = Timer.periodic(const Duration(milliseconds: 200), (timer) {
+                ImageController.convertCameraImageToJpeg(ImageController.imageBuffer!)
+                    .then((value) {
+                  _socket.emit('rotation', base64Encode(value));
+                });
+              });
+            },
+            child: const Text(
+              "Start",
+              style: TextStyle(
+                fontSize: 30.0,
+              ),
             ),
           ),
         ),

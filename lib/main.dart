@@ -6,11 +6,15 @@ import 'package:provider/provider.dart';
 import 'package:cy_cube/cube/cube_state.dart';
 import 'package:cy_cube/service/auth_service.dart';
 import 'package:cy_cube/view/route_page.dart';
+import 'package:cy_cube/service/realtime_metrics.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await Config.initCamera();
+  await AuthService().signInAnonymously();
+  // final metrics = RealTimeMetrics();
+  // metrics.startMonitoring();
 
   runApp(
     ChangeNotifierProvider(

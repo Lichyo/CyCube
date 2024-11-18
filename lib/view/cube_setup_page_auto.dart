@@ -1,4 +1,3 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -10,7 +9,6 @@ import 'package:cy_cube/service/image_controller.dart';
 import 'package:cy_cube/cube/cube_model/single_cube_component_face_model.dart';
 import 'package:gap/gap.dart';
 import 'package:cy_cube/config.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class CubeSetupPageAuto extends StatefulWidget {
   CubeSetupPageAuto({

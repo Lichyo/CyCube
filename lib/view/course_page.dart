@@ -31,6 +31,7 @@ class _CoursePageState extends State<CoursePage> {
   bool isJoinRoom = false;
   String _predictionResult = "";
   String role = "";
+  String connectionStatus = "Unconnected";
 
   @override
   void initState() {
@@ -44,12 +45,12 @@ class _CoursePageState extends State<CoursePage> {
     if (ImageController.controller != null) {
       ImageController.controller!.dispose();
     }
-    ImageController.initializeCamera(Config.cameras![1]).then((_) {
+    ImageController.initializeCamera(Config.cameras![0]).then((_) {
       if (mounted) {
         setState(() {});
       }
     });
-    _timer = Timer.periodic(const Duration(milliseconds: 70), (timer) {
+    _timer = Timer.periodic(const Duration(milliseconds: 30), (timer) {
       ImageController.convertCameraImageToJpeg(ImageController.imageBuffer!)
           .then((value) {
         _socket.emit('rotation', base64Encode(value));
@@ -63,16 +64,16 @@ class _CoursePageState extends State<CoursePage> {
       'autoConnect': false,
     });
     _socket.connect();
+    _socket.on('connect', (data) {
+      setState(() {
+        connectionStatus = "Connected";
+      });
+    });
     _socket.on('rotation', (data) {
-      if (data != "wait") {
-        Provider.of<CubeState>(context, listen: false)
-            .rotate(rotation: data.toString());
-        DatabaseService.updateCubeStateWithStudentPOV(
-            rotation: data.toString(), roomID: roomIDController.text);
         setState(() {
           _predictionResult = data.toString();
         });
-      }
+      // }
     });
   }
 
@@ -203,6 +204,13 @@ class _CoursePageState extends State<CoursePage> {
                             ),
                             child: const Text(
                                 'Cube init & Create the Room ( Student )'),
+                          ),
+                        ),
+                        const Gap(50),
+                        Text(
+                          connectionStatus,
+                          style: const TextStyle(
+                            fontSize: 30,
                           ),
                         ),
                       ],
