@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SingleCubeComponentFaceModel {
-  final int id;
+  int id;
   bool isSelected;
   Color? color;
 
@@ -10,4 +10,9 @@ class SingleCubeComponentFaceModel {
     this.color = Colors.white,
     this.isSelected = false,
   });
+
+  void reset({required int id, Color? color}) {
+    this.id = id;
+    this.color = color;
+  }
 }

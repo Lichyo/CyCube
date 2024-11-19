@@ -13,8 +13,6 @@ void main() async {
   await Firebase.initializeApp();
   await Config.initCamera();
   await AuthService().signInAnonymously();
-  // final metrics = RealTimeMetrics();
-  // metrics.startMonitoring();
 
   runApp(
     ChangeNotifierProvider(
