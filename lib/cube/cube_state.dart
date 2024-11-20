@@ -16,7 +16,9 @@ class CubeState extends ChangeNotifier {
   static String _nextMove = '';
 
   double get cubeDx => ArrangeController.dx;
+
   String get nextMove => _nextMove;
+
   double get cubeDy => ArrangeController.dy;
 
   void set nextMove(String move) {
@@ -43,6 +45,7 @@ class CubeState extends ChangeNotifier {
           cubeModels.add(
             SingleCubeModel(
               component: CubeComponent(
+                visibleControl: _updateFaceVisibility(id: id),
                 cubeColor: Map.from(defaultCubeColor),
               ),
               x: x * cubeWidth,
@@ -55,6 +58,33 @@ class CubeState extends ChangeNotifier {
         }
       }
     }
+  }
+
+  Map<Facing, bool> _updateFaceVisibility({required int id}) {
+    Map<Facing, bool> visibleControl = {
+      Facing.top: true,
+      Facing.down: true,
+      Facing.left: true,
+      Facing.right: true,
+      Facing.front: true,
+      Facing.back: true,
+    };
+
+    final Map<Facing, List<int>> faceRemovalMap = {
+      Facing.top: removeTop,
+      Facing.down: removeDown,
+      Facing.left: removeLeft,
+      Facing.right: removeRight,
+      Facing.front: removeFront,
+      Facing.back: removeBack,
+    };
+
+    faceRemovalMap.forEach((facing, removalList) {
+      if (removalList.contains(id)) {
+        visibleControl[facing] = false;
+      }
+    });
+    return visibleControl;
   }
 
   void rotate({required String rotation}) {
