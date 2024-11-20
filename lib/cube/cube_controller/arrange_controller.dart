@@ -97,6 +97,7 @@ class ArrangeController {
         arrangedCubeFaceIndex.add(cubeModel.component.cubeFaceIndex![index]);
       }
       cubeModel.component = CubeComponent(
+        visibleControl: cubeModel.component.visibleControl,
         cubeColor: cubeModel.component.cubeColor,
         cubeFaces: arrangedCubeFaces,
         cubeFaceIndex: arrangedCubeFaceIndex,
