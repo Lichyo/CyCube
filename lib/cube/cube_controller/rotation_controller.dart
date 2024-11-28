@@ -103,6 +103,16 @@ class RotationController {
     return cubeColor;
   }
 
+  Map<Facing, bool> _updateXVisibility({required SingleCubeModel cube}) {
+    Map<Facing, bool> visibleControl = Map.from(cube.component.visibleControl);
+    final bool topVisible = visibleControl[Facing.top]!;
+    visibleControl[Facing.top] = visibleControl[Facing.front]!;
+    visibleControl[Facing.front] = visibleControl[Facing.down]!;
+    visibleControl[Facing.down] = visibleControl[Facing.back]!;
+    visibleControl[Facing.back] = topVisible;
+    return visibleControl;
+  }
+
   Map<Facing, Color> _updateXColorReverse({required SingleCubeModel cube}) {
     Map<Facing, Color> cubeColor = Map.from(cube.component.cubeColor);
     final Color color = cubeColor[Facing.back]!;
@@ -111,6 +121,16 @@ class RotationController {
     cubeColor[Facing.front] = cubeColor[Facing.top]!;
     cubeColor[Facing.top] = color;
     return cubeColor;
+  }
+
+  Map<Facing, bool> _updateXVisibilityReverse({required SingleCubeModel cube}) {
+    Map<Facing, bool> visibleControl = Map.from(cube.component.visibleControl);
+    final bool topVisible = visibleControl[Facing.top]!;
+    visibleControl[Facing.top] = visibleControl[Facing.back]!;
+    visibleControl[Facing.back] = visibleControl[Facing.down]!;
+    visibleControl[Facing.down] = visibleControl[Facing.front]!;
+    visibleControl[Facing.front] = topVisible;
+    return visibleControl;
   }
 
   Map<Facing, Color> _updateYColorReverse({required SingleCubeModel cube}) {
@@ -123,6 +143,16 @@ class RotationController {
     return cubeColor;
   }
 
+  Map<Facing, bool> _updateYVisibilityReverse({required SingleCubeModel cube}) {
+    Map<Facing, bool> visibleControl = Map.from(cube.component.visibleControl);
+    final bool topVisible = visibleControl[Facing.top]!;
+    visibleControl[Facing.top] = visibleControl[Facing.right]!;
+    visibleControl[Facing.right] = visibleControl[Facing.down]!;
+    visibleControl[Facing.down] = visibleControl[Facing.left]!;
+    visibleControl[Facing.left] = topVisible;
+    return visibleControl;
+  }
+
   Map<Facing, Color> _updateYColor({required SingleCubeModel cube}) {
     Map<Facing, Color> cubeColor = Map.from(cube.component.cubeColor);
     final Color color = cubeColor[Facing.left]!;
@@ -131,6 +161,16 @@ class RotationController {
     cubeColor[Facing.right] = cubeColor[Facing.top]!;
     cubeColor[Facing.top] = color;
     return cubeColor;
+  }
+
+  Map<Facing, bool> _updateYVisibility({required SingleCubeModel cube}) {
+    Map<Facing, bool> visibleControl = Map.from(cube.component.visibleControl);
+    final bool topVisible = visibleControl[Facing.top]!;
+    visibleControl[Facing.top] = visibleControl[Facing.left]!;
+    visibleControl[Facing.left] = visibleControl[Facing.down]!;
+    visibleControl[Facing.down] = visibleControl[Facing.right]!;
+    visibleControl[Facing.right] = topVisible;
+    return visibleControl;
   }
 
   Map<Facing, Color> _updateZColor({required SingleCubeModel cube}) {
@@ -143,6 +183,16 @@ class RotationController {
     return cubeColor;
   }
 
+  Map<Facing, bool> _updateZVisibility({required SingleCubeModel cube}) {
+    Map<Facing, bool> visibleControl = Map.from(cube.component.visibleControl);
+    final bool leftVisible = visibleControl[Facing.left]!;
+    visibleControl[Facing.left] = visibleControl[Facing.front]!;
+    visibleControl[Facing.front] = visibleControl[Facing.right]!;
+    visibleControl[Facing.right] = visibleControl[Facing.back]!;
+    visibleControl[Facing.back] = leftVisible;
+    return visibleControl;
+  }
+
   Map<Facing, Color> _updateZColorReverse({required SingleCubeModel cube}) {
     Map<Facing, Color> cubeColor = Map.from(cube.component.cubeColor);
     final Color color = cubeColor[Facing.back]!;
@@ -151,6 +201,16 @@ class RotationController {
     cubeColor[Facing.front] = cubeColor[Facing.left]!;
     cubeColor[Facing.left] = color;
     return cubeColor;
+  }
+
+  Map<Facing, bool> _updateZVisibilityReverse({required SingleCubeModel cube}) {
+    Map<Facing, bool> visibleControl = Map.from(cube.component.visibleControl);
+    final bool leftVisible = visibleControl[Facing.left]!;
+    visibleControl[Facing.left] = visibleControl[Facing.back]!;
+    visibleControl[Facing.back] = visibleControl[Facing.right]!;
+    visibleControl[Facing.right] = visibleControl[Facing.front]!;
+    visibleControl[Facing.front] = leftVisible;
+    return visibleControl;
   }
 
   void _shift(List<int> cornerIds, List<int> edgeIds) {
@@ -181,21 +241,29 @@ class RotationController {
   }) {
     for (int id in ids) {
       Map<Facing, Color> updatedCubeColor = {};
+      Map<Facing, bool> updatedVisibleControl = {};
       if (axis == 'x') {
         updatedCubeColor = _updateXColor(cube: CubeState.cubeModels[id]);
+        updatedVisibleControl = _updateXVisibility(cube: CubeState.cubeModels[id]);
       } else if (axis == 'xx') {
         updatedCubeColor = _updateXColorReverse(cube: CubeState.cubeModels[id]);
+        updatedVisibleControl = _updateXVisibilityReverse(cube: CubeState.cubeModels[id]);
       } else if (axis == 'y') {
         updatedCubeColor = _updateYColor(cube: CubeState.cubeModels[id]);
+        updatedVisibleControl = _updateYVisibility(cube: CubeState.cubeModels[id]);
       } else if (axis == 'yy') {
         updatedCubeColor = _updateYColorReverse(cube: CubeState.cubeModels[id]);
+        updatedVisibleControl = _updateYVisibilityReverse(cube: CubeState.cubeModels[id]);
       } else if (axis == 'z') {
         updatedCubeColor = _updateZColor(cube: CubeState.cubeModels[id]);
+        updatedVisibleControl = _updateZVisibility(cube: CubeState.cubeModels[id]);
       } else {
         updatedCubeColor = _updateZColorReverse(cube: CubeState.cubeModels[id]);
+        updatedVisibleControl = _updateZVisibilityReverse(cube: CubeState.cubeModels[id]);
       }
       CubeState.cubeModels[id] = SingleCubeModel(
         component: CubeComponent(
+          visibleControl: updatedVisibleControl,
           cubeColor: updatedCubeColor,
           cubeFaceIndex: CubeState.cubeModels[id].component.cubeFaceIndex,
         ),

@@ -23,7 +23,7 @@ class _LabState extends State<Lab> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    ImageController.initializeCamera(Config.cameras![1]).then((_) {
+    ImageController.initializeCamera(Config.cameras![0]).then((_) {
       if (mounted) {
         setState(() {});
       }
@@ -34,42 +34,52 @@ class _LabState extends State<Lab> {
     });
     _socket.connect();
     _socket.on('rotation', (data) {
-      print("Received rotation");
       setState(() {
+        print(data);
         predictedResult = data;
       });
     });
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    _timer.cancel();
+    _socket.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Column(
+    return Stack(
       children: [
-        const MaxGap(50),
-        Row(
-          children: [
-            Text(
-              "Predicted Result: $predictedResult",
-              style: const TextStyle(
+        Center(child: CameraPreview(ImageController.controller!)),
+        Positioned(
+          top: 50,
+          child: Text(
+            "Predicted Result: $predictedResult",
+            style: const TextStyle(
+              fontSize: 30.0,
+            ),
+          ),
+        ),
+        Positioned(
+          top: 650,
+          left: 150,
+          child: TextButton(
+            onPressed: () {
+              _timer = Timer.periodic(const Duration(milliseconds: 200), (timer) {
+                ImageController.convertCameraImageToJpeg(ImageController.imageBuffer!)
+                    .then((value) {
+                  _socket.emit('rotation', base64Encode(value));
+                });
+              });
+            },
+            child: const Text(
+              "Start",
+              style: TextStyle(
                 fontSize: 30.0,
               ),
-            ),
-          ],
-        ),
-        CameraPreview(ImageController.controller!),
-        const Gap(30),
-        TextButton(
-          onPressed: () {
-            ImageController.convertCameraImageToJpeg(
-                    ImageController.imageBuffer!)
-                .then((value) {
-              _socket.emit('rotation', base64Encode(value));
-            });
-          },
-          child: const Text(
-            "Start",
-            style: TextStyle(
-              fontSize: 30.0,
             ),
           ),
         ),

@@ -1,12 +1,13 @@
 import 'package:cy_cube/cube/cube_state.dart';
 import 'package:flutter/material.dart';
-import 'package:cy_cube/cube/cube_view/cube_page.dart';
 import 'package:provider/provider.dart';
 import 'package:cy_cube/view/course_page.dart';
 import 'package:cy_cube/view/lab.dart';
 import 'dart:core';
 import 'package:camera/camera.dart';
 import 'package:cy_cube/view/home_page.dart';
+import 'package:gap/gap.dart';
+import 'package:cy_cube/config.dart';
 
 class RoutePage extends StatefulWidget {
   const RoutePage({super.key});
@@ -17,7 +18,6 @@ class RoutePage extends StatefulWidget {
 
 class _RoutePageState extends State<RoutePage> {
   int _selectedIndex = 0;
-  final CubeState _cubeState = CubeState();
 
   void _onItemTapped(int index) {
     setState(() {
@@ -28,6 +28,8 @@ class _RoutePageState extends State<RoutePage> {
   List<Widget> _pages = [];
   List<int> executionTimes = [];
   late List<CameraDescription> cameras;
+  String ip = "";
+  String port = "";
 
   @override
   void initState() {
@@ -49,6 +51,72 @@ class _RoutePageState extends State<RoutePage> {
                 .listenToArrange(detail: detail);
           },
           child: Scaffold(
+            floatingActionButton: FloatingActionButton(
+              child: const Icon(Icons.connected_tv_rounded),
+              onPressed: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => AlertDialog(
+                    content: SizedBox(
+                      height: 300,
+                      child: Column(
+                        children: [
+                          Text(
+                            Config.serverIP,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          TextField(
+                            onChanged: (value) {
+                              ip = value;
+                            },
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              labelText: 'Enter your IP address',
+                              prefixIcon: const Icon(Icons.wifi),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                          ),
+                          const Gap(10),
+                          TextField(
+                            onChanged: (value) {
+                              port = value;
+                            },
+                            keyboardType: TextInputType.number,
+                            decoration: InputDecoration(
+                              labelText: 'Enter your port number',
+                              prefixIcon: const Icon(Icons.numbers),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8.0),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    actions: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('Cancel'),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          Config.setIP(ip, port);
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text('Connect'),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
             bottomNavigationBar: BottomNavigationBar(
               items: const [
                 BottomNavigationBarItem(

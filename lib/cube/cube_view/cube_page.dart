@@ -24,7 +24,6 @@ class CubePage extends StatelessWidget {
         return Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // const MaxGap(200),
             Transform(
               origin: const Offset(0, 0),
               alignment: Alignment.center,
