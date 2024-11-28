@@ -14,7 +14,6 @@ class DatabaseService {
   }) async {
     final List<String> cubeStatus =
         Provider.of<CubeState>(context, listen: false).generateCubeStatus();
-    print(cubeStatus);
     int randomRoomID = Random().nextInt(900000) + 100000;
     String roomID = randomRoomID.toString();
     await _firestore.collection('rooms').doc(roomID).set({

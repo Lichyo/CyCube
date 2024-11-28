@@ -100,7 +100,6 @@ class RotationController {
     cubeColor[Facing.front] = cubeColor[Facing.down]!;
     cubeColor[Facing.down] = cubeColor[Facing.back]!;
     cubeColor[Facing.back] = topColor;
-
     return cubeColor;
   }
 

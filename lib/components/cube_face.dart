@@ -23,7 +23,6 @@ class CubeFace extends StatelessWidget {
         child: Container(
           width: cubeWidth,
           height: cubeWidth,
-          transform: transform,
           decoration: BoxDecoration(
             color: color,
             border: Border.all(color: Colors.black),

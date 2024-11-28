@@ -19,9 +19,9 @@ dependencies:
   gap: ^3.0.1
   camera: ^0.11.0+2
   rename: ^3.0.2
-  firebase_core: ^3.6.0
-  cloud_firestore: ^5.4.4
-  firebase_auth: ^5.3.1
+  firebase_core: ^3.8.0
+  cloud_firestore: ^5.5.0
+  firebase_auth: ^5.3.3
   image: ^3.0.2
   socket_io_client: ^2.0.3+1
   linear_progress_bar: ^1.1.2

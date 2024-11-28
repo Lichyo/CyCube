@@ -11,7 +11,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await Config.initCamera();
-  await AuthService().signInAnonymously();
+  // await AuthService().signInAnonymously();
+  await AuthService().signOut();
+  await AuthService().signInWithGoogle();
 
   runApp(
     ChangeNotifierProvider(
