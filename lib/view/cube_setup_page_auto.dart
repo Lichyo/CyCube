@@ -1,4 +1,3 @@
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -10,7 +9,6 @@ import 'package:cy_cube/service/image_controller.dart';
 import 'package:cy_cube/cube/cube_model/single_cube_component_face_model.dart';
 import 'package:gap/gap.dart';
 import 'package:cy_cube/config.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 class CubeSetupPageAuto extends StatefulWidget {
   CubeSetupPageAuto({
@@ -43,6 +41,11 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
   void initState() {
     super.initState();
     initCubeFaces();
+    ImageController.initializeCamera(Config.cameras![0]).then((_) {
+      if (mounted) {
+        setState(() {});
+      }
+    });
     widget.socket.emit("join", Config.user);
     widget.socket.on('receive_image', (data) async {
       await ImageController.updateImage(data);
@@ -61,11 +64,6 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
       });
     });
     widget.socket.on("init_color_dataset", (data) {});
-    ImageController.initializeCamera(Config.cameras![0]).then((_) {
-      if (mounted) {
-        setState(() {});
-      }
-    });
   }
 
   @override
@@ -227,7 +225,9 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
 
   @override
   void dispose() {
-    _timer!.cancel();
+    if (_timer != null || _timer!.isActive) {
+      _timer!.cancel();
+    }
     super.dispose();
   }
 }

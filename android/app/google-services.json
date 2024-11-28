@@ -1,45 +1,51 @@
 {
   "project_info": {
-    "project_number": "332722357217",
-    "project_id": "cy-cube",
-    "storage_bucket": "cy-cube.appspot.com"
+    "project_number": "116929185399",
+    "project_id": "cy-cube-a25ad",
+    "storage_bucket": "cy-cube-a25ad.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:332722357217:android:334cc4dd7ff21ffcd248a0",
-        "android_client_info": {
-          "package_name": "com.lcy.cy_c"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyCDt5rnEawnVkKAFIgXdgGNuJkzL7RjnhM"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:332722357217:android:1b18d33f081b7654d248a0",
+        "mobilesdk_app_id": "1:116929185399:android:41346488c3e79cbb7ae872",
         "android_client_info": {
           "package_name": "com.lcy.cy_cube"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "116929185399-8dup7gsr2c6qoje7d0ns8paa7dq3n0m3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lcy.cy_cube",
+            "certificate_hash": "f7f34aeeb046faf6bfe1c7045ab11552e12a8789"
+          }
+        },
+        {
+          "client_id": "116929185399-cpia57nomjdf8nebvoj0jlkdhvkcag1d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
-          "current_key": "AIzaSyCDt5rnEawnVkKAFIgXdgGNuJkzL7RjnhM"
+          "current_key": "AIzaSyD52XNdmEqbFj4xKbOzjx3L8LVLTQ764TA"
         }
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "116929185399-cpia57nomjdf8nebvoj0jlkdhvkcag1d.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "116929185399-5ppst9ucd7ghv3kstn19mdo9hv0o38au.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.lcy.cyCube"
+              }
+            }
+          ]
         }
       }
     }

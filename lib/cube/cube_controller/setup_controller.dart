@@ -114,6 +114,7 @@ class SetupController {
       updatedCubeColor[facing] = cubeFaces[i].color!;
       CubeState.cubeModels[id] = SingleCubeModel(
         component: CubeComponent(
+          visibleControl: CubeState.cubeModels[id].component.visibleControl,
           cubeColor: updatedCubeColor,
         ),
         x: CubeState.cubeModels[id].x,

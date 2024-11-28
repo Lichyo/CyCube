@@ -8,6 +8,16 @@ class AuthService {
 
   static User? get currentUser => _auth.currentUser;
 
+  Future<User?> signInAnonymously() async {
+    try {
+      final UserCredential userCredential = await _auth.signInAnonymously();
+      return userCredential.user;
+    } catch (e) {
+      print(e);
+      return null;
+    }
+  }
+
   Future<User?> signInWithEmailAndPassword({
     required String email,
     required String password,

@@ -88,6 +88,7 @@ class ImageController {
     controller = CameraController(camera, ResolutionPreset.low);
     try {
       await controller!.initialize();
+      controller!.setZoomLevel(0.8);
       if (controller!.value.isInitialized) {
         controller!.startImageStream((image) {
           imageBuffer = image;
