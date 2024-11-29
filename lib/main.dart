@@ -16,7 +16,7 @@ void main() async {
     ChangeNotifierProvider(
       create: (context) => CubeState(),
       child: MaterialApp(
-        debugShowCheckedModeBanner: true,
+        debugShowCheckedModeBanner: false,
         home: AuthService.currentUser != null
             ? const RoutePage()
             : const WelcomePage(),

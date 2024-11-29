@@ -11,6 +11,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:cy_cube/config.dart';
 import 'package:cy_cube/cube/cube_view/cube_page.dart';
+import 'package:cy_cube/components/cube_rotation_table.dart';
 import 'package:cy_cube/cube/cube_model/single_cube_component_face_model.dart';
 
 class CoursePage extends StatefulWidget {
@@ -30,7 +31,7 @@ class _CoursePageState extends State<CoursePage> {
   bool isLoad = false;
   bool isJoinRoom = false;
   String _predictionResult = "";
-  String role = "";
+  String role = "teacher";
   String connectionStatus = "Unconnected";
 
   @override
@@ -50,12 +51,12 @@ class _CoursePageState extends State<CoursePage> {
         setState(() {});
       }
     });
-    _timer = Timer.periodic(const Duration(milliseconds: 30), (timer) {
-      ImageController.convertCameraImageToJpeg(ImageController.imageBuffer!)
-          .then((value) {
-        _socket.emit('rotation', base64Encode(value));
-      });
-    });
+    // _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+    //   ImageController.convertCameraImageToJpeg(ImageController.imageBuffer!)
+    //       .then((value) {
+    //     _socket.emit('rotation', base64Encode(value));
+    //   });
+    // });
   }
 
   void _initializeSocket() {
@@ -70,49 +71,52 @@ class _CoursePageState extends State<CoursePage> {
       });
     });
     _socket.on('rotation', (data) {
-        setState(() {
-          _predictionResult = data.toString();
-        });
+      setState(() {
+        _predictionResult = data.toString();
+      });
       // }
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return isJoinRoom
-        ? Stack(
-            children: [
-              role == "student"
-                  ? Center(
-                      child: CameraPreview(
-                        ImageController.controller!,
-                      ),
-                    )
-                  : Container(),
-              Positioned(
-                top: 600,
-                left: MediaQuery.of(context).size.width / 2 - 10,
-                child: CubePage(),
-              ),
-              role == "student"
-                  ? Positioned(
-                      top: 130,
-                      left: 20,
-                      child: Container(
-                        color: Colors.white,
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 5),
-                        child: Text(
-                          "Rotation : $_predictionResult",
-                          style: const TextStyle(
-                            fontSize: 30,
-                            color: Colors.black,
+        ? Scaffold(
+            appBar: AppBar(
+              title: Text(roomIDController.text.length >= 3
+                  ? roomIDController.text
+                  : "CyCube"),
+            ),
+            body: Stack(
+              children: [
+                role == "student"
+                    ? Column(
+                        children: [
+                          const MaxGap(200),
+                          CubePage(),
+                          const Gap(100),
+                          CubeRotationTable(
+                            onPressed: (rotation) async {
+                              Provider.of<CubeState>(context, listen: false)
+                                  .rotate(rotation: rotation);
+                              await DatabaseService
+                                  .updateCubeStateWithStudentPOV(
+                                      rotation: rotation,
+                                      roomID: roomIDController.text,);
+                            },
                           ),
-                        ),
+                        ],
+                      )
+                    : Column(
+                        children: [
+                          const MaxGap(200),
+                          CubePage(),
+                          const Gap(100),
+                        ],
                       ),
-                    )
-                  : Container(),
-            ],
+              ],
+            ),
           )
         : isLoad
             ? const Center(child: CircularProgressIndicator())
@@ -144,6 +148,7 @@ class _CoursePageState extends State<CoursePage> {
                             onPressed: () async {
                               setState(() {
                                 role = "teacher";
+                                print(role);
                               });
                               await DatabaseService.joinRoom(
                                 roomID: roomIDController.text,
@@ -173,6 +178,7 @@ class _CoursePageState extends State<CoursePage> {
                             onPressed: () async {
                               setState(() {
                                 role = "student";
+                                print("student");
                               });
                               var data = await Navigator.of(context).push(
                                 MaterialPageRoute(
@@ -184,8 +190,9 @@ class _CoursePageState extends State<CoursePage> {
                                   cubeFaces = data[0];
                               Provider.of<CubeState>(context, listen: false)
                                   .setupCubeWithScanningColor(cubeFaces);
-                              await DatabaseService.createRoom(
-                                  context: context);
+                              roomIDController.text =
+                                  await DatabaseService.createRoom(
+                                      context: context);
                               print("room ID : " + roomIDController.text);
                               setState(() {
                                 isJoinRoom = true;

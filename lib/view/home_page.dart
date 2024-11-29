@@ -29,6 +29,7 @@ class _HomePageState extends State<HomePage> {
           onPressed: (rotation) {
             Provider.of<CubeState>(context, listen: false)
                 .rotate(rotation: rotation);
+
           },
         ),
         const MaxGap(80),
