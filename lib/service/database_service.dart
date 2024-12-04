@@ -49,6 +49,7 @@ class DatabaseService {
     _firestore.collection('rooms').doc(roomID).snapshots().listen((snapshot) {
       var data = snapshot.data();
       nextMove = data!['next_move'];
+      print("DateTime : ${DateTime.now()}");
       Provider.of<CubeState>(context, listen: false).rotate(rotation: nextMove);
       Provider.of<CubeState>(context).nextMove = nextMove;
     });
@@ -68,5 +69,6 @@ class DatabaseService {
     await _firestore.collection('rooms').doc(roomID).update({
       'next_move': rotation,
     });
+    print("DateTime : ${DateTime.now()}");
   }
 }
