@@ -51,72 +51,72 @@ class _RoutePageState extends State<RoutePage> {
                 .listenToArrange(detail: detail);
           },
           child: Scaffold(
-            floatingActionButton: FloatingActionButton(
-              child: const Icon(Icons.connected_tv_rounded),
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => AlertDialog(
-                    content: SizedBox(
-                      height: 300,
-                      child: Column(
-                        children: [
-                          Text(
-                            Config.serverIP,
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          TextField(
-                            onChanged: (value) {
-                              ip = value;
-                            },
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              labelText: 'Enter your IP address',
-                              prefixIcon: const Icon(Icons.wifi),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            ),
-                          ),
-                          const Gap(10),
-                          TextField(
-                            onChanged: (value) {
-                              port = value;
-                            },
-                            keyboardType: TextInputType.number,
-                            decoration: InputDecoration(
-                              labelText: 'Enter your port number',
-                              prefixIcon: const Icon(Icons.numbers),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    actions: [
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text('Cancel'),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          Config.setIP(ip, port);
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text('Connect'),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
+            // floatingActionButton: FloatingActionButton(
+            //   child: const Icon(Icons.connected_tv_rounded),
+            //   onPressed: () {
+            //     showDialog(
+            //       context: context,
+            //       builder: (context) => AlertDialog(
+            //         content: SizedBox(
+            //           height: 300,
+            //           child: Column(
+            //             children: [
+            //               Text(
+            //                 Config.serverIP,
+            //                 style: const TextStyle(
+            //                   fontSize: 20,
+            //                   fontWeight: FontWeight.bold,
+            //                 ),
+            //               ),
+            //               TextField(
+            //                 onChanged: (value) {
+            //                   ip = value;
+            //                 },
+            //                 keyboardType: TextInputType.number,
+            //                 decoration: InputDecoration(
+            //                   labelText: 'Enter your IP address',
+            //                   prefixIcon: const Icon(Icons.wifi),
+            //                   border: OutlineInputBorder(
+            //                     borderRadius: BorderRadius.circular(8.0),
+            //                   ),
+            //                 ),
+            //               ),
+            //               const Gap(10),
+            //               TextField(
+            //                 onChanged: (value) {
+            //                   port = value;
+            //                 },
+            //                 keyboardType: TextInputType.number,
+            //                 decoration: InputDecoration(
+            //                   labelText: 'Enter your port number',
+            //                   prefixIcon: const Icon(Icons.numbers),
+            //                   border: OutlineInputBorder(
+            //                     borderRadius: BorderRadius.circular(8.0),
+            //                   ),
+            //                 ),
+            //               ),
+            //             ],
+            //           ),
+            //         ),
+            //         actions: [
+            //           ElevatedButton(
+            //             onPressed: () {
+            //               Navigator.of(context).pop();
+            //             },
+            //             child: const Text('Cancel'),
+            //           ),
+            //           ElevatedButton(
+            //             onPressed: () {
+            //               Config.setIP(ip, port);
+            //               Navigator.of(context).pop();
+            //             },
+            //             child: const Text('Connect'),
+            //           ),
+            //         ],
+            //       ),
+            //     );
+            //   },
+            // ),
             bottomNavigationBar: BottomNavigationBar(
               items: const [
                 BottomNavigationBarItem(

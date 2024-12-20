@@ -19,37 +19,39 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const MaxGap(200),
-        CubePage(),
-        const Gap(100),
-        CubeRotationTable(
-          onPressed: (rotation) {
-            Provider.of<CubeState>(context, listen: false)
-                .rotate(rotation: rotation);
-
-          },
-        ),
-        const MaxGap(80),
-        MaterialButton(
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return const CubeStateIn2D();
-              },
-            );
-            Provider.of<CubeState>(context, listen: false)
-                .show2DFace(facing: Facing.top);
-          },
-          child: const FaIcon(
-            FontAwesomeIcons.cube,
-            size: 50,
+    return Scaffold(
+      appBar: AppBar(title: const Text('CyCube'),),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          const MaxGap(200),
+          CubePage(),
+          const Gap(100),
+          CubeRotationTable(
+            onPressed: (rotation) {
+              Provider.of<CubeState>(context, listen: false)
+                  .rotate(rotation: rotation);
+            },
           ),
-        ),
-      ],
+          const MaxGap(80),
+          MaterialButton(
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return const CubeStateIn2D();
+                },
+              );
+              Provider.of<CubeState>(context, listen: false)
+                  .show2DFace(facing: Facing.top);
+            },
+            child: const FaIcon(
+              FontAwesomeIcons.cube,
+              size: 50,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

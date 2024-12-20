@@ -88,6 +88,9 @@ class _CoursePageState extends State<CoursePage> {
     Size size = MediaQuery.of(context).size;
     return isJoinRoom
         ? Scaffold(
+            backgroundColor: const Color(
+              0xff4f7092,
+            ).withOpacity(0.9),
             appBar: AppBar(
               title: Text(roomIDController.text.length >= 3
                   ? roomIDController.text
@@ -115,8 +118,8 @@ class _CoursePageState extends State<CoursePage> {
                         ],
                       )
                     : Stack(
-                      children: [
-                        Positioned.fill(
+                        children: [
+                          Positioned.fill(
                             child: Stack(
                               children: [
                                 if (ImageController.imageInWidget1 != null)
@@ -132,9 +135,9 @@ class _CoursePageState extends State<CoursePage> {
                               ],
                             ),
                           ),
-                        CubePage(),
-                      ],
-                    )
+                          CubePage(),
+                        ],
+                      )
               ],
             ),
           )

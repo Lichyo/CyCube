@@ -30,7 +30,9 @@ class RotationController {
       _bMove();
     } else if (rotation == 'B\'') {
       _bMoveReverse();
-    } else {}
+    } else {
+      print("Fail Move");
+    }
   }
 
   void _rMove() {

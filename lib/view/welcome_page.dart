@@ -27,6 +27,9 @@ class _WelcomePageState extends State<WelcomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color(
+        0xff4f7092,
+      ).withOpacity(0.9),
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text('CyCube'),
