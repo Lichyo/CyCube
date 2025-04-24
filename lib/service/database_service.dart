@@ -68,5 +68,6 @@ class DatabaseService {
     await _firestore.collection('rooms').doc(roomID).update({
       'next_move': rotation,
     });
+    print("DateTime : ${DateTime.now()}");
   }
 }

@@ -71,8 +71,7 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'CyCube Setup',
-          style: GoogleFonts.adamina(),
+          "Cube Setup",
         ),
         actions: [
           IconButton(
@@ -91,7 +90,7 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
                 _timer!.cancel();
               } else {
                 _timer =
-                    Timer.periodic(const Duration(milliseconds: 125), (timer) {
+                    Timer.periodic(const Duration(milliseconds: 100), (timer) {
                   ImageController.convertCameraImageToJpeg(
                           ImageController.imageBuffer!)
                       .then((value) {

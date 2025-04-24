@@ -1,10 +1,13 @@
-import 'package:gap/gap.dart';
 import 'package:camera/camera.dart';
+import 'package:cy_cube/cube/cube_state.dart';
+import 'package:cy_cube/cube/cube_view/cube.dart';
 import 'package:flutter/material.dart';
-import 'package:socket_io_client/socket_io_client.dart' as IO;
-import 'dart:async';
-import 'package:cy_cube/service/image_controller.dart';
 import 'package:cy_cube/config.dart';
+import 'package:provider/provider.dart';
+import 'package:socket_io_client/socket_io_client.dart' as IO;
+import 'package:cy_cube/service/image_controller.dart';
+import 'package:cy_cube/cube/cube_view/cube_page.dart';
+import 'dart:async';
 import 'dart:convert';
 
 class Lab extends StatefulWidget {
@@ -17,27 +20,51 @@ class Lab extends StatefulWidget {
 class _LabState extends State<Lab> {
   late IO.Socket _socket;
   late Timer _timer;
-  String predictedResult = "";
+  String connectionStatus = "Unconnected";
+  late CameraController? controller;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    ImageController.initializeCamera(Config.cameras![0]).then((_) {
+    _initializeSocket();
+    ImageController.initializeCamera(Config.cameras![1]).then((_) {
       if (mounted) {
         setState(() {});
       }
     });
+  }
+
+  void _initializeSocket() {
     _socket = IO.io(Config.serverIP, <String, dynamic>{
       'transports': ['websocket'],
       'autoConnect': false,
     });
     _socket.connect();
-    _socket.on('rotation', (data) {
+    _socket.on('connect', (data) {
       setState(() {
-        print(data);
-        predictedResult = data;
+
+        connectionStatus = "Connected";
       });
+    });
+    _socket.on('disconnect', (data) {
+      setState(() {
+        connectionStatus = "Disconnected";
+      });
+    });
+    _socket.on('rotation', (data) {
+      String rotation = data['predictedResult'];
+      print(rotation);
+      if (rotation != "wait") {
+        print(rotation);
+        Provider.of<CubeState>(context, listen: false)
+            .rotate(rotation: rotation);
+      }
+    });
+
+    _socket.on('receive_image', (data) async {
+      await ImageController.updateImage(data);
+      setState(() {});
     });
   }
 
@@ -51,39 +78,62 @@ class _LabState extends State<Lab> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Center(child: CameraPreview(ImageController.controller!)),
-        Positioned(
-          top: 50,
-          child: Text(
-            "Predicted Result: $predictedResult",
-            style: const TextStyle(
-              fontSize: 30.0,
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
+            ImageController.convertCameraImageToJpeg(
+                    ImageController.imageBuffer!)
+                .then((value) {
+              // _socket.emit('save_image', base64Encode(value));
+              _socket.emit("rotation", base64Encode(value));
+              // print("send image");
+            });
+          });
+        },
+        child: const Icon(Icons.flash_on),
+      ),
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text('Lab'),
+      ),
+      body: Column(
+        children: [
+          Expanded(
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: CameraPreview(
+                    ImageController.controller!,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 350),
+                  child: CubePage(),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 50, left: 30),
+                  child: Text(
+                    connectionStatus,
+                    style: const TextStyle(
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-        ),
-        Positioned(
-          top: 650,
-          left: 150,
-          child: TextButton(
-            onPressed: () {
-              _timer = Timer.periodic(const Duration(milliseconds: 200), (timer) {
-                ImageController.convertCameraImageToJpeg(ImageController.imageBuffer!)
-                    .then((value) {
-                  _socket.emit('rotation', base64Encode(value));
-                });
-              });
-            },
-            child: const Text(
-              "Start",
-              style: TextStyle(
-                fontSize: 30.0,
-              ),
-            ),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _socket.disconnect();
+    _timer.cancel();
+    ImageController.controller!.dispose();
+    super.dispose();
   }
 }

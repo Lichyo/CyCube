@@ -1,16 +1,28 @@
-# cy_cube
+# CyCube
 
-A new Flutter project.
+## Installation
+### Prerequisites
+our system can use one of the following systems below: 
+1. Python Flask Server
+```bash
+git clone git@github.com:ChenYi0725/senior_project.git
+cd senior_project
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+python pack_for_chiyu/predict_server.py
+```
+2. Docker Container
+```bash
+docker pull chiyu003/cycube-server:dev
+docker run -d -p 5000:5000 --name cycube-server chiyu003/cycube-server:dev
+```
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+### Flutter
+```bash
+git clone git@github.com:Lichyo/CyCube.git
+cd CyCube
+// update the server address in lib/config.dart with your own 
+flutter pub get
+flutter run
+```

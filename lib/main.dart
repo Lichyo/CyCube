@@ -11,15 +11,13 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await Config.initCamera();
-  // await AuthService().signInAnonymously();
-  await AuthService().signOut();
-  await AuthService().signInWithGoogle();
+  await AuthService().signInAnonymously();
 
   runApp(
     ChangeNotifierProvider(
       create: (context) => CubeState(),
       child: MaterialApp(
-        debugShowCheckedModeBanner: true,
+        debugShowCheckedModeBanner: false,
         home: AuthService.currentUser != null
             ? const RoutePage()
             : const WelcomePage(),
