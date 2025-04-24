@@ -30,7 +30,6 @@ class _CoursePageState extends State<CoursePage> {
   String _predictionResult = "";
   bool isLoad = false;
   bool isJoinRoom = false;
-  String _predictionResult = "";
   String role = "";
   String connectionStatus = "Unconnected";
 
