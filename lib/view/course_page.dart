@@ -30,7 +30,8 @@ class _CoursePageState extends State<CoursePage> {
   String _predictionResult = "";
   bool isLoad = false;
   bool isJoinRoom = false;
-  String role = "teacher";
+  String _predictionResult = "";
+  String role = "";
   String connectionStatus = "Unconnected";
 
   @override
@@ -80,6 +81,12 @@ class _CoursePageState extends State<CoursePage> {
       setState(() {
         connectionStatus = "Connected";
       });
+    });
+    _socket.on('rotation', (data) {
+        setState(() {
+          _predictionResult = data.toString();
+        });
+      // }
     });
   }
 

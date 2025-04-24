@@ -12,6 +12,7 @@ android {
     namespace = "com.lcy.cy_cube"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
+//    minSdkVersion = 23
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8

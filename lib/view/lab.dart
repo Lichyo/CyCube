@@ -69,6 +69,14 @@ class _LabState extends State<Lab> {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    _timer.cancel();
+    _socket.close();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(

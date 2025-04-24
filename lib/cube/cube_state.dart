@@ -82,8 +82,6 @@ class CubeState extends ChangeNotifier {
     faceRemovalMap.forEach((facing, removalList) {
       if (removalList.contains(id)) {
         visibleControl[facing] = false;
-
-        
       }
     });
     return visibleControl;
