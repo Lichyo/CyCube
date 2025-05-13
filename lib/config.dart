@@ -1,7 +1,7 @@
 import 'package:camera/camera.dart';
 
 class Config {
-  static String _serverIP = "http://192.168.205.251:5000";
+  static String _serverIP = "http://192.168.50.40:5001";
 
   static String get serverIP => _serverIP;
   static String user = "chiyu";
