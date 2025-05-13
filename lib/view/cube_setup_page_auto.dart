@@ -47,6 +47,7 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
       }
     });
     widget.socket.emit("join", Config.user);
+    print('join');
     widget.socket.on('receive_image', (data) async {
       await ImageController.updateImage(data);
       setState(() {});
@@ -70,7 +71,7 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           "Cube Setup",
         ),
         actions: [
@@ -136,6 +137,9 @@ class _CubeSetupPageAutoState extends State<CubeSetupPageAuto> {
               initCubeFaces();
             });
             if (allCubeFaces.length == 6) {
+              widget.socket.disconnect();
+              widget.socket.dispose();
+              _timer!.cancel();
               Navigator.pop(context, [allCubeFaces]);
             }
           }

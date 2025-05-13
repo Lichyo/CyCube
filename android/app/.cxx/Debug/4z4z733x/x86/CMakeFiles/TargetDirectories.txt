@@ -1,0 +1,2 @@
+/Users/lichyo/StudioProjects/cy_cube/android/app/.cxx/Debug/4z4z733x/x86/CMakeFiles/edit_cache.dir
+/Users/lichyo/StudioProjects/cy_cube/android/app/.cxx/Debug/4z4z733x/x86/CMakeFiles/rebuild_cache.dir

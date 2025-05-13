@@ -30,7 +30,7 @@ class _CoursePageState extends State<CoursePage> {
   String _predictionResult = "";
   bool isLoad = false;
   bool isJoinRoom = false;
-  String role = "";
+  String role = "teacher";
   String connectionStatus = "Unconnected";
 
   @override
@@ -47,9 +47,6 @@ class _CoursePageState extends State<CoursePage> {
         _predictionResult = data.toString();
       });
     });
-    if (ImageController.controller != null) {
-      ImageController.controller!.dispose();
-    }
     ImageController.initializeCamera(Config.cameras![0]).then((_) {
       if (mounted) {
         setState(() {});
@@ -58,7 +55,7 @@ class _CoursePageState extends State<CoursePage> {
     _timer = Timer.periodic(const Duration(milliseconds: 100), (timer) {
       ImageController.convertCameraImageToJpeg(ImageController.imageBuffer!)
           .then((value) {
-        _socket.emit('save_image', base64Encode(value));
+        _socket.emit('rotation', base64Encode(value));
       });
     });
   }
@@ -81,22 +78,12 @@ class _CoursePageState extends State<CoursePage> {
         connectionStatus = "Connected";
       });
     });
-    _socket.on('rotation', (data) {
-        setState(() {
-          _predictionResult = data.toString();
-        });
-      // }
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
     return isJoinRoom
         ? Scaffold(
-            backgroundColor: const Color(
-              0xff4f7092,
-            ).withOpacity(0.9),
             appBar: AppBar(
               title: Text(roomIDController.text.length >= 3
                   ? roomIDController.text
@@ -121,6 +108,7 @@ class _CoursePageState extends State<CoursePage> {
                               );
                             },
                           ),
+                          Text(_predictionResult),
                         ],
                       )
                     : Stack(
@@ -216,6 +204,7 @@ class _CoursePageState extends State<CoursePage> {
                           roomIDController.text =
                               await DatabaseService.createRoom(
                                   context: context);
+                          print('i am back');
                           setState(() {
                             isJoinRoom = true;
                             studentStartCourse();
