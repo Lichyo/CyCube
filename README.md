@@ -7,6 +7,7 @@ flutter run
 ```
 
 # 專案結構
+```
 lib/
 ├── cube/
 │   └── ... (所有與 Cube 相關的程式碼，包含 Controller、Model、View 等)
@@ -21,3 +22,4 @@ lib/
 │   └── 加入課程教室 (老師)
 ├── course_setup_page_auto.dart: 進入此頁面後，系統會請求相機權限，並至少等待 3 秒，按下相機按鈕以拍攝圖片。
 └── home_page.dart: 一個沒有旋轉偵測的簡單 Cube。
+```
